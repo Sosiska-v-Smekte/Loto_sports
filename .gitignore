@@ -1,0 +1,27 @@
+# Зависимости и сборка
+node_modules/
+dist/
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Локальные данные и секреты
+*.db
+*.db-journal
+backend/data/
+data/
+.env
+.env.*
+
+# Инструменты агента (скиллы ставятся локально)
+.agents/
+.claude/
+skills-lock.json
+
+# IDE и ОС
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
