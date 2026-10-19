@@ -23,6 +23,9 @@ export const LEVEL_HINT: Record<Level, string> = {
   pro: "Высокий уровень подготовки",
 };
 
+/** Тип организатора — одинаковая подпись на карточках и странице события. */
+export const organizerKind = (event: { organization: unknown }) => (event.organization ? "Организация" : "Частное лицо");
+
 export const JOIN_MODE_LABEL: Record<JoinMode, string> = {
   open: "Свободная запись",
   approval: "По заявке",

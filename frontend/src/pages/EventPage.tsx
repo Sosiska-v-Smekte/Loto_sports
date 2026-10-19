@@ -21,7 +21,7 @@ import { useAuth } from "@/features/auth";
 import { useEvent, useParticipants } from "@/features/events";
 import { formatEventDateLong } from "@/lib/dates";
 import { pluralize } from "@/lib/names";
-import { JOIN_MODE_HINT, JOIN_MODE_LABEL, LEVEL_HINT, LEVEL_LABEL } from "@/lib/status";
+import { JOIN_MODE_HINT, JOIN_MODE_LABEL, LEVEL_HINT, LEVEL_LABEL, organizerKind } from "@/lib/status";
 
 export function EventPage() {
   const id = Number(useParams().id);
@@ -140,7 +140,8 @@ function EventView({ event }: { event: SportEvent }) {
               <span>
                 <span className="block font-semibold">{event.organization?.name ?? event.organizer.name}</span>
                 <span className="block text-sm text-muted">
-                  {event.organization ? `Ведёт ${event.organizer.name}` : "Частный организатор"}
+                  {organizerKind(event)}
+                  {event.organization && ` · ведёт ${event.organizer.name}`}
                 </span>
               </span>
             </Link>

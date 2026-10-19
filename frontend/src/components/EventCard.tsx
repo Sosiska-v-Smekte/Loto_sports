@@ -2,7 +2,7 @@ import { CalendarDays, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { SportEvent } from "@/api/types";
 import { formatEventDate } from "@/lib/dates";
-import { LEVEL_LABEL, JOIN_MODE_LABEL } from "@/lib/status";
+import { JOIN_MODE_LABEL, LEVEL_LABEL, organizerKind } from "@/lib/status";
 import { SportIllustration } from "./SportIllustration";
 import { JOIN_MODE_ICON, StatusBadge } from "./StatusBadge";
 import { Avatar } from "./ui/Avatar";
@@ -36,7 +36,7 @@ export function EventCard({ event }: { event: SportEvent }) {
       </div>
 
       <div className="flex flex-1 flex-col px-3 pb-2 pt-3">
-        <p className="truncate pr-20 text-lg font-medium">{event.organization?.name ?? "Организатор"}</p>
+        <p className="truncate pr-20 text-lg font-medium">{organizerKind(event)}</p>
         <p className="mt-2 flex items-center gap-2 text-[15px]">
           <CalendarDays className="size-[18px] shrink-0 text-muted" aria-hidden />
           {formatEventDate(event.starts_at)}
