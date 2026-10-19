@@ -1,4 +1,4 @@
-import { LogIn, LogOut, RefreshCw, ShieldCheck, UserRound } from "lucide-react";
+import { LogIn, LogOut, Menu, RefreshCw, ShieldCheck, Ticket, UserRound } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/features/auth";
@@ -13,7 +13,7 @@ function roleLabel(isAdmin: boolean, orgStatus: string | undefined) {
   return "Пользователь";
 }
 
-export function AccountMenu({ compact = false }: { compact?: boolean }) {
+export function AccountMenu() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -59,15 +59,11 @@ export function AccountMenu({ compact = false }: { compact?: boolean }) {
         aria-expanded={open}
         aria-haspopup="menu"
         aria-label={`Аккаунт: ${user.name}`}
-        className={cn(
-          "pressable flex min-h-11 items-center gap-2 rounded-full border border-line bg-surface-muted py-1 pl-1 pr-1 hover:bg-white",
-          compact ? "2xl:pr-4" : "wide:pr-4",
-        )}
+        className="pressable flex min-h-11 items-center gap-2 rounded-full border border-line bg-surface-muted py-1 pl-3 pr-1 hover:bg-white"
       >
+        <Menu className="size-5" aria-hidden />
+        <span className="hidden max-w-[9rem] truncate text-[15px] font-medium wide:inline">{user.name}</span>
         <Avatar name={user.name} id={user.id} src={user.avatar_url} size="sm" className="size-9" />
-        <span className={cn("hidden max-w-[9rem] truncate text-[15px] font-medium", compact ? "2xl:inline" : "wide:inline")}>
-          {user.name}
-        </span>
       </button>
 
       <div
@@ -86,8 +82,11 @@ export function AccountMenu({ compact = false }: { compact?: boolean }) {
           </p>
         </div>
         <div className="border-t border-line pt-2">
-          <Link role="menuitem" to="/profile" className={itemClass} onClick={() => setOpen(false)}>
+          <Link role="menuitem" to={`/users/${user.id}`} className={itemClass} onClick={() => setOpen(false)}>
             <UserRound className="size-5" aria-hidden /> Профиль
+          </Link>
+          <Link role="menuitem" to="/my" className={itemClass} onClick={() => setOpen(false)}>
+            <Ticket className="size-5" aria-hidden /> Мои активности
           </Link>
           {user.is_admin && (
             <Link role="menuitem" to="/admin" className={itemClass} onClick={() => setOpen(false)}>

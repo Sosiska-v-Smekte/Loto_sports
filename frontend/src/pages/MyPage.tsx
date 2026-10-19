@@ -25,7 +25,7 @@ export function MyPage() {
 
   return (
     <div className="page-container max-w-4xl pt-6 lg:pt-10">
-      <h1 className="text-[30px] font-bold sm:text-[40px]">Мои активности</h1>
+      <h1 className="text-[30px] font-bold leading-tight sm:text-[40px]">Мои активности</h1>
       <Tabs
         className="mt-5"
         label="Мои активности"

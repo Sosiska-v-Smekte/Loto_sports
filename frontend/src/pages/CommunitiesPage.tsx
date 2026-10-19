@@ -1,6 +1,7 @@
 import { Building2, MapPin, Search } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { MyOrganization } from "@/components/organization/MyOrganization";
 import { Card } from "@/components/ui/Card";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { EmptyState, ErrorState } from "@/components/ui/States";
@@ -12,9 +13,13 @@ export function CommunitiesPage() {
 
   return (
     <div className="page-container max-w-5xl pt-6 lg:pt-10">
-      <h1 className="text-[30px] font-bold sm:text-[40px]">Сообщества</h1>
+      <h1 className="text-[30px] font-bold leading-tight sm:text-[40px]">Сообщества</h1>
       <p className="mt-2 text-lg text-muted">Клубы и секции, прошедшие проверку. У каждого — свои регулярные активности.</p>
-      <div className="relative mt-5">
+      <div className="mt-5">
+        <MyOrganization />
+      </div>
+      <h2 className="mt-8 text-xl font-semibold">Все сообщества</h2>
+      <div className="relative mt-3">
         <Search className="pointer-events-none absolute left-5 top-1/2 size-5 -translate-y-1/2 text-muted" aria-hidden />
         <input
           type="search"

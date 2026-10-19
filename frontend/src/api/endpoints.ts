@@ -13,6 +13,7 @@ import type {
   OrganizationStatus,
   Participant,
   Participants,
+  ProfileInput,
   Sport,
   SportEvent,
   User,
@@ -51,6 +52,7 @@ export const meApi = {
   events: () => api.get<SportEvent[]>("/me/events"),
   organization: () => api.get<Organization | null>("/me/organization"),
   submitOrganization: (data: OrganizationInput) => api.post<Organization>("/me/organization", data),
+  updateProfile: (data: ProfileInput) => api.patch<User>("/me", data),
 };
 
 export const organizationsApi = {

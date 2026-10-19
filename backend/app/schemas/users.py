@@ -45,6 +45,12 @@ class RegisterIn(BaseModel):
     city: Annotated[str, StringConstraints(strip_whitespace=True, min_length=2, max_length=120)] = "Москва"
 
 
+class ProfileUpdate(BaseModel):
+    name: Annotated[str, StringConstraints(strip_whitespace=True, min_length=2, max_length=120)]
+    city: Annotated[str, StringConstraints(strip_whitespace=True, min_length=2, max_length=120)]
+    about: Annotated[str, StringConstraints(strip_whitespace=True, max_length=500)] = ""
+
+
 class AuthOut(BaseModel):
     token: str
     user: UserOut

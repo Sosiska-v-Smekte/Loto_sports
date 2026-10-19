@@ -1,6 +1,7 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { Layout } from "./components/Layout";
 import { RequireAuth } from "./components/RequireAuth";
+import { useAuth } from "./features/auth";
 import { AdminPage } from "./pages/AdminPage";
 import { CommunitiesPage } from "./pages/CommunitiesPage";
 import { CommunityPage } from "./pages/CommunityPage";
@@ -10,9 +11,13 @@ import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
 import { MyPage } from "./pages/MyPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
-import { ProfilePage } from "./pages/ProfilePage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { UserPage } from "./pages/UserPage";
+
+function OwnProfileRedirect() {
+  const { user } = useAuth();
+  return user ? <Navigate to={`/users/${user.id}`} replace /> : null;
+}
 
 export function App() {
   return (
@@ -26,7 +31,8 @@ export function App() {
         <Route path="/my" element={<RequireAuth><MyPage /></RequireAuth>} />
         <Route path="/communities" element={<CommunitiesPage />} />
         <Route path="/communities/:id" element={<CommunityPage />} />
-        <Route path="/profile" element={<RequireAuth><ProfilePage /></RequireAuth>} />
+        {/* Старый адрес профиля: ведёт на свой публичный профиль, чтобы не было битых ссылок */}
+        <Route path="/profile" element={<RequireAuth><OwnProfileRedirect /></RequireAuth>} />
         <Route path="/users/:id" element={<UserPage />} />
         <Route path="/admin" element={<RequireAuth admin><AdminPage /></RequireAuth>} />
         <Route path="*" element={<NotFoundPage />} />

@@ -139,6 +139,12 @@ export interface OrganizationInput {
   contacts: string;
 }
 
+export interface ProfileInput {
+  name: string;
+  city: string;
+  about: string;
+}
+
 export interface DemoAccount {
   email: string;
   password: string;

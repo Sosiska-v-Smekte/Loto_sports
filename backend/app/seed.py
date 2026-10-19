@@ -4,6 +4,7 @@
 """
 
 import argparse
+import sys
 from datetime import datetime, timedelta
 
 from sqlalchemy import select
@@ -330,6 +331,8 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Заполнить базу демо-данными")
     parser.add_argument("--reset", action="store_true", help="удалить все данные и создать заново")
     args = parser.parse_args()
+    # Консоль Windows может быть не в UTF-8: сообщение не должно ронять уже выполненный сид
+    sys.stdout.reconfigure(errors="replace")
 
     if args.reset:
         import app.models  # noqa: F401

@@ -6,7 +6,8 @@ import { isNavActive, NAV_ITEMS } from "./nav";
 /** Нижний таб-бар для телефонов и планшетов; «Создать» — выделенная кнопка по центру. */
 export function BottomNav() {
   const { pathname } = useLocation();
-  const [first, second, third, fourth] = NAV_ITEMS;
+  // Админка на телефоне открывается из меню аватара
+  const [find, mine, communities] = NAV_ITEMS.filter((item) => !item.adminOnly);
 
   const tab = (item: (typeof NAV_ITEMS)[number]) => {
     const active = isNavActive(item.to, pathname);
@@ -34,8 +35,8 @@ export function BottomNav() {
       className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-[#f7f2e8]/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden"
     >
       <div className="mx-auto flex max-w-xl items-center gap-1 px-2 pt-1.5 pb-1.5">
-        {tab(first)}
-        {tab(second)}
+        {tab(find)}
+        {tab(mine)}
         <Link
           to="/events/new"
           aria-label="Создать активность"
@@ -46,8 +47,7 @@ export function BottomNav() {
           </span>
           Создать
         </Link>
-        {tab(third)}
-        {tab(fourth)}
+        {tab(communities)}
       </div>
     </nav>
   );
