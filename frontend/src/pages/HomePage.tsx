@@ -9,7 +9,7 @@ import { SportChips } from "@/components/SportChips";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { SectionTitle } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/States";
-import { useCities, useEvents, useFeaturedEvent, useSports } from "@/features/events";
+import { useEvents, useFeaturedEvent, useSports } from "@/features/events";
 import { dayjs } from "@/lib/dates";
 import { eventsInCityTitle } from "@/lib/names";
 
@@ -41,7 +41,6 @@ export function HomePage() {
 
   const events = useEvents({ q: q || undefined, city, date: date ?? undefined, sport_id: sportId ?? undefined });
   const featured = useFeaturedEvent(city);
-  const cities = useCities();
   const sports = useSports();
 
   const hasFilters = Boolean(q || date || sportId);
@@ -58,7 +57,6 @@ export function HomePage() {
           query={q}
           onQueryChange={setQuery}
           city={city}
-          cities={cities.data ?? [DEFAULT_CITY]}
           onCityChange={(value) => update("city", value === DEFAULT_CITY ? null : value)}
         />
       </div>

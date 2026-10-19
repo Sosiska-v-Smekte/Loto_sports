@@ -3,11 +3,13 @@ import { useState, type ChangeEvent, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { errorMessage } from "@/api/client";
 import { authApi } from "@/api/endpoints";
+import { CityCombobox } from "@/components/CityCombobox";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Field";
 import { toast } from "@/components/ui/Toast";
 import { useAuth } from "@/features/auth";
+import { isValidEmail } from "@/lib/validation";
 
 export function RegisterPage() {
   const { signIn } = useAuth();
@@ -17,9 +19,9 @@ export function RegisterPage() {
 
   const errors = {
     name: form.name.trim().length < 2 ? "Укажите имя — так вас увидят другие участники" : undefined,
-    email: /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(form.email.trim()) ? undefined : "Введите email в формате name@mail.ru",
+    email: isValidEmail(form.email) ? undefined : "Введите корректный email, например name@mail.ru",
     password: form.password.length < 6 ? "Пароль — минимум 6 символов" : undefined,
-    city: form.city.trim().length < 2 ? "Укажите город" : undefined,
+    city: form.city ? undefined : "Выберите город из списка",
   };
   const valid = !Object.values(errors).some(Boolean);
 
@@ -59,7 +61,7 @@ export function RegisterPage() {
             error={touched ? errors.password : undefined}
             required
           />
-          <Input label="Город" autoComplete="address-level2" value={form.city} onChange={set("city")} error={touched ? errors.city : undefined} required />
+          <CityCombobox label="Город" value={form.city} onChange={(city) => setForm((f) => ({ ...f, city }))} error={touched ? errors.city : undefined} required />
           {register.isError && (
             <p role="alert" className="rounded-2xl bg-danger px-4 py-3 font-medium text-danger-ink">
               {errorMessage(register.error)}

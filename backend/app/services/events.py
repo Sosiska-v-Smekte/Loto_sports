@@ -112,16 +112,6 @@ def featured_event(db: Session, city: str | None) -> Event | None:
     return db.scalars(stmt.limit(1)).first()
 
 
-def list_cities(db: Session) -> list[str]:
-    stmt = (
-        select(Event.city)
-        .where(Event.status == EventStatus.published, Event.starts_at >= now())
-        .group_by(Event.city)
-        .order_by(func.count().desc())
-    )
-    return list(db.scalars(stmt))
-
-
 def upcoming_by_organizer(db: Session, user_id: int) -> list[Event]:
     return list(db.scalars(_feed_query().where(Event.organizer_user_id == user_id)).unique())
 

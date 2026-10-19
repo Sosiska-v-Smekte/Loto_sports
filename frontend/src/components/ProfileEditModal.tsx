@@ -3,6 +3,7 @@ import { errorMessage } from "@/api/client";
 import { meApi } from "@/api/endpoints";
 import type { UserPublic } from "@/api/types";
 import { useAction } from "@/features/action";
+import { CityCombobox } from "./CityCombobox";
 import { Button } from "./ui/Button";
 import { Input, Textarea } from "./ui/Field";
 import { Modal } from "./ui/Modal";
@@ -20,7 +21,7 @@ export function ProfileEditModal({ open, onClose, profile }: ProfileEditModalPro
 
   const errors = {
     name: form.name.trim().length < 2 ? "Имя — минимум 2 символа" : undefined,
-    city: form.city.trim().length < 2 ? "Укажите город" : undefined,
+    city: form.city ? undefined : "Выберите город из списка",
   };
   const valid = !errors.name && !errors.city;
 
@@ -62,12 +63,12 @@ export function ProfileEditModal({ open, onClose, profile }: ProfileEditModalPro
           error={touched ? errors.name : undefined}
           onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
         />
-        <Input
+        <CityCombobox
           label="Город"
           required
           value={form.city}
           error={touched ? errors.city : undefined}
-          onChange={(e) => setForm((f) => ({ ...f, city: e.target.value }))}
+          onChange={(city) => setForm((f) => ({ ...f, city }))}
         />
         <Textarea
           label="О себе"

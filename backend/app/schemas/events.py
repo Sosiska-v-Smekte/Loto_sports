@@ -4,7 +4,7 @@ from typing import Annotated
 from pydantic import BaseModel, Field, StringConstraints, model_validator
 
 from app.models import EventLevel, JoinMode
-from app.schemas.common import ORMModel, OrganizationBrief, SportOut, UserBrief
+from app.schemas.common import City, ORMModel, OrganizationBrief, SportOut, UserBrief
 
 ShortText = Annotated[str, StringConstraints(strip_whitespace=True, max_length=2000)]
 
@@ -48,7 +48,7 @@ class EventCreate(BaseModel):
     sport_name: Annotated[str, StringConstraints(strip_whitespace=True, max_length=60)] | None = None
     starts_at: datetime
     ends_at: datetime | None = None
-    city: Annotated[str, StringConstraints(strip_whitespace=True, min_length=2, max_length=120)]
+    city: City
     address: Annotated[str, StringConstraints(strip_whitespace=True, min_length=3, max_length=300)]
     place_details: ShortText = ""
     level: EventLevel = EventLevel.any

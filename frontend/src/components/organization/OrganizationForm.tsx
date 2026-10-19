@@ -3,6 +3,7 @@ import { errorMessage } from "@/api/client";
 import { meApi } from "@/api/endpoints";
 import type { Organization, OrganizationInput } from "@/api/types";
 import { useAction } from "@/features/action";
+import { CityCombobox } from "../CityCombobox";
 import { Button } from "../ui/Button";
 import { Input, Textarea } from "../ui/Field";
 
@@ -28,7 +29,7 @@ export function OrganizationForm({ initial, onCancel }: OrganizationFormProps) {
     name: form.name.trim().length < 3 ? "Название — минимум 3 символа" : undefined,
     description: form.description.trim().length < 10 ? "Опишите организацию хотя бы в одном предложении" : undefined,
     sports: form.sports.trim().length < 2 ? "Укажите хотя бы одно направление" : undefined,
-    city: form.city.trim().length < 2 ? "Укажите город" : undefined,
+    city: form.city ? undefined : "Выберите город из списка",
     contacts: form.contacts.trim().length < 3 ? "Телефон, почта или ссылка для связи" : undefined,
   };
   const valid = !Object.values(errors).some(Boolean);
@@ -50,7 +51,13 @@ export function OrganizationForm({ initial, onCancel }: OrganizationFormProps) {
       <Textarea label="Описание" required rows={3} {...bind("description")} />
       <div className="grid gap-4 sm:grid-cols-2">
         <Input label="Направления" placeholder="Шахматы, бег" required {...bind("sports")} />
-        <Input label="Город" required {...bind("city")} />
+        <CityCombobox
+          label="Город"
+          required
+          value={form.city}
+          error={touched ? errors.city : undefined}
+          onChange={(city) => setForm((f) => ({ ...f, city }))}
+        />
       </div>
       <Input label="Контакты" placeholder="+7 900 000-00-00, club@mail.ru" required {...bind("contacts")} />
       {submit.isError && (

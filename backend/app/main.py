@@ -44,10 +44,14 @@ def _validation_message(exc: RequestValidationError) -> str:
     """Сводит ошибки Pydantic к одной понятной русской строке в едином формате {detail: str}."""
     parts = []
     for error in exc.errors():
+        field = str(error["loc"][-1]) if error["loc"] else ""
+        if field == "email":
+            # Тексты email-validator английские и слишком техничные — даём одно понятное сообщение
+            parts.append("Введите корректный email")
+            continue
         if error["type"] == "value_error":
             parts.append(str(error["ctx"]["error"]))
             continue
-        field = str(error["loc"][-1]) if error["loc"] else ""
         label = FIELD_LABELS.get(field, field)
         parts.append(f"{label}: {ERROR_TEXTS.get(error['type'], 'неверное значение')}")
     return "; ".join(dict.fromkeys(parts)) or "Проверьте введённые данные"

@@ -29,6 +29,10 @@ export const authApi = {
   demoAccounts: () => api.get<DemoAccount[]>("/auth/demo-accounts"),
 };
 
+export const citiesApi = {
+  list: () => api.get<string[]>("/cities"),
+};
+
 export const sportsApi = {
   list: (q?: string) => api.get<Sport[]>("/sports", { q }),
 };
@@ -36,7 +40,6 @@ export const sportsApi = {
 export const eventsApi = {
   search: (filters: EventFilters) => api.get<SportEvent[]>("/events", { ...filters }),
   featured: (city?: string) => api.get<SportEvent | null>("/events/featured", { city }),
-  cities: () => api.get<string[]>("/events/cities"),
   get: (id: number) => api.get<SportEvent>(`/events/${id}`),
   create: (data: EventCreate) => api.post<SportEvent>("/events", data),
   join: (id: number) => api.post<Participant>(`/events/${id}/join`),

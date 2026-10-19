@@ -3,7 +3,7 @@ from typing import Annotated
 
 from pydantic import BaseModel, StringConstraints
 
-from app.schemas.common import ORMModel, UserBrief
+from app.schemas.common import City, ORMModel, UserBrief
 from app.schemas.events import EventOut
 
 
@@ -35,5 +35,5 @@ class OrganizationIn(BaseModel):
     name: Annotated[str, StringConstraints(strip_whitespace=True, min_length=3, max_length=200)]
     description: Annotated[str, StringConstraints(strip_whitespace=True, min_length=10, max_length=2000)]
     sports: Annotated[str, StringConstraints(strip_whitespace=True, min_length=2, max_length=500)]
-    city: Annotated[str, StringConstraints(strip_whitespace=True, min_length=2, max_length=120)]
+    city: City
     contacts: Annotated[str, StringConstraints(strip_whitespace=True, min_length=3, max_length=500)]

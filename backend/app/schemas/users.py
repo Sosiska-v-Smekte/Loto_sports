@@ -2,7 +2,7 @@ from typing import Annotated
 
 from pydantic import BaseModel, StringConstraints
 
-from app.schemas.common import ORMModel, OrganizationBrief
+from app.schemas.common import City, Email, ORMModel, OrganizationBrief
 from app.schemas.events import EventOut
 
 
@@ -38,16 +38,14 @@ class LoginIn(BaseModel):
 
 class RegisterIn(BaseModel):
     name: Annotated[str, StringConstraints(strip_whitespace=True, min_length=2, max_length=120)]
-    email: Annotated[
-        str, StringConstraints(strip_whitespace=True, to_lower=True, pattern=r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
-    ]
+    email: Email
     password: Annotated[str, StringConstraints(min_length=6, max_length=128)]
-    city: Annotated[str, StringConstraints(strip_whitespace=True, min_length=2, max_length=120)] = "Москва"
+    city: City = "Москва"
 
 
 class ProfileUpdate(BaseModel):
     name: Annotated[str, StringConstraints(strip_whitespace=True, min_length=2, max_length=120)]
-    city: Annotated[str, StringConstraints(strip_whitespace=True, min_length=2, max_length=120)]
+    city: City
     about: Annotated[str, StringConstraints(strip_whitespace=True, max_length=500)] = ""
 
 

@@ -1,9 +1,22 @@
 from typing import Annotated
 
-from pydantic import BaseModel, ConfigDict, StringConstraints
+from pydantic import AfterValidator, BaseModel, ConfigDict, EmailStr, StringConstraints
 
-# Строка без пробелов по краям
-Text = Annotated[str, StringConstraints(strip_whitespace=True)]
+from app.services.cities import check_city
+
+# Город только из справочника, в каноническом написании
+City = Annotated[str, StringConstraints(strip_whitespace=True), AfterValidator(check_city)]
+
+
+def _ascii_lower(email: str) -> str:
+    # email-validator допускает кириллические домены (IDN); по требованиям такие адреса без punycode отклоняем
+    if not email.isascii():
+        raise ValueError("Введите корректный email")
+    return email.lower()
+
+
+# EmailStr проверяет формат без DNS-запросов, поэтому работает офлайн
+Email = Annotated[EmailStr, AfterValidator(_ascii_lower)]
 
 
 class ORMModel(BaseModel):

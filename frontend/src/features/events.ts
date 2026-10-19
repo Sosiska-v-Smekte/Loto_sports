@@ -1,5 +1,5 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { eventsApi, sportsApi } from "@/api/endpoints";
+import { citiesApi, eventsApi, sportsApi } from "@/api/endpoints";
 import type { EventFilters } from "@/api/types";
 
 export const useEvents = (filters: EventFilters) =>
@@ -8,7 +8,8 @@ export const useEvents = (filters: EventFilters) =>
 export const useFeaturedEvent = (city: string) =>
   useQuery({ queryKey: ["events", "featured", city], queryFn: () => eventsApi.featured(city) });
 
-export const useCities = () => useQuery({ queryKey: ["cities"], queryFn: eventsApi.cities, staleTime: 5 * 60_000 });
+// Справочник городов не меняется во время работы — грузим один раз
+export const useCities = () => useQuery({ queryKey: ["cities"], queryFn: citiesApi.list, staleTime: Infinity });
 
 export const useSports = () => useQuery({ queryKey: ["sports"], queryFn: () => sportsApi.list(), staleTime: 60_000 });
 

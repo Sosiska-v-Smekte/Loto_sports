@@ -5,6 +5,7 @@ import { errorMessage } from "@/api/client";
 import { eventsApi } from "@/api/endpoints";
 import type { JoinMode, Level } from "@/api/types";
 import { BackLink } from "@/components/BackLink";
+import { CityCombobox } from "@/components/CityCombobox";
 import { SportPicker, type SportChoice } from "@/components/SportPicker";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -53,7 +54,7 @@ export function CreateEventPage() {
     sport: sport ? undefined : "Выберите направление или добавьте своё",
     date: !startsAt.isValid() || !startsAt.isAfter(dayjs()) ? "Выберите дату и время в будущем" : undefined,
     endTime: endsAt && !endsAt.isAfter(startsAt) ? "Окончание должно быть позже начала" : undefined,
-    city: form.city.trim().length < 2 ? "Укажите город" : undefined,
+    city: form.city ? undefined : "Выберите город из списка",
     address: form.address.trim().length < 3 ? "Укажите адрес или название площадки" : undefined,
   };
   const valid = !Object.values(errors).some(Boolean);
@@ -76,7 +77,7 @@ export function CreateEventPage() {
         sport_name: "customName" in sport ? sport.customName : null,
         starts_at: startsAt.format("YYYY-MM-DDTHH:mm:00"),
         ends_at: endsAt ? endsAt.format("YYYY-MM-DDTHH:mm:00") : null,
-        city: form.city.trim(),
+        city: form.city,
         address: form.address.trim(),
         place_details: form.placeDetails.trim(),
         level,
@@ -115,7 +116,13 @@ export function CreateEventPage() {
             <Input label="Окончание" type="time" hint="Необязательно" error={show("endTime")} {...field("endTime")} />
           </div>
           <div className="grid gap-4 sm:grid-cols-[1fr_2fr]">
-            <Input label="Город" required error={show("city")} {...field("city")} />
+            <CityCombobox
+              label="Город"
+              required
+              value={form.city}
+              error={show("city")}
+              onChange={(city) => setForm((f) => ({ ...f, city }))}
+            />
             <Input label="Адрес или площадка" placeholder="Парк Горького, главный вход" required error={show("address")} {...field("address")} />
           </div>
           <Input label="Как найти место" placeholder="Например: встречаемся у фонтана, поле №2" {...field("placeDetails")} />

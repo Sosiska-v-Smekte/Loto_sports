@@ -29,11 +29,6 @@ def featured(db: Db, viewer: OptionalUser, city: str | None = None):
     return service.present_events(db, [event], viewer)[0] if event else None
 
 
-@router.get("/cities", response_model=list[str])
-def cities(db: Db):
-    return service.list_cities(db)
-
-
 @router.post("", response_model=EventOut, status_code=status.HTTP_201_CREATED)
 def create(data: EventCreate, db: Db, user: CurrentUser):
     event = service.create_event(db, data, user)
