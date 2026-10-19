@@ -1,0 +1,37 @@
+/* Дизайн-токены, снятые с макета docs/design/home.png */
+:root {
+  --color-page: #f4efe3;
+  --color-surface: #fbf8f1;
+  --color-surface-muted: #f8f3e9;
+  --color-line: #e3d9c6;
+  --color-ink: #2b2620;
+  --color-muted: #6e655a;
+
+  --color-primary: #1f4f47;
+  --color-primary-hover: #183f39;
+  --color-primary-soft: #dde8e1;
+
+  --color-weekend: #b5473a;
+  --color-today: #e9dfcc;
+  --color-level: #efe2c3;
+
+  /* Статусы: фон + тёмный текст с контрастом AA */
+  --color-success: #cfe3a8;
+  --color-success-ink: #2f4a12;
+  --color-warning: #f6e1a6;
+  --color-warning-ink: #6a4b06;
+  --color-danger: #f4cfc8;
+  --color-danger-ink: #8a2d22;
+  --color-info: #dce4f6;
+  --color-info-ink: #2b3f6b;
+
+  --radius-card: 24px;
+  --radius-header: 18px;
+
+  --shadow-card: 0 1px 2px rgb(67 52 30 / 0.06), 0 8px 24px -10px rgb(67 52 30 / 0.18);
+  --shadow-soft: 0 1px 2px rgb(67 52 30 / 0.05), 0 4px 12px -6px rgb(67 52 30 / 0.12);
+  --shadow-pop: 0 16px 48px -12px rgb(43 38 32 / 0.35);
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+}

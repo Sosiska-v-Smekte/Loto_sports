@@ -1,0 +1,112 @@
+@import "./tokens.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-page font-sans text-base text-ink antialiased;
+    background-image: url("/topo.svg");
+    background-size: 900px 900px;
+    background-attachment: fixed;
+    min-height: 100dvh;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  button,
+  [role="button"],
+  a {
+    touch-action: manipulation;
+  }
+
+  /* Поля ввода не меньше 16px, чтобы iOS не увеличивал страницу при фокусе */
+  input,
+  select,
+  textarea {
+    font-size: max(16px, 1rem);
+  }
+}
+
+@layer components {
+  .page-container {
+    @apply mx-auto w-full max-w-page px-4 sm:px-6 lg:px-10;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .pressable {
+    transition: transform 160ms var(--ease-out), background-color 160ms ease, color 160ms ease,
+      border-color 160ms ease, box-shadow 160ms ease;
+  }
+
+  .pressable:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  .lift {
+    transition: transform 220ms var(--ease-out), box-shadow 220ms var(--ease-out);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .lift:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 2px 4px rgb(67 52 30 / 0.06), 0 16px 32px -12px rgb(67 52 30 / 0.25);
+    }
+  }
+
+  dialog.modal::backdrop {
+    background: rgb(43 38 32 / 0.45);
+  }
+
+  dialog.modal[open] {
+    animation: modal-in 260ms var(--ease-out);
+  }
+
+  dialog.modal[open]::backdrop {
+    animation: fade-in 200ms ease-out;
+  }
+
+  .illustration {
+    filter: drop-shadow(0 10px 12px rgb(43 38 32 / 0.25));
+    font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+    line-height: 1;
+  }
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
