@@ -4,6 +4,7 @@ from pathlib import Path
 from sqlalchemy import create_engine, event
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
+from sqlalchemy.pool import StaticPool
 
 from app.config import DATABASE_URL
 
@@ -12,18 +13,27 @@ class Base(DeclarativeBase):
     pass
 
 
-def make_engine(url: str, **kwargs) -> Engine:
-    if url.startswith("sqlite:///"):
-        db_path = url.removeprefix("sqlite:///")
-        if db_path and db_path != ":memory:":
-            Path(db_path).parent.mkdir(parents=True, exist_ok=True)
+def search_key(value: str | None) -> str | None:
+    """Ключ для поиска без учёта регистра и «ё»."""
+    return value.lower().replace("ё", "е") if value else value
+
+
+def make_engine(url: str) -> Engine:
+    kwargs = {}
+    if url in ("sqlite://", "sqlite:///:memory:"):
+        # Одна общая in-memory база на все соединения (для тестов)
+        kwargs["poolclass"] = StaticPool
+    elif url.startswith("sqlite:///"):
+        Path(url.removeprefix("sqlite:///")).parent.mkdir(parents=True, exist_ok=True)
     engine = create_engine(url, connect_args={"check_same_thread": False}, **kwargs)
 
     @event.listens_for(engine, "connect")
-    def _enable_foreign_keys(dbapi_connection, _record) -> None:
+    def _on_connect(dbapi_connection, _record) -> None:
         cursor = dbapi_connection.cursor()
         cursor.execute("PRAGMA foreign_keys=ON")
         cursor.close()
+        # Встроенный lower() в SQLite понимает только латиницу, поэтому поиск по-русски идёт через Python
+        dbapi_connection.create_function("search_key", 1, search_key, deterministic=True)
 
     return engine
 
