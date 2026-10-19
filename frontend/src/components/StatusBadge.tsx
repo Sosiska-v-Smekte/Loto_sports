@@ -1,6 +1,6 @@
-import type { EventStatus, JoinMode, ParticipationStatus } from "@/api/types";
+import type { EventStatus, ParticipationStatus } from "@/api/types";
 import { ClipboardCheck, Zap } from "lucide-react";
-import { JOIN_MODE_LABEL, participationView } from "@/lib/status";
+import { participationView } from "@/lib/status";
 import { Tag } from "./ui/Tag";
 
 interface StatusBadgeProps {
@@ -21,11 +21,3 @@ export function StatusBadge({ status, eventStatus, size, className }: StatusBadg
 }
 
 export const JOIN_MODE_ICON = { open: Zap, approval: ClipboardCheck } as const;
-
-export function JoinModeBadge({ mode, className }: { mode: JoinMode; className?: string }) {
-  return (
-    <Tag tone="neutral" icon={JOIN_MODE_ICON[mode]} className={className}>
-      {JOIN_MODE_LABEL[mode]}
-    </Tag>
-  );
-}
