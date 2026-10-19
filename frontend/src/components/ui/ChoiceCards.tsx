@@ -14,15 +14,14 @@ interface ChoiceCardsProps<T extends string> {
   value: T;
   onChange: (value: T) => void;
   choices: Choice<T>[];
-  columns?: 2 | 4;
 }
 
 /** Крупные карточки-переключатели на нативных radio: работают с клавиатуры и экранным диктором. */
-export function ChoiceCards<T extends string>({ legend, name, value, onChange, choices, columns = 2 }: ChoiceCardsProps<T>) {
+export function ChoiceCards<T extends string>({ legend, name, value, onChange, choices }: ChoiceCardsProps<T>) {
   return (
     <fieldset>
       <legend className="text-[15px] font-medium">{legend}</legend>
-      <div className={cn("mt-2 grid gap-3", columns === 4 ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" : "sm:grid-cols-2")}>
+      <div className="mt-2 grid gap-3 sm:grid-cols-2">
         {choices.map((choice) => {
           const checked = choice.value === value;
           const Icon = choice.icon;

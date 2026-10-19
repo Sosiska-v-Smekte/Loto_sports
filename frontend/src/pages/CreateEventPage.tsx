@@ -128,7 +128,6 @@ export function CreateEventPage() {
             name="level"
             value={level}
             onChange={setLevel}
-            columns={4}
             choices={LEVELS.map((value) => ({ value, title: LEVEL_LABEL[value], description: LEVEL_HINT[value] }))}
           />
           <Textarea

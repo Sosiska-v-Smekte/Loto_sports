@@ -1,7 +1,5 @@
-import type { UseQueryResult } from "@tanstack/react-query";
 import { Building2, CalendarPlus, MapPin, UserX } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
-import type { SportEvent } from "@/api/types";
 import { BackLink } from "@/components/BackLink";
 import { EventGrid } from "@/components/EventGrid";
 import { Avatar } from "@/components/ui/Avatar";
@@ -24,7 +22,6 @@ export function UserPage() {
     );
   }
   const { user, events } = page.data;
-  const eventsQuery = { ...page, data: events } as unknown as UseQueryResult<SportEvent[]>;
 
   return (
     <div className="page-container pt-4 lg:pt-6">
@@ -53,7 +50,10 @@ export function UserPage() {
       </Card>
       <SectionTitle className="mt-8">Ближайшие активности</SectionTitle>
       <EventGrid
-        query={eventsQuery}
+        events={events}
+        isPending={false}
+        error={null}
+        onRetry={() => page.refetch()}
         className="mt-4"
         empty={<EmptyState icon={CalendarPlus} title="Ближайших активностей нет" />}
       />

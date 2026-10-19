@@ -4,6 +4,8 @@ export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
+      // Промежуточная ширина для шапки: полная подпись «Создать активность», как на макете 1440
+      screens: { wide: "1400px" },
       colors: {
         page: "var(--color-page)",
         surface: "var(--color-surface)",

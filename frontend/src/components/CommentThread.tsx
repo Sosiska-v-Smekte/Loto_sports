@@ -1,5 +1,5 @@
 import { EyeOff, LogIn, MessageCircleQuestion, Send, ShieldCheck } from "lucide-react";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { useLocation } from "react-router-dom";
 import { adminApi, eventsApi } from "@/api/endpoints";
 import type { Comment, SportEvent } from "@/api/types";
@@ -20,6 +20,13 @@ export function CommentThread({ event }: { event: SportEvent }) {
   const { user } = useAuth();
   const comments = useComments(event.id);
   const [hideTarget, setHideTarget] = useState<Comment | null>(null);
+  const { hash } = useLocation();
+  const loaded = comments.isSuccess;
+
+  // Переход по ссылке «Обсуждение» из админки: прокручиваем, когда сообщения уже отрисованы
+  useEffect(() => {
+    if (loaded && hash === "#discussion") document.getElementById("discussion")?.scrollIntoView({ behavior: "smooth" });
+  }, [loaded, hash]);
   const hide = useAction(
     ({ id, reason }: { id: number; reason: string }) => adminApi.hideComment(id, reason),
     "Сообщение скрыто, остальные остались на месте",

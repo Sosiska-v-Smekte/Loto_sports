@@ -88,7 +88,11 @@ export function HomePage() {
       </div>
 
       <EventGrid
-        query={events}
+        events={events.data}
+        isPending={events.isPending}
+        error={events.error}
+        onRetry={() => events.refetch()}
+        isStale={events.isPlaceholderData}
         className="mt-5"
         empty={
           <EmptyState

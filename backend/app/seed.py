@@ -53,12 +53,19 @@ DEMO_ACCOUNTS = [
 
 
 def _at(days: int, hour: int, minute: int = 0) -> datetime:
-    """Дата через `days` дней в hh:mm; сегодняшние события не должны оказаться в прошлом."""
+    """Дата через `days` дней в hh:mm.
+
+    Если сид запускают вечером и сегодняшнее время уже прошло, событие переносится на ближайший
+    час сегодня (не позже 22:00), а если и это невозможно — на завтра в то же время.
+    """
     current = now()
     moment = (current + timedelta(days=days)).replace(hour=hour, minute=minute, second=0)
-    if moment < current + timedelta(hours=1):
-        moment = current.replace(minute=0, second=0) + timedelta(hours=2)
-    return moment
+    if moment >= current + timedelta(hours=1):
+        return moment
+    later_today = current.replace(minute=minute, second=0) + timedelta(hours=2)
+    if later_today.date() == current.date() and later_today.hour <= 22:
+        return later_today
+    return moment + timedelta(days=1)
 
 
 def seed(db: Session) -> None:

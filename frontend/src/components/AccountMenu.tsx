@@ -13,7 +13,7 @@ function roleLabel(isAdmin: boolean, orgStatus: string | undefined) {
   return "Пользователь";
 }
 
-export function AccountMenu() {
+export function AccountMenu({ compact = false }: { compact?: boolean }) {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -59,10 +59,15 @@ export function AccountMenu() {
         aria-expanded={open}
         aria-haspopup="menu"
         aria-label={`Аккаунт: ${user.name}`}
-        className="pressable flex min-h-11 items-center gap-2 rounded-full border border-line bg-surface-muted py-1 pl-1 pr-1 hover:bg-white xl:pr-4"
+        className={cn(
+          "pressable flex min-h-11 items-center gap-2 rounded-full border border-line bg-surface-muted py-1 pl-1 pr-1 hover:bg-white",
+          compact ? "2xl:pr-4" : "wide:pr-4",
+        )}
       >
         <Avatar name={user.name} id={user.id} src={user.avatar_url} size="sm" className="size-9" />
-        <span className="hidden max-w-[9rem] truncate text-[15px] font-medium xl:inline">{user.name}</span>
+        <span className={cn("hidden max-w-[9rem] truncate text-[15px] font-medium", compact ? "2xl:inline" : "wide:inline")}>
+          {user.name}
+        </span>
       </button>
 
       <div

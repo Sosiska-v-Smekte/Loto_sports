@@ -116,7 +116,8 @@ function EventView({ event }: { event: SportEvent }) {
           <CommentThread event={event} />
         </div>
 
-        <aside className="flex flex-col gap-6 lg:sticky lg:top-[108px]">
+        {/* На телефоне запись — главное действие, поэтому колонка идёт сразу под шапкой */}
+        <aside className="order-first flex flex-col gap-6 lg:order-none lg:sticky lg:top-[108px]">
           <Card className="p-5 sm:p-6">
             <p className="flex items-center gap-2 text-sm font-medium uppercase tracking-wide text-muted">
               <ModeIcon className="size-4" aria-hidden />

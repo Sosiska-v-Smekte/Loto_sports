@@ -10,6 +10,7 @@ export function Header() {
   const { user } = useAuth();
   const { pathname } = useLocation();
   const items = NAV_ITEMS.filter((item) => !item.adminOnly || user?.is_admin);
+  const compact = items.length > 4;
 
   return (
     <header className="sticky top-0 z-30 border-b border-line/80 bg-[#f7f2e8]/90 backdrop-blur-md">
@@ -37,7 +38,8 @@ export function Header() {
                 )}
               >
                 {active && <item.icon className="size-5" aria-hidden />}
-                {item.label}
+                <span className={compact ? "2xl:hidden" : "xl:hidden"}>{item.shortLabel}</span>
+                <span className={cn("hidden", compact ? "2xl:inline" : "xl:inline")}>{item.label}</span>
               </NavLink>
             );
           })}
@@ -49,10 +51,11 @@ export function Header() {
             className="hidden whitespace-nowrap lg:inline-flex xl:min-h-[50px] xl:px-5 xl:text-[17px] 2xl:px-6 2xl:text-[18px]"
             icon={<Plus className="size-5" aria-hidden />}
           >
-            <span className="xl:hidden">Создать</span>
-            <span className="hidden xl:inline">Создать активность</span>
+            {/* У админа пятый пункт меню, поэтому полная подпись появляется только на очень широких экранах */}
+            <span className={compact ? "2xl:hidden" : "wide:hidden"}>Создать</span>
+            <span className={cn("hidden", compact ? "2xl:inline" : "wide:inline")}>Создать активность</span>
           </ButtonLink>
-          <AccountMenu />
+          <AccountMenu compact={compact} />
         </div>
       </div>
     </header>
