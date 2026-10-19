@@ -166,7 +166,9 @@ function EventView({ event }: { event: SportEvent }) {
                 ))}
               </ul>
             ) : (
-              <p className="mt-2 text-muted">Пока никто не записался — станьте первым!</p>
+              <p className="mt-2 text-muted">
+                {event.can_manage ? "Пока участников нет." : "Пока никто не записался — станьте первым!"}
+              </p>
             )}
           </Card>
         </aside>

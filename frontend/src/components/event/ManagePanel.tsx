@@ -10,9 +10,9 @@ import { EmptyState } from "../ui/States";
 import { Tabs } from "../ui/Tabs";
 import { PersonRow } from "./PersonRow";
 
-type Tab = "requests" | "participants";
+type Tab = "requests" | "participants" | "rejected";
 
-/** Блок организатора: заявки с кнопками «Принять»/«Отклонить» и список подтверждённых участников. */
+/** Блок организатора: заявки с кнопками «Принять»/«Отклонить», подтверждённые участники и отдельно отклонённые. */
 export function ManagePanel({ participants }: { participants: Participants }) {
   const [tab, setTab] = useState<Tab>(participants.pending.length > 0 ? "requests" : "participants");
 
@@ -32,6 +32,10 @@ export function ManagePanel({ participants }: { participants: Participants }) {
         items={[
           { value: "requests", label: "Заявки", count: participants.pending.length },
           { value: "participants", label: "Участники", count: participants.confirmed.length },
+          // Отклонённые — не участники: отдельная вкладка, которая не открыта по умолчанию
+          ...(participants.rejected.length > 0
+            ? [{ value: "rejected" as const, label: "Отклонённые", count: participants.rejected.length }]
+            : []),
         ]}
       />
 
@@ -85,15 +89,22 @@ export function ManagePanel({ participants }: { participants: Participants }) {
           </ul>
         ))}
 
-      {participants.rejected.length > 0 && (
-        <details className="mt-4 rounded-2xl bg-surface-muted px-4 py-3">
-          <summary className="cursor-pointer font-medium">Отклонённые заявки ({participants.rejected.length})</summary>
-          <ul className="divide-y divide-line">
+      {tab === "rejected" && (
+        <>
+          <p className="mt-4 rounded-2xl bg-surface-muted px-4 py-3 text-muted">
+            Эти люди не участвуют в мероприятии и не видны другим. Список нужен только вам для истории.
+          </p>
+          <ul className="mt-2 divide-y divide-line">
             {participants.rejected.map((p) => (
-              <PersonRow key={p.id} user={p.user} meta="Заявка отклонена" />
+              <PersonRow
+                key={p.id}
+                user={p.user}
+                muted
+                meta={`Заявка отклонена ${formatRelative(p.decided_at ?? p.created_at)}`}
+              />
             ))}
           </ul>
-        </details>
+        </>
       )}
     </Card>
   );
