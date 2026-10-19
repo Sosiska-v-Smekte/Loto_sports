@@ -1,0 +1,10 @@
+services:
+  app:
+    build: .
+    image: sport-club
+    ports:
+      - "8000:8000"
+    volumes:
+      # Файл SQLite живёт на хосте и переживает пересборку контейнера
+      - ./data:/data
+    restart: unless-stopped
