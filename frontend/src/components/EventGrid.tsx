@@ -19,7 +19,7 @@ interface EventGridProps {
 
 const SIMPLE_LIMIT = 6;
 
-const GRID_CLASS = "event-grid grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4 lg:gap-6";
+const GRID_CLASS = "event-grid grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6 xl:grid-cols-4";
 
 export function EventGrid({ events, isPending, error, onRetry, isStale, empty, className }: EventGridProps) {
   const { simple } = useAccessibility().settings;
