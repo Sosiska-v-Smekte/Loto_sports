@@ -14,8 +14,9 @@ interface DateStripProps {
 function fade({ start, end }: { start: boolean; end: boolean }) {
   if (typeof window !== "undefined" && window.innerWidth < 640) return undefined;
   if (start && end) return undefined;
-  const left = start ? "black 0" : "transparent 0, black 64px";
-  const right = end ? "black 100%" : "black calc(100% - 96px), transparent 100%";
+  // Под стрелкой (44px) лента полностью прозрачна, переход начинается раньше
+  const left = start ? "black 0" : "transparent 0, transparent 40px, black 110px";
+  const right = end ? "black 100%" : "black calc(100% - 130px), transparent calc(100% - 52px)";
   return `linear-gradient(to right, ${left}, ${right})`;
 }
 
