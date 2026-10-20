@@ -205,6 +205,8 @@ export function EventMap({ events, onEventSelect, center = KRASNOYARSK_CENTER, z
         className={styles.map}
         // Колесо мыши не зумит карту, чтобы страница прокручивалась как обычно; масштаб — кнопками и жестами
         scrollWheelZoom={false}
+        // Подпись в углу карты (с флагом в префиксе Leaflet) скрыта по просьбе заказчика
+        attributionControl={false}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
