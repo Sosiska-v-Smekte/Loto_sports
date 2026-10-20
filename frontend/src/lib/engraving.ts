@@ -36,3 +36,6 @@ export const SPORT_PATTERN: Record<string, CardPattern> = {
   chess: "chess",
   bowling: "balls",
 };
+
+export const sportPattern = (sport: { slug: string | null } | null | undefined): CardPattern =>
+  (sport?.slug && SPORT_PATTERN[sport.slug]) || "topo";

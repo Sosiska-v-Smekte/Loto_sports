@@ -1,4 +1,5 @@
 import { Building2, MapPin, Search, UsersRound } from "lucide-react";
+import { sportPattern } from "@/lib/engraving";
 import { SimpleHint } from "@/components/SimpleHint";
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
@@ -185,7 +186,7 @@ function FeaturedCard({ org }: { org: Organization }) {
       className="tinted-3d lift relative isolate flex h-full min-h-[220px] flex-col justify-between overflow-hidden rounded-card p-5"
       style={{ backgroundColor: colorSafe ? safeCardColor(color, colorSafe) : color }}
     >
-      <Engraving pattern={null} />
+      <Engraving pattern={sportPattern(org.sport)} />
       <h3 className="max-w-[62%] text-[24px] font-semibold leading-tight">
         <Link to={`/communities/${org.id}`} className="after:absolute after:inset-0 after:content-['']">
           {org.name}

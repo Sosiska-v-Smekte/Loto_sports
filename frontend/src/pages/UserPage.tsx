@@ -6,6 +6,7 @@ import {
   Plus,
   UserX,
 } from "lucide-react";
+import { sportPattern } from "@/lib/engraving";
 import { useState, type FormEvent } from "react";
 import { Link, useParams } from "react-router-dom";
 import { errorMessage } from "@/api/client";
@@ -223,7 +224,7 @@ function SportCard({ item }: { item: UserSport }) {
       className="tinted-3d relative isolate flex h-36 flex-col justify-between overflow-hidden rounded-card p-4"
       style={{ backgroundColor: background }}
     >
-      <Engraving pattern={null} />
+      <Engraving pattern={sportPattern(item.sport)} />
       <h3 className="max-w-[60%] text-[22px] font-semibold leading-tight">
         {item.sport.name}
       </h3>
