@@ -59,10 +59,10 @@ export function AccountMenu() {
         aria-expanded={open}
         aria-haspopup="menu"
         aria-label={`Аккаунт: ${user.name}`}
-        className="pressable flex min-h-11 items-center gap-2 rounded-full border border-line bg-surface-muted py-1 pl-3 pr-1 hover:bg-white"
+        className="neu-control pressable flex min-h-11 items-center gap-2 rounded-full border border-line/70 bg-surface-muted py-1 pl-3 pr-1"
       >
         <Menu className="size-5" aria-hidden />
-        <span className="hidden max-w-[9rem] truncate text-[15px] font-medium wide:inline">{user.name}</span>
+        {/* Имени рядом с аватаром нет: длинное имя выталкивало шапку за край экрана. Оно видно в открытом меню */}
         <Avatar name={user.name} id={user.id} src={user.avatar_url} size="sm" className="size-9" />
       </button>
 

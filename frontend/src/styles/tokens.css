@@ -28,9 +28,18 @@
   --radius-card: 24px;
   --radius-header: 18px;
 
-  --shadow-card: 0 1px 2px rgb(67 52 30 / 0.06), 0 8px 24px -10px rgb(67 52 30 / 0.18);
-  --shadow-soft: 0 1px 2px rgb(67 52 30 / 0.05), 0 4px 12px -6px rgb(67 52 30 / 0.12);
-  --shadow-pop: 0 16px 48px -12px rgb(43 38 32 / 0.35);
+  /* Тени мягкие и низкоконтрастные: нейтральный холодный тон без коричневого ореола и белых бликов */
+  --shadow-card: 0 1px 2px rgb(28 32 40 / 0.04), 0 6px 20px -8px rgb(28 32 40 / 0.12);
+  --shadow-soft: 0 1px 2px rgb(28 32 40 / 0.05), 0 2px 8px -3px rgb(28 32 40 / 0.08);
+  --shadow-pop: 0 2px 6px rgb(28 32 40 / 0.06), 0 20px 48px -16px rgb(28 32 40 / 0.28);
+  --shadow-hover: 0 2px 4px rgb(28 32 40 / 0.05), 0 14px 32px -12px rgb(28 32 40 / 0.18);
+  /* Внутренняя тень — только для нажатых состояний и отдельных углублённых поверхностей */
+  --shadow-inset: inset 0 1px 3px rgb(28 32 40 / 0.1);
+  --shadow-primary: inset 0 1px 0 rgb(255 255 255 / 0.14), 0 1px 2px rgb(20 50 45 / 0.18), 0 4px 12px -4px rgb(20 50 45 / 0.3);
+  --shadow-primary-pressed: inset 0 2px 4px rgb(0 0 0 / 0.25);
+
+  --gradient-surface: linear-gradient(180deg, #fffdf9 0%, #fbf8f1 100%);
+  --gradient-primary: linear-gradient(180deg, #255a51 0%, #1f4f47 100%);
 
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);

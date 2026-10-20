@@ -15,8 +15,8 @@ export function Pill({ active, icon, className, children, ...rest }: PillProps) 
       className={cn(
         "pressable inline-flex min-h-11 shrink-0 items-center gap-2 whitespace-nowrap rounded-full border px-4 text-[15px] font-medium",
         active
-          ? "border-primary bg-primary text-white"
-          : "border-line bg-surface-muted text-ink hover:border-[#d3c6ad] hover:bg-white",
+          ? "neu-primary border-primary bg-primary text-white"
+          : "neu-control border-line/70 bg-surface-muted text-ink",
         className,
       )}
       {...rest}

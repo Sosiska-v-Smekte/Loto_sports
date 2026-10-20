@@ -56,6 +56,9 @@ export interface SportEvent {
   level: Level;
   requirements: string;
   join_mode: JoinMode;
+  card_color: string | null;
+  /** Гравировка шапки карточки, id из CARD_PATTERNS */
+  card_pattern: string | null;
   status: EventStatus;
   moderation_reason: string | null;
   created_at: string;
@@ -81,6 +84,9 @@ export interface EventCreate {
   level: Level;
   requirements: string;
   join_mode: JoinMode;
+  card_color: string | null;
+  /** Гравировка шапки карточки, id из CARD_PATTERNS */
+  card_pattern: string | null;
   organization_id: number | null;
 }
 

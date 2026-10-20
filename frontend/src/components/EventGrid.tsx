@@ -15,7 +15,7 @@ interface EventGridProps {
   className?: string;
 }
 
-const GRID_CLASS = "grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4 lg:gap-6";
+const GRID_CLASS = "event-grid grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4 lg:gap-6";
 
 /** Сетка карточек с состояниями загрузки, ошибки и пустого результата. */
 export function EventGrid({ events, isPending, error, onRetry, isStale, empty, className }: EventGridProps) {

@@ -40,8 +40,9 @@ export function BottomNav() {
 
   return (
     <nav
+      data-mobile-nav
       aria-label="Основная навигация"
-      className="fixed inset-x-0 bottom-0 z-30 border-t border-line bg-[#f7f2e8]/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-30 border-t border-line/70 bg-[#f7f2e8]/95 shadow-[0_-6px_20px_-8px_rgb(110_84_46/0.25)] pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden"
     >
       <div className="mx-auto flex max-w-xl items-center gap-1 px-2 pt-1.5 pb-1.5">
         {tab(find)}
@@ -51,7 +52,7 @@ export function BottomNav() {
           aria-label="Создать активность"
           className="pressable mx-1 flex min-h-14 flex-1 flex-col items-center justify-center gap-0.5 text-[12px] font-semibold text-primary"
         >
-          <span className="grid size-11 -mt-5 place-items-center rounded-full bg-primary text-white shadow-pop ring-4 ring-[#f7f2e8]">
+          <span className="grid size-11 -mt-5 place-items-center neu-primary rounded-full bg-primary text-white ring-4 ring-[#f7f2e8]">
             <Plus className="size-6" aria-hidden />
           </span>
           Создать

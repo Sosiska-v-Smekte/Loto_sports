@@ -13,6 +13,20 @@
       rel="stylesheet"
     />
     <title>Спортивный клуб</title>
+    <script>
+      // Специальные возможности применяются до отрисовки, чтобы не было вспышки обычного вида.
+      // Логика повторяет applyToDocument из src/features/accessibility.tsx.
+      (function () {
+        try {
+          var s = JSON.parse(localStorage.getItem("a11y-settings") || "{}");
+          var root = document.documentElement;
+          if (s.lowVision === true) root.setAttribute("data-low-vision", "");
+          if (s.colorSafe === true) root.setAttribute("data-color-safe", "");
+          if (s.simple === true) root.setAttribute("data-simple", "");
+          root.setAttribute("data-text-size", String(s.textSize === 1 || s.textSize === 2 ? s.textSize : 0));
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

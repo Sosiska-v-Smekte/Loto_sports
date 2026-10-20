@@ -1,0 +1,248 @@
+/*
+ * Специальные возможности. Атрибуты на <html> ставит src/features/accessibility.tsx
+ * (и встроенный скрипт в index.html до загрузки приложения).
+ */
+
+/* ---------- Размер текста и кнопок ---------- */
+
+/* zoom масштабирует всё вместе: текст, отступы, зоны нажатия; вёрстка перестраивается под ширину */
+html[data-text-size="1"] #root {
+  zoom: 1.15;
+}
+
+html[data-text-size="2"] #root {
+  zoom: 1.3;
+}
+
+/* При крупном тексте карточки не сжимаются: колонок становится меньше */
+html[data-text-size="1"] .event-grid,
+html[data-text-size="2"] .event-grid,
+html[data-simple] .event-grid {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr));
+}
+
+/* Крупный текст не помещается в шапку: навигация уезжает в нижнюю панель
+   (при «крупном» — до 1280px, при «очень крупном» и в простом режиме — до 1536px) */
+@media (max-width: 1279.98px) {
+  html[data-text-size="1"] [data-desktop-nav] {
+    display: none !important;
+  }
+
+  html[data-text-size="1"] [data-mobile-nav] {
+    display: block !important;
+  }
+
+  html[data-text-size="1"] [data-main] {
+    padding-bottom: 8rem !important;
+  }
+}
+
+@media (max-width: 1535.98px) {
+  html[data-simple] [data-desktop-nav],
+  html[data-text-size="2"] [data-desktop-nav] {
+    display: none !important;
+  }
+
+  html[data-simple] [data-mobile-nav],
+  html[data-text-size="2"] [data-mobile-nav] {
+    display: block !important;
+  }
+
+  html[data-simple] [data-main],
+  html[data-text-size="2"] [data-main] {
+    padding-bottom: 8rem !important;
+  }
+}
+
+/* При крупном тексте в шапке короткие подписи */
+html[data-text-size="1"] [data-label-full],
+html[data-text-size="2"] [data-label-full] {
+  display: none !important;
+}
+
+html[data-text-size="1"] [data-label-short],
+html[data-text-size="2"] [data-label-short] {
+  display: inline !important;
+}
+
+/* На узком телефоне логотип с крупным текстом иначе наезжает на кнопки шапки */
+@media (max-width: 639.98px) {
+  html[data-text-size="1"] [data-logo],
+  html[data-text-size="2"] [data-logo] {
+    font-size: 18px;
+  }
+}
+
+/* ---------- Для слабовидящих ---------- */
+
+/* Чистый светлый фон, почти чёрный текст, тонкие, но заметные рамки (контраст рамок от 3:1, текста от 7:1).
+   Тени остаются мягкими — объём держится на рамке, а не на тени. */
+html[data-low-vision] {
+  --color-page: #fbf9f4;
+  --color-surface: #ffffff;
+  --color-surface-muted: #ffffff;
+  --color-line: #8a7e6c;
+  --color-ink: #0f0d0a;
+  --color-muted: #38322a;
+
+  --color-primary: #134a41;
+  --color-primary-hover: #0c3a33;
+  --color-primary-soft: #d6e8e0;
+
+  --color-weekend: #a21d10;
+  --color-today: #ece2cd;
+  --color-level: #efe3c6;
+
+  --color-success-ink: #1d3606;
+  --color-warning-ink: #4a3300;
+  --color-danger-ink: #7a1f15;
+  --color-info-ink: #1d2d55;
+
+  --gradient-surface: linear-gradient(#fff, #fff);
+  --gradient-primary: linear-gradient(var(--color-primary), var(--color-primary));
+  --shadow-card: 0 0 0 1.5px var(--color-line), 0 6px 18px -10px rgb(28 32 40 / 0.18);
+  --shadow-soft: 0 0 0 1.5px var(--color-line);
+  --shadow-hover: 0 0 0 2.5px var(--color-ink), 0 10px 24px -12px rgb(28 32 40 / 0.25);
+  --shadow-primary: none;
+}
+
+html[data-low-vision] body {
+  background-image: none;
+  font-weight: 500;
+}
+
+html[data-low-vision] h1,
+html[data-low-vision] h2,
+html[data-low-vision] h3 {
+  font-weight: 700;
+}
+
+/* Рамки на светлых элементах дублирует тень-контур, обычные border прячем, чтобы не было двойных линий */
+html[data-low-vision] .neu-raised,
+html[data-low-vision] .neu-raised-sm,
+html[data-low-vision] .neu-control {
+  border-color: transparent;
+}
+
+/* Хорошо заметная двойная рамка фокуса: тёмная + жёлтая */
+html[data-low-vision] :focus-visible {
+  outline: 3px solid #0f0d0a !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 6px #ffd400 !important;
+}
+
+html[data-low-vision] ::placeholder {
+  color: #5a5146 !important;
+  opacity: 1;
+}
+
+html[data-low-vision] input,
+html[data-low-vision] select,
+html[data-low-vision] textarea {
+  border-width: 2px;
+  border-color: #6f6453;
+}
+
+/* Ссылки внутри текста подчёркнуты; заголовки карточек — нет, их видно по рамке карточки */
+html[data-low-vision] main p a,
+html[data-low-vision] main li a {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+html[data-low-vision] .tinted-3d {
+  background-image: none;
+}
+
+html[data-low-vision] .engraving {
+  display: none;
+}
+
+/* Элемент, который сейчас озвучивается */
+[data-speaking] {
+  outline: 3px dashed var(--color-primary) !important;
+  outline-offset: 3px;
+}
+
+/* ---------- Для людей с нарушением цветовосприятия ---------- */
+
+/* Палитра по мотивам Okabe–Ito: «хорошо» — синий, «плохо» — оранжевый, «ждём» — жёлтый.
+   Пары различимы при протанопии, дейтеранопии и тританопии и отличаются по яркости. */
+html[data-color-safe] {
+  --color-success: #cfe0ff;
+  --color-success-ink: #0b3a8c;
+  --color-warning: #fbe6a0;
+  --color-warning-ink: #533c00;
+  --color-danger: #ffd6bd;
+  --color-danger-ink: #8f3000;
+  --color-info: #e6e2f2;
+  --color-info-ink: #3a2e66;
+  --color-weekend: #a04a00;
+}
+
+/* Статус различается не только цветом, но и рамкой: сплошная, пунктир, точки */
+html[data-color-safe] [data-tone="success"] {
+  box-shadow: inset 0 0 0 2px currentColor;
+}
+
+html[data-color-safe] [data-tone="warning"] {
+  outline: 2px dashed currentColor;
+  outline-offset: -2px;
+}
+
+html[data-color-safe] [data-tone="danger"] {
+  outline: 2.5px dotted currentColor;
+  outline-offset: -2.5px;
+}
+
+/* Выходные в ленте дат: метка под днём недели, а не только красный цвет */
+html[data-color-safe] [data-weekend]::after,
+html[data-low-vision] [data-weekend]::after {
+  content: "";
+  position: absolute;
+  bottom: 7px;
+  left: 50%;
+  width: 18px;
+  height: 3px;
+  margin-left: -9px;
+  border-radius: 2px;
+  background: currentColor;
+}
+
+/* Ошибки в полях: толстая рамка, чтобы красный не был единственным признаком */
+html[data-color-safe] [aria-invalid="true"] {
+  border-width: 3px;
+  border-style: dashed;
+}
+
+/* ---------- Простой режим ---------- */
+
+[data-simple-only] {
+  display: none !important;
+}
+
+html[data-simple] [data-simple-only] {
+  display: flex !important;
+}
+
+html[data-simple] [data-simple-hide] {
+  display: none !important;
+}
+
+/* Без «прыгающих» элементов и анимаций */
+html[data-simple] *,
+html[data-simple] *::before,
+html[data-simple] *::after {
+  animation-duration: 0.01ms !important;
+  transition-duration: 0.01ms !important;
+}
+
+html[data-simple] .lift:hover,
+html[data-simple] .group:hover .illustration {
+  transform: none !important;
+}
+
+html[data-simple] body {
+  background-image: none;
+}

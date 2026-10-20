@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { App } from "./App";
 import { Toaster } from "./components/ui/Toast";
+import { AccessibilityProvider } from "./features/accessibility";
 import { AuthProvider } from "./features/auth";
 import "./lib/dates";
 import "./styles/index.css";
@@ -18,10 +19,12 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <AuthProvider>
-          <App />
-          <Toaster />
-        </AuthProvider>
+        <AccessibilityProvider>
+          <AuthProvider>
+            <App />
+            <Toaster />
+          </AuthProvider>
+        </AccessibilityProvider>
       </BrowserRouter>
     </QueryClientProvider>
   </StrictMode>,

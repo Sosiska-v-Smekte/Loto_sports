@@ -15,7 +15,7 @@ interface NoticeProps {
 /** Плашка состояния: всегда иконка + заголовок + пояснение, чтобы смысл не держался только на цвете. */
 export function Notice({ tone, icon: Icon, title, children, action, className }: NoticeProps) {
   return (
-    <div className={cn("flex flex-col gap-3 rounded-[20px] p-4 sm:flex-row sm:items-center sm:p-5", TONE_CLASS[tone], className)}>
+    <div data-tone={tone} className={cn("flex flex-col gap-3 rounded-[20px] p-4 sm:flex-row sm:items-center sm:p-5", TONE_CLASS[tone], className)}>
       <Icon className="size-6 shrink-0" aria-hidden />
       <div className="min-w-0 flex-1">
         <p className="font-semibold">{title}</p>

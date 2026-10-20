@@ -23,6 +23,10 @@ BASE_SPORTS = [
     ("Йога и зарядка", "yoga", "#CDB8EE", "🧘"),
     ("Плавание", "swimming", "#AFC3EE", "🏊"),
     ("Велоспорт", "cycling", "#E9CF9F", "🚴"),
+    ("Боулинг", "bowling", "#F5BE92", "🎳"),
+    ("Бокс", "boxing", "#F2A9C8", "🥊"),
+    ("Хоккей", "hockey", "#AFC3EE", "🏒"),
+    ("Бадминтон", "badminton", "#A9D8C6", "🏸"),
 ]
 
 
@@ -74,6 +78,10 @@ def get_or_create_sport(db: Session, name: str, author: User | None) -> Sport:
 def ensure_base_sports(db: Session) -> None:
     for name, slug, color, icon in BASE_SPORTS:
         normalized = normalize_sport_name(name)
-        if not db.scalar(select(Sport).where(Sport.normalized_name == normalized)):
+        existing = db.scalar(select(Sport).where(Sport.normalized_name == normalized))
+        if not existing:
             db.add(Sport(name=name, normalized_name=normalized, slug=slug, color=color, icon=icon))
+        elif existing.slug is None:
+            # Пользователь уже завёл такое направление сам — теперь оно базовое, со своей иконкой
+            existing.slug, existing.icon, existing.is_custom = slug, icon, False
     db.flush()

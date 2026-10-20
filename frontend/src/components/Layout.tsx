@@ -19,7 +19,7 @@ export function Layout() {
         Перейти к содержанию
       </a>
       <Header />
-      <main id="main" className="flex-1 pb-28 lg:pb-16">
+      <main id="main" data-main className="flex-1 pb-28 lg:pb-16">
         <Outlet />
       </main>
       <BottomNav />

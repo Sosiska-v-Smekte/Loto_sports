@@ -51,7 +51,7 @@ export function FieldShell({ label, hint, error, required, children }: FieldShel
 
 const controlClass = (invalid: boolean, extra?: string) =>
   cn(
-    "w-full border bg-white/80 text-ink placeholder:text-[#9a8f80] transition-colors",
+    "w-full border bg-white text-ink placeholder:text-[#8a7f70] transition-colors",
     "focus:border-primary focus:bg-white focus:outline-none focus-visible:outline-none focus:ring-2 focus:ring-primary/25",
     invalid ? "border-danger-ink" : "border-line",
     extra,

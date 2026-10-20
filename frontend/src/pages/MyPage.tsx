@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { meApi } from "@/api/endpoints";
 import type { MyParticipation, SportEvent } from "@/api/types";
 import { SportIllustration } from "@/components/SportIllustration";
+import { eventPalette } from "@/lib/color";
 import { StatusBadge } from "@/components/StatusBadge";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
@@ -155,8 +156,8 @@ function EventRow({ event, children, action }: EventRowProps) {
   const linkable = event.status !== "deleted";
   return (
     <Card className={linkable ? "lift relative flex gap-4 p-4" : "relative flex gap-4 p-4"}>
-      <div className="grid size-16 shrink-0 place-items-center rounded-2xl sm:size-20" style={{ backgroundColor: event.sport.color }}>
-        <SportIllustration sport={event.sport} className="text-[38px] sm:text-[46px]" />
+      <div className="grid size-16 shrink-0 place-items-center rounded-2xl sm:size-20" style={{ backgroundColor: eventPalette(event).background }}>
+        <SportIllustration sport={event.sport} tint={eventPalette(event).tint} className="text-[38px] sm:text-[46px]" />
       </div>
       <div className="min-w-0 flex-1">
         <h2 className="text-lg font-semibold leading-snug">
