@@ -67,20 +67,18 @@ export function EventCard({ event }: { event: SportEvent }) {
           <Tag tone={event.join_mode === "open" ? "success" : "info"} icon={ModeIcon}>
             {JOIN_MODE_LABEL[event.join_mode]}
           </Tag>
+          {event.my_participation && <StatusBadge status={event.my_participation.status} eventStatus={event.status} />}
         </div>
-        <div className="mt-auto flex items-center justify-between gap-2 pt-4">
-          <span data-simple-hide className="flex min-w-0 items-center gap-2">
+        <div data-simple-hide className="mt-auto flex items-center gap-2 pt-4">
+          <span className="flex min-w-0 items-center gap-2">
             <Avatar name={event.organizer.name} id={event.organizer.id} src={event.organizer.avatar_url} />
             <span className="truncate text-[15px] font-medium">{event.organizer.name}</span>
           </span>
-          {event.my_participation && (
-            <StatusBadge status={event.my_participation.status} eventStatus={event.status} className="min-w-0" />
-          )}
         </div>
         <span
           data-simple-only
           aria-hidden
-          className="neu-primary mt-4 min-h-12 items-center justify-center gap-2 rounded-full bg-primary px-5 text-[17px] font-semibold text-white"
+          className="neu-primary mt-auto min-h-12 items-center justify-center gap-2 rounded-full bg-primary px-5 text-[17px] font-semibold text-white"
         >
           Подробнее и запись
           <ArrowRight className="size-5" />

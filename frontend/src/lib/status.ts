@@ -43,7 +43,7 @@ export const JOIN_MODE_HINT: Record<JoinMode, string> = {
 
 const PARTICIPATION: Record<ParticipationStatus, StatusView> = {
   confirmed: { label: "Вы записаны", tone: "success", icon: CheckCircle2 },
-  pending: { label: "Заявка на рассмотрении", tone: "warning", icon: Clock },
+  pending: { label: "Заявка отправлена", tone: "warning", icon: Clock },
   rejected: { label: "Заявка отклонена", tone: "danger", icon: XCircle },
 };
 
