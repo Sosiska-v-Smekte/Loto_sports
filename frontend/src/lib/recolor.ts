@@ -9,6 +9,10 @@ type HSL = [number, number, number]; // h — градусы, s и l — 0..1
 
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
 
+/** Корзины гистограммы (по 10°) с фиолетовым акцентом Figma-пака: 240–289°. */
+const ACCENT_FROM = 24;
+const ACCENT_TO = 28;
+
 function rgbToHsl(r: number, g: number, b: number): HSL {
   const max = Math.max(r, g, b);
   const min = Math.min(r, g, b);
@@ -51,7 +55,11 @@ function weightOf(hue: number, sat: number, source: HSL) {
   return wHue * wSat;
 }
 
-/** Основной цвет иконки: самый частый оттенок среди насыщенных пикселей. Null, если цветных пикселей мало. */
+/**
+ * Перекрашиваемый цвет иконки. У иконок Figma-пака это фиолетовый акцент (оттенок 240–289°), даже если на картинке
+ * больше другого цвета (у тенниса — жёлтый мяч). Без фиолетового — самый частый оттенок среди насыщенных пикселей.
+ * Null, если цветных пикселей мало.
+ */
 function dominantColour(px: Uint8ClampedArray): HSL | null {
   const bins = new Array<number>(36).fill(0);
   let coloured = 0;
@@ -63,7 +71,11 @@ function dominantColour(px: Uint8ClampedArray): HSL | null {
     coloured += 1;
   }
   if (coloured < 500) return null;
-  const peak = bins.indexOf(Math.max(...bins));
+  const accent = bins.slice(ACCENT_FROM, ACCENT_TO + 1);
+  const peak =
+    accent.reduce((sum, n) => sum + n, 0) >= 500
+      ? ACCENT_FROM + accent.indexOf(Math.max(...accent))
+      : bins.indexOf(Math.max(...bins));
   const centre = peak * 10 + 5;
   let x = 0;
   let y = 0;

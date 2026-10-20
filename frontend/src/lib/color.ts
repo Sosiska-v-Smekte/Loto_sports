@@ -37,11 +37,19 @@ export function mutedColor(hex: string): string {
   return toHex(mix(mix(rgb, [gray, gray, gray], 0.22), [255, 255, 255], 0.1));
 }
 
+/** Цвет иконки: насыщеннее и темнее цвета карточки, чтобы предмет не сливался с фоном шапки. */
+export function iconColor(hex: string): string {
+  const rgb = toRgb(hex);
+  const gray = 0.3 * rgb[0] + 0.59 * rgb[1] + 0.11 * rgb[2];
+  const vivid = rgb.map((v) => Math.min(255, Math.max(0, gray + (v - gray) * 1.45))) as RGB;
+  return toHex(mix(vivid, [0, 0, 0], 0.2));
+}
+
 /**
- * Фон карточки и цвет иконки. Если автор выбрал свой цвет, фон приглушён, а иконка перекрашивается в этот цвет;
- * иначе карточка выглядит как раньше: цвет направления и 3D-иконка.
+ * Фон карточки и цвет иконки. Иконка всегда перекрашивается в тон карточки: в цвет, выбранный автором,
+ * а если его нет — в цвет направления. Свой цвет на фоне чуть приглушён.
  */
-export function eventPalette(event: Pick<SportEvent, "card_color" | "sport">): { background: string; tint?: string } {
-  if (!isHexColor(event.card_color)) return { background: event.sport.color };
-  return { background: mutedColor(event.card_color), tint: event.card_color };
+export function eventPalette(event: Pick<SportEvent, "card_color" | "sport">): { background: string; tint: string } {
+  if (!isHexColor(event.card_color)) return { background: event.sport.color, tint: iconColor(event.sport.color) };
+  return { background: mutedColor(event.card_color), tint: iconColor(event.card_color) };
 }
