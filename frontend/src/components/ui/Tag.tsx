@@ -22,7 +22,7 @@ export function Tag({ tone = "level", icon: Icon, size = "sm", className, childr
       )}
     >
       {Icon && <Icon className={size === "sm" ? "size-4 shrink-0" : "size-[18px] shrink-0"} aria-hidden />}
-      <span className="truncate">{children}</span>
+      <span className="min-w-0 truncate">{children}</span>
     </span>
   );
 }

@@ -86,7 +86,8 @@ function EventView({ event }: { event: SportEvent }) {
         />
       </header>
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
+      {/* grid-cols-1 = minmax(0,1fr): длинные строки с truncate не растягивают колонку на телефоне */}
+      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
         <div className="flex flex-col gap-6">
           <Card className="p-5 sm:p-6">
             <dl className="grid gap-5 sm:grid-cols-2">

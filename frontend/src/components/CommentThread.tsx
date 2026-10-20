@@ -152,7 +152,8 @@ function Message({ comment, onReply, onHide, showMention }: MessageProps) {
       {showMention && comment.reply_to && (
         <p className="mt-2 flex items-center gap-1 text-sm text-muted">
           <CornerDownRight className="size-4 shrink-0" aria-hidden />
-          <span className="truncate">
+          {/* min-w-0: иначе длинная цитата не сжимается и растягивает страницу на телефоне */}
+          <span className="min-w-0 truncate">
             в ответ {comment.reply_to.author_name}
             {comment.reply_to.excerpt && `: «${comment.reply_to.excerpt}»`}
           </span>

@@ -43,7 +43,7 @@ export function EventCard({ event }: { event: SportEvent }) {
         </p>
         <p className="mt-1.5 flex min-w-0 items-center gap-2 text-[15px]">
           <MapPin className="size-[18px] shrink-0 text-muted" aria-hidden />
-          <span className="truncate">
+          <span className="min-w-0 truncate">
             {shortPlace(event.address)} • {event.organizer.name}
           </span>
         </p>
