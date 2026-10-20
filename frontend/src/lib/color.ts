@@ -37,12 +37,12 @@ export function mutedColor(hex: string): string {
   return toHex(mix(mix(rgb, [gray, gray, gray], 0.22), [255, 255, 255], 0.1));
 }
 
-/** Цвет иконки: насыщеннее и темнее цвета карточки, чтобы предмет не сливался с фоном шапки. */
+/** Цвет иконки: заметно темнее и насыщеннее цвета карточки, чтобы предмет не сливался с фоном шапки. */
 export function iconColor(hex: string): string {
   const rgb = toRgb(hex);
   const gray = 0.3 * rgb[0] + 0.59 * rgb[1] + 0.11 * rgb[2];
-  const vivid = rgb.map((v) => Math.min(255, Math.max(0, gray + (v - gray) * 1.45))) as RGB;
-  return toHex(mix(vivid, [0, 0, 0], 0.2));
+  const vivid = rgb.map((v) => Math.min(255, Math.max(0, gray + (v - gray) * 1.6))) as RGB;
+  return toHex(mix(vivid, [0, 0, 0], 0.4));
 }
 
 /**
