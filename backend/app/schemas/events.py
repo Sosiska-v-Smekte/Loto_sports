@@ -26,6 +26,8 @@ class EventOut(ORMModel):
     city: str
     address: str
     place_details: str
+    latitude: float | None
+    longitude: float | None
     level: str
     requirements: str
     join_mode: str
@@ -51,6 +53,8 @@ class EventCreate(BaseModel):
     city: City
     address: Annotated[str, StringConstraints(strip_whitespace=True, min_length=3, max_length=300)]
     place_details: ShortText = ""
+    latitude: Annotated[float, Field(ge=-90, le=90)] | None = None
+    longitude: Annotated[float, Field(ge=-180, le=180)] | None = None
     level: EventLevel = EventLevel.any
     requirements: ShortText = ""
     join_mode: JoinMode = JoinMode.open

@@ -4,7 +4,10 @@ import json
 from functools import cache
 from pathlib import Path
 
-_FILE = Path(__file__).resolve().parent.parent / "data" / "cities.json"
+_DATA = Path(__file__).resolve().parent.parent / "data"
+_FILE = _DATA / "cities.json"
+# Центры городов для карты: найдены геокодером OpenStreetMap (Nominatim) один раз и хранятся рядом со справочником
+_CENTERS_FILE = _DATA / "city_centers.json"
 
 
 def _key(name: str) -> str:
@@ -14,6 +17,12 @@ def _key(name: str) -> str:
 @cache
 def all_cities() -> tuple[str, ...]:
     return tuple(json.loads(_FILE.read_text(encoding="utf-8")))
+
+
+@cache
+def city_centers() -> dict[str, tuple[float, float]]:
+    """Координаты центра каждого города справочника: [широта, долгота]."""
+    return {name: (lat, lng) for name, (lat, lng) in json.loads(_CENTERS_FILE.read_text(encoding="utf-8")).items()}
 
 
 @cache

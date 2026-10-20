@@ -123,7 +123,14 @@ export function CreateEventPage() {
               error={show("city")}
               onChange={(city) => setForm((f) => ({ ...f, city }))}
             />
-            <Input label="Адрес или площадка" placeholder="Парк Горького, главный вход" required error={show("address")} {...field("address")} />
+            <Input
+              label="Адрес или площадка"
+              placeholder="ул. Карла Маркса, 114"
+              hint="По этому адресу мероприятие появится на карте — укажите улицу и дом"
+              required
+              error={show("address")}
+              {...field("address")}
+            />
           </div>
           <Input label="Как найти место" placeholder="Например: встречаемся у фонтана, поле №2" {...field("placeDetails")} />
         </Card>

@@ -20,6 +20,7 @@ from app.models.base import now
 from app.schemas.events import EventCreate, EventOut, MyParticipation
 from app.services.access import can_manage
 from app.services.errors import bad_request, forbidden, not_found
+from app.services.geocoding import geocode
 from app.services.sports import get_or_create_sport
 
 
@@ -160,6 +161,11 @@ def create_event(db: Session, data: EventCreate, author: User) -> Event:
         organizer_user_id=author.id,
         status=EventStatus.published,
     )
+    # Точка на карте ставится по адресу из карточки, если координаты не переданы явно
+    if event.latitude is None or event.longitude is None:
+        point = geocode(event.address, event.city)
+        if point is not None:
+            event.latitude, event.longitude = point
     db.add(event)
     db.commit()
     db.refresh(event)

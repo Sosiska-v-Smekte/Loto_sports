@@ -1,7 +1,7 @@
 from datetime import datetime
 from enum import StrEnum
 
-from sqlalchemy import DateTime, ForeignKey, String, Text
+from sqlalchemy import DateTime, Float, ForeignKey, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db import Base
@@ -40,6 +40,9 @@ class Event(Base):
     city: Mapped[str] = mapped_column(String(120), index=True)
     address: Mapped[str] = mapped_column(String(300))
     place_details: Mapped[str] = mapped_column(Text, default="")
+    # Координаты точки на карте. Необязательны: без них мероприятие просто не показывается на карте
+    latitude: Mapped[float | None] = mapped_column(Float)
+    longitude: Mapped[float | None] = mapped_column(Float)
     level: Mapped[EventLevel] = mapped_column(String(20), default=EventLevel.any)
     requirements: Mapped[str] = mapped_column(Text, default="")
     join_mode: Mapped[JoinMode] = mapped_column(String(20), default=JoinMode.open)

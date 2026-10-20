@@ -51,6 +51,8 @@ export interface SportEvent {
   city: string;
   address: string;
   place_details: string;
+  latitude: number | null;
+  longitude: number | null;
   level: Level;
   requirements: string;
   join_mode: JoinMode;
@@ -74,6 +76,8 @@ export interface EventCreate {
   city: string;
   address: string;
   place_details: string;
+  latitude?: number | null;
+  longitude?: number | null;
   level: Level;
   requirements: string;
   join_mode: JoinMode;

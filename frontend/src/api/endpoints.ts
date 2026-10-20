@@ -32,6 +32,7 @@ export const authApi = {
 
 export const citiesApi = {
   list: () => api.get<string[]>("/cities"),
+  centers: () => api.get<Record<string, [number, number]>>("/cities/centers"),
 };
 
 export const sportsApi = {

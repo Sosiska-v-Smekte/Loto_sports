@@ -2,14 +2,23 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { citiesApi, eventsApi, sportsApi } from "@/api/endpoints";
 import type { EventFilters } from "@/api/types";
 
-export const useEvents = (filters: EventFilters) =>
-  useQuery({ queryKey: ["events", filters], queryFn: () => eventsApi.search(filters), placeholderData: keepPreviousData });
+// enabled=false — пока неизвестен город (ждём профиль), чтобы не загрузить сначала чужой город
+export const useEvents = (filters: EventFilters, enabled = true) =>
+  useQuery({
+    queryKey: ["events", filters],
+    queryFn: () => eventsApi.search(filters),
+    placeholderData: keepPreviousData,
+    enabled,
+  });
 
-export const useFeaturedEvent = (city: string) =>
-  useQuery({ queryKey: ["events", "featured", city], queryFn: () => eventsApi.featured(city) });
+export const useFeaturedEvent = (city: string, enabled = true) =>
+  useQuery({ queryKey: ["events", "featured", city], queryFn: () => eventsApi.featured(city), enabled });
 
-// Справочник городов не меняется во время работы — грузим один раз
+// Справочник городов и их центры не меняются во время работы — грузим один раз
 export const useCities = () => useQuery({ queryKey: ["cities"], queryFn: citiesApi.list, staleTime: Infinity });
+
+export const useCityCenters = () =>
+  useQuery({ queryKey: ["cities", "centers"], queryFn: citiesApi.centers, staleTime: Infinity });
 
 export const useSports = () => useQuery({ queryKey: ["sports"], queryFn: () => sportsApi.list(), staleTime: 60_000 });
 

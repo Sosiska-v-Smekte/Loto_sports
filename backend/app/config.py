@@ -15,3 +15,7 @@ CORS_ORIGINS = [
 ]
 
 SEED_ON_STARTUP = os.getenv("SEED_ON_STARTUP", "1") == "1"
+
+# Координаты новых мероприятий по адресу через Nominatim (OpenStreetMap). В тестах отключено — без сети
+GEOCODING_ENABLED = os.getenv("GEOCODING_ENABLED", "1") == "1"
+GEOCODER_URL = os.getenv("GEOCODER_URL", "https://nominatim.openstreetmap.org/search")

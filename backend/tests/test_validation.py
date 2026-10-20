@@ -79,3 +79,11 @@ def test_seed_uses_directory_cities(client):
     cities = set(client.get("/api/cities").json())
     events = client.get("/api/events").json()
     assert {e["city"] for e in events} <= cities
+
+
+def test_every_directory_city_has_center(client):
+    cities = client.get("/api/cities").json()
+    centers = client.get("/api/cities/centers").json()
+    assert set(cities) == set(centers)
+    lat, lng = centers["Красноярск"]
+    assert 55.9 < lat < 56.1 and 92.7 < lng < 93.0
