@@ -102,7 +102,7 @@ export function LoginPage() {
                 disabled={login.isPending}
                 onClick={() => login.mutate({ email: account.email, password: account.password })}
                 className={cn(
-                  "lift pressable flex items-start gap-3 neu-raised-sm rounded-card border border-white/70 bg-surface p-4 text-left disabled:opacity-60",
+                  "lift pressable flex items-start gap-3 neu-raised-sm rounded-card border border-line/70 bg-surface p-4 text-left disabled:opacity-60",
                   current ? "border-primary ring-2 ring-primary/25" : "border-line",
                 )}
               >

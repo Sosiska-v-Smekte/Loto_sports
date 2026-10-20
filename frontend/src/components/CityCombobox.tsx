@@ -119,8 +119,8 @@ function CityInput({ value, onChange, id, describedBy, invalid = false, compact 
         onKeyDown={onKeyDown}
         onBlur={onBlur}
         className={cn(
-          "neu-inset w-full rounded-full border text-ink placeholder:text-[#7d7366] focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/25",
-          compact ? "h-[52px] bg-surface-muted/90 pl-14 pr-12 text-[17px] sm:text-lg" : "min-h-12 bg-surface-muted pl-11 pr-11",
+          "w-full rounded-full border text-ink placeholder:text-[#7d7366] focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/25",
+          compact ? "h-[52px] bg-white pl-14 pr-12 text-[17px] sm:text-lg" : "min-h-12 bg-white pl-11 pr-11",
           invalid ? "border-danger-ink" : "border-line",
         )}
       />

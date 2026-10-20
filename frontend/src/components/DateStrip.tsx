@@ -38,7 +38,7 @@ export function DateStrip({ value, onChange }: DateStripProps) {
   };
 
   const arrowClass =
-    "pressable absolute top-[38px] z-10 hidden size-11 place-items-center neu-control rounded-full border border-white/70 bg-surface sm:grid";
+    "pressable absolute top-[38px] z-10 hidden size-11 place-items-center neu-control rounded-full border border-line/70 bg-surface sm:grid";
 
   return (
     <div className="relative">
@@ -76,7 +76,7 @@ export function DateStrip({ value, onChange }: DateStripProps) {
                   "pressable relative flex h-[66px] w-[50px] flex-col items-center justify-center rounded-2xl leading-none sm:w-[54px]",
                   selected
                     ? "neu-primary bg-primary text-white"
-                    : cn(isToday && "neu-inset bg-today", "hover:bg-surface-muted", weekend ? "text-weekend" : "text-ink"),
+                    : cn(isToday && "bg-today", "hover:bg-surface-muted", weekend ? "text-weekend" : "text-ink"),
                 )}
               >
                 <span className="text-[22px] font-medium tabular-nums sm:text-[24px]">{day.date()}</span>

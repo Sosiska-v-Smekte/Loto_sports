@@ -16,7 +16,7 @@ export function EventCard({ event }: { event: SportEvent }) {
   const ModeIcon = JOIN_MODE_ICON[event.join_mode];
 
   return (
-    <article className="neu-raised lift group relative flex flex-col rounded-card border border-white/70 bg-surface p-2.5">
+    <article className="neu-raised lift group relative flex flex-col rounded-card border border-line/70 bg-surface p-2.5">
       <div
         className="tinted-3d relative h-[124px] rounded-[18px] px-4 pt-3.5"
         style={{ backgroundColor: event.sport.color }}
@@ -31,7 +31,7 @@ export function EventCard({ event }: { event: SportEvent }) {
         </h3>
         <SportIllustration
           sport={event.sport}
-          className="absolute -bottom-9 right-2 text-[92px] transition-transform duration-300 ease-out group-hover:-translate-y-1.5 group-hover:rotate-[-6deg]"
+          className="absolute -bottom-10 right-1 text-[112px] transition-transform duration-300 ease-out group-hover:-translate-y-1.5 group-hover:rotate-[-6deg]"
         />
       </div>
 
@@ -78,7 +78,7 @@ export function EventCard({ event }: { event: SportEvent }) {
 
 export function EventCardSkeleton() {
   return (
-    <div className="neu-raised rounded-card border border-white/70 bg-surface p-2.5" aria-hidden>
+    <div className="neu-raised rounded-card border border-line/70 bg-surface p-2.5" aria-hidden>
       <Skeleton className="h-[124px] rounded-[18px]" />
       <div className="space-y-2.5 px-3 pb-2 pt-4">
         <Skeleton className="h-5 w-1/2" />

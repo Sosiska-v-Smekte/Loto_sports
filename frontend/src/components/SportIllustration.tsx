@@ -1,21 +1,29 @@
-import { useId } from "react";
 import type { Sport } from "@/api/types";
 import { cn } from "@/lib/cn";
-import { ICONS, Medal } from "./sport-icons/icons";
+
+/** Направления, для которых есть 3D-рендер в public/sport-icons (см. scripts/sport-icons). */
+const RENDERED = new Set([
+  "football",
+  "basketball",
+  "volleyball",
+  "tennis",
+  "table-tennis",
+  "chess",
+  "running",
+  "yoga",
+  "swimming",
+  "cycling",
+]);
 
 /**
- * Объёмная иллюстрация направления (SVG с градиентами, бликами и тенями).
- * Размер задаётся через font-size (text-[80px] и т. п.): иконка занимает 1em × 1em.
- * Для пользовательских направлений без своей картинки показываем медаль.
+ * Объёмная иллюстрация направления. Размер задаётся через font-size (text-[80px] и т. п.):
+ * картинка занимает 1em × 1em. Для пользовательских направлений показываем медаль.
  */
 export function SportIllustration({ sport, className }: { sport: Sport; className?: string }) {
-  const uid = useId().replace(/:/g, "");
-  const Icon = (sport.slug && ICONS[sport.slug]) || Medal;
+  const slug = sport.slug && RENDERED.has(sport.slug) ? sport.slug : "custom";
   return (
     <span aria-hidden className={cn("illustration pointer-events-none inline-block select-none", className)}>
-      <svg viewBox="0 0 120 120" width="1em" height="1em" className="block overflow-visible">
-        <Icon id={(name) => `${uid}-${name}`} />
-      </svg>
+      <img src={`/sport-icons/${slug}.webp`} alt="" width={384} height={384} draggable={false} className="block size-[1em] max-w-none" />
     </span>
   );
 }

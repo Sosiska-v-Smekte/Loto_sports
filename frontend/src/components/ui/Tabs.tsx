@@ -22,7 +22,7 @@ export function Tabs<T extends string>({ value, onChange, items, label, classNam
             onClick={() => onChange(item.value)}
             className={cn(
               "pressable inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full border px-5 font-medium",
-              active ? "neu-primary border-primary bg-primary text-white" : "neu-control border-white/70 bg-surface-muted",
+              active ? "neu-primary border-primary bg-primary text-white" : "neu-control border-line/70 bg-surface-muted",
             )}
           >
             {item.label}

@@ -1,12 +1,13 @@
-import { Contrast, Eye, Hand, RotateCcw, type LucideIcon } from "lucide-react";
+import { Contrast, Eye, Hand, RotateCcw, Volume2, type LucideIcon } from "lucide-react";
 import { useState } from "react";
 import { useAccessibility, type A11ySettings, type TextSize } from "@/features/accessibility";
+import { speak, speechSupported } from "@/features/speech";
 import { cn } from "@/lib/cn";
 import { Button } from "./ui/Button";
 import { Modal } from "./ui/Modal";
 
 interface ModeInfo {
-  key: "lowVision" | "colorSafe" | "simple";
+  key: "lowVision" | "colorSafe" | "simple" | "speech";
   title: string;
   text: string;
   icon: LucideIcon;
@@ -16,8 +17,14 @@ const MODES: ModeInfo[] = [
   {
     key: "lowVision",
     title: "Для слабовидящих",
-    text: "Крупный и контрастный текст, чёткие рамки, яркая подсветка выбранного элемента, без фонового узора.",
+    text: "Крупный и контрастный текст, чёткие рамки, яркая подсветка выбранного элемента, без фонового узора. Сразу включает озвучку.",
     icon: Eye,
+  },
+  {
+    key: "speech",
+    title: "Озвучка при наведении",
+    text: "Наведите мышь или перейдите клавишей Tab — сайт прочитает вслух кнопку, ссылку или карточку события. Esc — замолчать.",
+    icon: Volume2,
   },
   {
     key: "colorSafe",
@@ -49,10 +56,10 @@ function ModeSwitch({ mode, checked, onChange }: { mode: ModeInfo; checked: bool
       onClick={() => onChange(!checked)}
       className={cn(
         "pressable flex w-full items-start gap-3 rounded-[20px] border-2 p-4 text-left",
-        checked ? "neu-inset border-primary bg-primary-soft" : "neu-raised-sm border-white/80",
+        checked ? "border-primary bg-primary-soft" : "neu-raised-sm border-line/70",
       )}
     >
-      <span className={cn("grid size-11 shrink-0 place-items-center rounded-2xl", checked ? "neu-primary bg-primary text-white" : "neu-inset bg-surface-muted text-primary")}>
+      <span className={cn("grid size-11 shrink-0 place-items-center rounded-2xl", checked ? "neu-primary bg-primary text-white" : "bg-primary-soft text-primary")}>
         <Icon className="size-6" aria-hidden />
       </span>
       <span className="min-w-0 flex-1">
@@ -97,12 +104,17 @@ export function AccessibilityPanel({ open, onClose }: { open: boolean; onClose: 
       }
     >
       <div className="flex flex-col gap-3">
-        {MODES.map((mode) => (
+        {MODES.filter((mode) => mode.key !== "speech" || speechSupported()).map((mode) => (
           <ModeSwitch
             key={mode.key}
             mode={mode}
             checked={settings[mode.key]}
-            onChange={(value) => update({ [mode.key]: value } as Partial<A11ySettings>)}
+            onChange={(value) => {
+              update({ [mode.key]: value } as Partial<A11ySettings>);
+              if (value && (mode.key === "speech" || mode.key === "lowVision")) {
+                speak("Озвучка включена. Наведите мышь на элемент, чтобы услышать его.");
+              }
+            }}
           />
         ))}
       </div>
@@ -151,7 +163,7 @@ export function AccessibilityButton({ className }: { className?: string }) {
         aria-haspopup="dialog"
         aria-label="Специальные возможности: для слабовидящих, дальтоников, простой режим"
         className={cn(
-          "neu-control pressable relative inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-full border border-white/70 bg-surface-muted px-2.5 font-medium xl:min-h-[50px] xl:px-4",
+          "neu-control pressable relative inline-flex min-h-11 min-w-11 items-center justify-center gap-2 rounded-full border border-line/70 bg-surface-muted px-2.5 font-medium xl:min-h-[50px] xl:px-4",
           className,
         )}
       >

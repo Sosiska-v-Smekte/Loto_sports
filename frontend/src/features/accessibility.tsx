@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { useHoverSpeech } from "./speech";
 
 /**
  * Специальные возможности. Каждая настройка — атрибут на <html>, вся визуальная часть живёт в CSS
@@ -14,12 +15,14 @@ export interface A11ySettings {
   colorSafe: boolean;
   /** Простой режим: меньше элементов, крупные кнопки, подсказки, без анимаций */
   simple: boolean;
+  /** Озвучка элементов при наведении мыши и переходе по Tab */
+  speech: boolean;
   textSize: TextSize;
 }
 
 export const STORAGE_KEY = "a11y-settings";
 
-export const DEFAULT_SETTINGS: A11ySettings = { lowVision: false, colorSafe: false, simple: false, textSize: 0 };
+export const DEFAULT_SETTINGS: A11ySettings = { lowVision: false, colorSafe: false, simple: false, speech: false, textSize: 0 };
 
 function read(): A11ySettings {
   try {
@@ -31,6 +34,7 @@ function read(): A11ySettings {
       lowVision: parsed.lowVision === true,
       colorSafe: parsed.colorSafe === true,
       simple: parsed.simple === true,
+      speech: parsed.speech === true,
       textSize: size === 1 || size === 2 ? size : 0,
     };
   } catch {
@@ -75,18 +79,22 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
       if ((patch.lowVision && !prev.lowVision) || (patch.simple && !prev.simple)) {
         next.textSize = Math.max(next.textSize, 1) as TextSize;
       }
+      // Режим для слабовидящих сразу включает озвучку; выключить её можно отдельно
+      if (patch.lowVision && !prev.lowVision && patch.speech === undefined) next.speech = true;
       return next;
     });
   }, []);
 
   const reset = useCallback(() => setSettings(DEFAULT_SETTINGS), []);
 
+  useHoverSpeech(settings.speech);
+
   const value = useMemo(
     () => ({
       settings,
       update,
       reset,
-      isCustomized: settings.lowVision || settings.colorSafe || settings.simple || settings.textSize > 0,
+      isCustomized: settings.lowVision || settings.colorSafe || settings.simple || settings.speech || settings.textSize > 0,
     }),
     [settings, update, reset],
   );

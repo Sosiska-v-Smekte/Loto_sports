@@ -21,25 +21,48 @@ html[data-simple] .event-grid {
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr));
 }
 
-/* Крупный текст не помещается в шапку: до очень широких экранов навигация уезжает в нижнюю панель */
+/* Крупный текст не помещается в шапку: навигация уезжает в нижнюю панель
+   (при «крупном» — до 1280px, при «очень крупном» и в простом режиме — до 1536px) */
+@media (max-width: 1279.98px) {
+  html[data-text-size="1"] [data-desktop-nav] {
+    display: none !important;
+  }
+
+  html[data-text-size="1"] [data-mobile-nav] {
+    display: block !important;
+  }
+
+  html[data-text-size="1"] [data-main] {
+    padding-bottom: 8rem !important;
+  }
+}
+
 @media (max-width: 1535.98px) {
   html[data-simple] [data-desktop-nav],
-  html[data-text-size="1"] [data-desktop-nav],
   html[data-text-size="2"] [data-desktop-nav] {
     display: none !important;
   }
 
   html[data-simple] [data-mobile-nav],
-  html[data-text-size="1"] [data-mobile-nav],
   html[data-text-size="2"] [data-mobile-nav] {
     display: block !important;
   }
 
   html[data-simple] [data-main],
-  html[data-text-size="1"] [data-main],
   html[data-text-size="2"] [data-main] {
     padding-bottom: 8rem !important;
   }
+}
+
+/* При крупном тексте в шапке короткие подписи */
+html[data-text-size="1"] [data-label-full],
+html[data-text-size="2"] [data-label-full] {
+  display: none !important;
+}
+
+html[data-text-size="1"] [data-label-short],
+html[data-text-size="2"] [data-label-short] {
+  display: inline !important;
 }
 
 /* На узком телефоне логотип с крупным текстом иначе наезжает на кнопки шапки */
@@ -52,42 +75,40 @@ html[data-simple] .event-grid {
 
 /* ---------- Для слабовидящих ---------- */
 
+/* Чистый светлый фон, почти чёрный текст, тонкие, но заметные рамки (контраст рамок от 3:1, текста от 7:1).
+   Тени остаются мягкими — объём держится на рамке, а не на тени. */
 html[data-low-vision] {
-  --color-page: #fbf8f1;
+  --color-page: #fbf9f4;
   --color-surface: #ffffff;
   --color-surface-muted: #ffffff;
-  --color-line: #5f5444;
+  --color-line: #8a7e6c;
   --color-ink: #0f0d0a;
-  --color-muted: #2e2922;
+  --color-muted: #38322a;
 
-  --color-primary: #0e3a33;
-  --color-primary-hover: #082a25;
-  --color-primary-soft: #cfe3da;
+  --color-primary: #134a41;
+  --color-primary-hover: #0c3a33;
+  --color-primary-soft: #d6e8e0;
 
-  --color-weekend: #9a1b0f;
-  --color-today: #e2d4b8;
-  --color-level: #ead9b0;
+  --color-weekend: #a21d10;
+  --color-today: #ece2cd;
+  --color-level: #efe3c6;
 
   --color-success-ink: #1d3606;
   --color-warning-ink: #4a3300;
   --color-danger-ink: #7a1f15;
   --color-info-ink: #1d2d55;
 
-  /* Объём заменяется чёткой рамкой: тени при слабом зрении сливаются с фоном */
   --gradient-surface: linear-gradient(#fff, #fff);
   --gradient-primary: linear-gradient(var(--color-primary), var(--color-primary));
-  --shadow-card: 0 0 0 2px var(--color-line), 0 8px 18px -8px rgb(0 0 0 / 0.35);
-  --shadow-soft: 0 0 0 2px var(--color-line);
-  --shadow-hover: 0 0 0 3px var(--color-ink), 0 10px 22px -8px rgb(0 0 0 / 0.4);
-  --shadow-inset: inset 0 0 0 2px var(--color-line);
-  --shadow-primary: 0 0 0 2px var(--color-primary);
-  --shadow-primary-pressed: inset 0 0 0 3px rgb(255 255 255 / 0.6);
+  --shadow-card: 0 0 0 1.5px var(--color-line), 0 6px 18px -10px rgb(28 32 40 / 0.18);
+  --shadow-soft: 0 0 0 1.5px var(--color-line);
+  --shadow-hover: 0 0 0 2.5px var(--color-ink), 0 10px 24px -12px rgb(28 32 40 / 0.25);
+  --shadow-primary: none;
 }
 
 html[data-low-vision] body {
   background-image: none;
   font-weight: 500;
-  letter-spacing: 0.01em;
 }
 
 html[data-low-vision] h1,
@@ -96,15 +117,22 @@ html[data-low-vision] h3 {
   font-weight: 700;
 }
 
-/* Хорошо заметная двойная рамка фокуса: чёрная + жёлтая */
+/* Рамки на светлых элементах дублирует тень-контур, обычные border прячем, чтобы не было двойных линий */
+html[data-low-vision] .neu-raised,
+html[data-low-vision] .neu-raised-sm,
+html[data-low-vision] .neu-control {
+  border-color: transparent;
+}
+
+/* Хорошо заметная двойная рамка фокуса: тёмная + жёлтая */
 html[data-low-vision] :focus-visible {
-  outline: 4px solid #0f0d0a !important;
-  outline-offset: 3px !important;
-  box-shadow: 0 0 0 8px #ffd400 !important;
+  outline: 3px solid #0f0d0a !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 6px #ffd400 !important;
 }
 
 html[data-low-vision] ::placeholder {
-  color: #4a4238 !important;
+  color: #5a5146 !important;
   opacity: 1;
 }
 
@@ -112,26 +140,25 @@ html[data-low-vision] input,
 html[data-low-vision] select,
 html[data-low-vision] textarea {
   border-width: 2px;
-  border-color: var(--color-line);
+  border-color: #6f6453;
 }
 
-/* Ссылки в тексте подчёркнуты, чтобы их не нужно было искать по цвету */
+/* Ссылки внутри текста подчёркнуты; заголовки карточек — нет, их видно по рамке карточки */
 html[data-low-vision] main p a,
-html[data-low-vision] main li a,
-html[data-low-vision] main h3 a {
+html[data-low-vision] main li a {
   text-decoration: underline;
   text-decoration-thickness: 2px;
   text-underline-offset: 4px;
 }
 
-html[data-low-vision] .chip-3d {
-  box-shadow: inset 0 0 0 1.5px currentColor;
-}
-
-/* Цветные шапки карточек: текст на них должен оставаться чёрным и чётким */
 html[data-low-vision] .tinted-3d {
   background-image: none;
-  box-shadow: inset 0 0 0 2px rgb(0 0 0 / 0.35);
+}
+
+/* Элемент, который сейчас озвучивается */
+[data-speaking] {
+  outline: 3px dashed var(--color-primary) !important;
+  outline-offset: 3px;
 }
 
 /* ---------- Для людей с нарушением цветовосприятия ---------- */

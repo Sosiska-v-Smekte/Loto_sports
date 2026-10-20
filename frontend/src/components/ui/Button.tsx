@@ -8,7 +8,7 @@ type Size = "sm" | "md" | "lg";
 
 const VARIANTS: Record<Variant, string> = {
   primary: "neu-primary bg-primary text-white",
-  secondary: "neu-control border border-white/70 bg-surface-muted text-ink",
+  secondary: "neu-control border border-line/70 bg-surface-muted text-ink",
   ghost: "text-ink hover:bg-surface-muted",
   danger: "bg-danger-ink text-white shadow-soft hover:bg-[#6f241b] active:shadow-inset",
   success: "bg-success text-success-ink shadow-soft hover:bg-[#bfd894] active:shadow-inset",

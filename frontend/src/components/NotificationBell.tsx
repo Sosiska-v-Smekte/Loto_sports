@@ -49,7 +49,7 @@ export function NotificationBell() {
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-label={label}
-        className="neu-control pressable relative grid size-11 place-items-center rounded-full border border-white/70 bg-surface-muted xl:size-[50px]"
+        className="neu-control pressable relative grid size-11 place-items-center rounded-full border border-line/70 bg-surface-muted xl:size-[50px]"
       >
         <Bell className="size-5" aria-hidden />
         <UnreadBadge count={unread.data} className="absolute -right-1 -top-1" />

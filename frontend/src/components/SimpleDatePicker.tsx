@@ -31,7 +31,7 @@ export function SimpleDatePicker({ value, onChange }: SimpleDatePickerProps) {
         className={
           other
             ? "neu-primary inline-flex min-h-14 items-center gap-2 rounded-full bg-primary px-5 text-lg font-medium text-white"
-            : "neu-control inline-flex min-h-14 items-center gap-2 rounded-full border border-white/70 bg-surface-muted px-5 text-lg font-medium"
+            : "neu-control inline-flex min-h-14 items-center gap-2 rounded-full border border-line/70 bg-surface-muted px-5 text-lg font-medium"
         }
       >
         <CalendarDays className="size-5 shrink-0" aria-hidden />

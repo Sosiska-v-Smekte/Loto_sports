@@ -29,7 +29,7 @@ export function BottomNav() {
           active ? "text-primary" : "text-muted",
         )}
       >
-        <span className={cn("relative grid h-8 w-12 place-items-center rounded-full", active && "neu-inset bg-primary-soft")}>
+        <span className={cn("relative grid h-8 w-12 place-items-center rounded-full", active && "bg-primary-soft")}>
           <item.icon className="size-[22px]" aria-hidden strokeWidth={active ? 2.4 : 2} />
           {badge}
         </span>
@@ -42,7 +42,7 @@ export function BottomNav() {
     <nav
       data-mobile-nav
       aria-label="Основная навигация"
-      className="fixed inset-x-0 bottom-0 z-30 border-t border-white/80 bg-[#f7f2e8]/95 shadow-[0_-6px_20px_-8px_rgb(110_84_46/0.25)] pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden"
+      className="fixed inset-x-0 bottom-0 z-30 border-t border-line/70 bg-[#f7f2e8]/95 shadow-[0_-6px_20px_-8px_rgb(110_84_46/0.25)] pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden"
     >
       <div className="mx-auto flex max-w-xl items-center gap-1 px-2 pt-1.5 pb-1.5">
         {tab(find)}
