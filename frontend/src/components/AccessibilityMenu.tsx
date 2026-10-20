@@ -167,7 +167,7 @@ export function AccessibilityButton({ className }: { className?: string }) {
         )}
       >
         <Eye className="size-[22px]" aria-hidden />
-        <span className="hidden text-[15px] 2xl:inline">Доступность</span>
+        <span className="hidden text-[15px] huge:inline">Доступность</span>
         {isCustomized && (
           <span aria-hidden className="absolute -right-0.5 -top-0.5 size-3 rounded-full bg-primary ring-2 ring-[#f7f2e8]" />
         )}

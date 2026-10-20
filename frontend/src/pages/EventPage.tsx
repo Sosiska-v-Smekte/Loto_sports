@@ -81,7 +81,7 @@ function EventView({ event }: { event: SportEvent }) {
             <Tag tone="level" className="bg-white/55">
               {event.sport.name}
             </Tag>
-            <SportIllustration sport={event.sport} tint={palette.tint} className="-my-2 -mr-1 text-[72px] sm:hidden" />
+            <SportIllustration sport={event.sport} className="-my-2 -mr-1 text-[72px] sm:hidden" />
           </div>
           <h1 className="mt-1 text-[28px] font-bold leading-[1.1] tracking-[-0.02em] [overflow-wrap:anywhere] sm:mt-3 sm:text-[44px] sm:leading-[1.08]">
             {event.title}
@@ -93,7 +93,6 @@ function EventView({ event }: { event: SportEvent }) {
         </div>
         <SportIllustration
           sport={event.sport}
-          tint={palette.tint}
           className="absolute right-10 top-1/2 hidden -translate-y-1/2 text-[150px] sm:block"
         />
       </header>

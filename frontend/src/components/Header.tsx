@@ -48,10 +48,11 @@ export function Header() {
                 {/* В простом режиме значки у всех пунктов; на узком десктопе (1024–1279) — только у активного,
                     иначе у админа с четырьмя пунктами шапка не помещается */}
                 {(active || simple) && <item.icon className={active ? "size-5" : "hidden size-5 xl:block"} aria-hidden />}
-                <span data-label-short className={compact ? undefined : simple ? "2xl:hidden" : "xl:hidden"}>
+                {/* Полные подписи («Найти активность») только на очень широком экране: на 1536–1700px шапка с ними не помещается */}
+                <span data-label-short className={compact ? undefined : simple ? "min-[2100px]:hidden" : "huge:hidden"}>
                   {item.shortLabel}
                 </span>
-                <span data-label-full className={compact ? "hidden" : simple ? "hidden 2xl:inline" : "hidden xl:inline"}>
+                <span data-label-full className={compact ? "hidden" : simple ? "hidden min-[2100px]:inline" : "hidden huge:inline"}>
                   {item.label}
                 </span>
               </NavLink>
@@ -66,10 +67,10 @@ export function Header() {
             className="hidden whitespace-nowrap lg:inline-flex xl:min-h-[50px] xl:px-5 xl:text-[17px]"
             icon={<Plus className="size-5" aria-hidden />}
           >
-            <span data-label-short className="wide:hidden">
+            <span data-label-short className="huge:hidden">
               Создать
             </span>
-            <span data-label-full className="hidden wide:inline">
+            <span data-label-full className="hidden huge:inline">
               Создать активность
             </span>
           </ButtonLink>

@@ -159,7 +159,7 @@ function EventRow({ event, children, action }: EventRowProps) {
   return (
     <Card className={linkable ? "lift relative flex gap-4 p-4" : "relative flex gap-4 p-4"}>
       <div className="grid size-16 shrink-0 place-items-center rounded-2xl sm:size-20" style={{ backgroundColor: palette.background }}>
-        <SportIllustration sport={event.sport} tint={palette.tint} className="text-[38px] sm:text-[46px]" />
+        <SportIllustration sport={event.sport} className="text-[38px] sm:text-[46px]" />
       </div>
       <div className="min-w-0 flex-1">
         <h2 className="text-lg font-semibold leading-snug">

@@ -40,7 +40,6 @@ export function FeaturedBanner({ event }: { event: SportEvent }) {
       </div>
       <SportIllustration
         sport={event.sport}
-        tint={palette.tint}
         className="absolute right-4 top-4 text-[64px] sm:static sm:mr-6 sm:text-[96px] lg:mr-16 lg:text-[104px]"
       />
       <Link to={`/events/${event.id}`} className={buttonClass("primary", "lg", "shrink-0 sm:min-w-[230px]")}>

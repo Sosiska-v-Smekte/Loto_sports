@@ -1,38 +1,52 @@
 import { useEffect, useState } from "react";
 import type { Sport } from "@/api/types";
-import { useColorSafe } from "@/features/accessibility";
 import { cn } from "@/lib/cn";
-import { iconColor, safeCardColor } from "@/lib/color";
 import { recolorIcon } from "@/lib/recolor";
 
 /**
- * 3D-иконки направлений из Figma-пака «Sports 3D Icon Pack» и боулинг из присланных картинок,
- * файлы в public/sport-icons. Направлению без своей иконки в паке подобран предмет по смыслу.
+ * 3D-иконки направлений: Figma-пак «Sports 3D Icon Pack» и присланные картинки (боулинг, бег, плавание,
+ * волейбол, бильярд), файлы в public/sport-icons. Направлению без своей иконки подобран предмет по смыслу.
  */
 const ICONS: Record<string, string> = {
   football: "football",
   basketball: "basketball",
-  volleyball: "whistle",
+  volleyball: "volleyball",
   tennis: "tennis",
   "table-tennis": "table-tennis",
   chess: "chess",
-  running: "stopwatch",
+  running: "running-shoes",
   yoga: "dumbbell",
-  swimming: "swimming",
+  swimming: "swim-goggles",
   cycling: "bottle",
   bowling: "bowling",
   boxing: "boxing",
   hockey: "hockey",
   badminton: "badminton",
+  billiards: "eight-ball",
+};
+
+/**
+ * Натуральные цвета: у иконок Figma-пака фиолетовый акцент, а предмет в жизни другого цвета. Акцент заменяется
+ * цветом из этой таблицы (светотень остаётся), остальные иконки показываются как есть.
+ */
+const NATURAL: Record<string, string> = {
+  boxing: "#D32F2F",
+  "table-tennis": "#D63A2F",
+  tennis: "#2F6FD1",
+  bottle: "#2E9E57",
+  badminton: "#D8A15E",
+  dumbbell: "#9CA3AF",
+  chess: "#3A3A3F",
 };
 
 /** В маленьком размере (чипы) сложная композиция не читается — показываем один предмет. */
 const COMPACT: Record<string, string> = { bowling: "bowling-pin" };
 
-/** Адрес перекрашенной картинки для выбранного цвета; пока считается, возвращает null. */
-function useRecoloredIcon(src: string, color: string): string | null {
+/** Адрес перекрашенной картинки; пока считается (или цвет не нужен), возвращает null. */
+function useRecoloredIcon(src: string, color: string | undefined): string | null {
   const [done, setDone] = useState<{ key: string; url: string } | null>(null);
   useEffect(() => {
+    if (!color) return;
     let alive = true;
     recolorIcon(src, color).then((url) => {
       if (alive) setDone({ key: `${src}|${color}`, url });
@@ -41,7 +55,7 @@ function useRecoloredIcon(src: string, color: string): string | null {
       alive = false;
     };
   }, [src, color]);
-  return done?.key === `${src}|${color}` ? done.url : null;
+  return color && done?.key === `${src}|${color}` ? done.url : null;
 }
 
 /**
@@ -53,23 +67,20 @@ interface SportIllustrationProps {
   className?: string;
   /** Маленькая иконка: для чипов и списков */
   compact?: boolean;
-  /** Цвет иконки: светотень и детали сохраняются. Без него — тон цвета направления, как в чипах */
-  tint?: string;
 }
 
-export function SportIllustration({ sport, className, compact, tint }: SportIllustrationProps) {
+export function SportIllustration({ sport, className, compact }: SportIllustrationProps) {
   const base = (sport.slug && ICONS[sport.slug]) || "custom";
   const file = (compact && COMPACT[base]) || base;
   const src = `/sport-icons/${file}.webp`;
-  const colorSafe = useColorSafe();
-  const recolorTo = tint ?? iconColor(colorSafe ? safeCardColor(sport.color) : sport.color);
+  const recolorTo = NATURAL[file];
   const recolored = useRecoloredIcon(src, recolorTo);
   return (
     <span aria-hidden className={cn("illustration pointer-events-none inline-block select-none", className)}>
-      {!recolored ? (
+      {recolorTo && !recolored ? (
         <span className="block size-[1em]" />
       ) : (
-        <img src={recolored} alt="" width={384} height={384} draggable={false} className="block size-[1em] max-w-none" />
+        <img src={recolored ?? src} alt="" width={384} height={384} draggable={false} className="block size-[1em] max-w-none" />
       )}
     </span>
   );

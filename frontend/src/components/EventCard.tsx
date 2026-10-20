@@ -43,7 +43,6 @@ export function EventCard({ event }: { event: SportEvent }) {
         )}
         <SportIllustration
           sport={event.sport}
-          tint={palette.tint}
           className="absolute bottom-1.5 right-2 text-[100px] transition-transform duration-300 ease-out group-hover:-translate-y-1.5 group-hover:rotate-[-6deg]"
         />
       </div>

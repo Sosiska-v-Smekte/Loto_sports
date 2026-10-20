@@ -37,14 +37,6 @@ export function mutedColor(hex: string): string {
   return toHex(mix(mix(rgb, [gray, gray, gray], 0.22), [255, 255, 255], 0.1));
 }
 
-/** Цвет иконки: заметно темнее и насыщеннее цвета карточки, чтобы предмет не сливался с фоном шапки. */
-export function iconColor(hex: string): string {
-  const rgb = toRgb(hex);
-  const gray = 0.3 * rgb[0] + 0.59 * rgb[1] + 0.11 * rgb[2];
-  const vivid = rgb.map((v) => Math.min(255, Math.max(0, gray + (v - gray) * 1.6))) as RGB;
-  return toHex(mix(vivid, [0, 0, 0], 0.4));
-}
-
 function hueOf([r, g, b]: RGB): { hue: number; sat: number } {
   const max = Math.max(r, g, b);
   const min = Math.min(r, g, b);
@@ -78,19 +70,12 @@ export function safeCardColor(hex: string): string {
 }
 
 /**
- * Фон карточки и цвет иконки. Иконка всегда перекрашивается в тон карточки: в цвет, выбранный автором,
- * а если его нет — в цвет направления. Свой цвет на фоне чуть приглушён.
+ * Фон карточки: цвет, выбранный автором (чуть приглушённый), а если его нет — цвет направления.
  * colorSafe: режим для людей с нарушением цветовосприятия, цвета заменяются различимыми.
  */
-export function eventPalette(
-  event: Pick<SportEvent, "card_color" | "sport">,
-  colorSafe = false,
-): { background: string; tint: string } {
+export function eventPalette(event: Pick<SportEvent, "card_color" | "sport">, colorSafe = false): { background: string } {
   const own = isHexColor(event.card_color);
   const base = own ? event.card_color! : event.sport.color;
-  if (colorSafe) {
-    const safe = safeCardColor(base);
-    return { background: safe, tint: iconColor(safe) };
-  }
-  return { background: own ? mutedColor(base) : base, tint: iconColor(base) };
+  if (colorSafe) return { background: safeCardColor(base) };
+  return { background: own ? mutedColor(base) : base };
 }

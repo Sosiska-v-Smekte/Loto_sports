@@ -5,7 +5,7 @@ export default {
   theme: {
     extend: {
       // Промежуточная ширина для шапки: полная подпись «Создать активность», как на макете 1440
-      screens: { wide: "1400px" },
+      screens: { wide: "1400px", huge: "1800px" },
       colors: {
         page: "var(--color-page)",
         surface: "var(--color-surface)",

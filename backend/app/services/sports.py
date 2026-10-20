@@ -27,6 +27,7 @@ BASE_SPORTS = [
     ("Бокс", "boxing", "#F2A9C8", "🥊"),
     ("Хоккей", "hockey", "#AFC3EE", "🏒"),
     ("Бадминтон", "badminton", "#A9D8C6", "🏸"),
+    ("Бильярд", "billiards", "#CFCBC4", "🎱"),
 ]
 
 
