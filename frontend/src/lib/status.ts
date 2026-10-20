@@ -43,11 +43,17 @@ const PARTICIPATION: Record<ParticipationStatus, StatusView> = {
 };
 
 const EVENT_REMOVED: StatusView = { label: "Мероприятие снято", tone: "neutral", icon: Ban };
+const EVENT_DELETED: StatusView = { label: "Мероприятие удалено", tone: "neutral", icon: Trash2 };
 
-/** Статус записи пользователя; снятое событие важнее статуса заявки. */
+/** Статус записи пользователя; снятое или удалённое событие важнее статуса заявки. */
 export function participationView(status: ParticipationStatus, eventStatus: EventStatus): StatusView {
+  if (eventStatus === "deleted") return EVENT_DELETED;
   return eventStatus === "published" ? PARTICIPATION[status] : EVENT_REMOVED;
 }
+
+/** Запись больше не актуальна — её можно убрать из «Моих активностей». */
+export const isOutdatedParticipation = (status: ParticipationStatus, eventStatus: EventStatus) =>
+  status === "rejected" || eventStatus !== "published";
 
 export const ORGANIZATION_STATUS: Record<OrganizationStatus, StatusView> = {
   pending: { label: "Заявка на рассмотрении", tone: "warning", icon: Clock },

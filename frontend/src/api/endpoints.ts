@@ -53,6 +53,7 @@ export const eventsApi = {
 
 export const meApi = {
   participations: () => api.get<MyParticipation[]>("/me/participations"),
+  hideParticipation: (id: number) => api.post<void>(`/me/participations/${id}/hide`),
   events: () => api.get<SportEvent[]>("/me/events"),
   organization: () => api.get<Organization | null>("/me/organization"),
   submitOrganization: (data: OrganizationInput) => api.post<Organization>("/me/organization", data),

@@ -79,11 +79,28 @@ def list_participants(db: Session, event_id: int, viewer: User | None) -> Partic
 
 
 def my_participations(db: Session, user: User) -> list[Participation]:
-    """Записи пользователя, включая снятые события: запись сохраняется, статус «Мероприятие снято» видит фронт."""
+    """Записи пользователя, включая снятые и удалённые события, чтобы он понимал, что произошло.
+
+    Скрытые им самим записи не показываются.
+    """
     stmt = (
         select(Participation)
         .join(Participation.event)
-        .where(Participation.user_id == user.id, Event.status != EventStatus.deleted)
+        .where(Participation.user_id == user.id, Participation.hidden_by_user.is_(False))
         .order_by(Event.starts_at)
     )
     return list(db.scalars(stmt).unique())
+
+
+def hide_for_user(db: Session, participation_id: int, user: User) -> None:
+    """Убрать неактуальную запись из «Моих активностей»: отклонённую заявку или запись на снятое/удалённое событие."""
+    participation = db.get(Participation, participation_id)
+    if participation is None or participation.user_id != user.id:
+        raise not_found("Запись не найдена")
+    is_outdated = (
+        participation.status == ParticipationStatus.rejected or participation.event.status != EventStatus.published
+    )
+    if not is_outdated:
+        raise conflict("Активную запись убрать нельзя: вы участвуете или ждёте решения организатора")
+    participation.hidden_by_user = True
+    db.commit()

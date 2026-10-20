@@ -38,6 +38,11 @@ def my_participations(db: Db, user: CurrentUser):
     ]
 
 
+@router.post("/me/participations/{participation_id}/hide", status_code=status.HTTP_204_NO_CONTENT)
+def hide_participation(participation_id: int, db: Db, user: CurrentUser):
+    service.hide_for_user(db, participation_id, user)
+
+
 @router.get("/me/events", response_model=list[EventOut])
 def my_events(db: Db, user: CurrentUser):
     return present_events(db, organized_by(db, user), user)

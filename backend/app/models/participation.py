@@ -1,7 +1,7 @@
 from datetime import datetime
 from enum import StrEnum
 
-from sqlalchemy import DateTime, ForeignKey, String, UniqueConstraint
+from sqlalchemy import Boolean, DateTime, ForeignKey, String, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db import Base
@@ -24,6 +24,10 @@ class Participation(Base):
     status: Mapped[ParticipationStatus] = mapped_column(String(20))
     created_at: Mapped[datetime] = mapped_column(DateTime, default=now)
     decided_at: Mapped[datetime | None] = mapped_column(DateTime)
+    # «Убрать из списка» в «Моих активностях» только прячет запись от самого пользователя.
+    # Строку не удаляем: иначе отклонённый смог бы подать заявку повторно в обход решения организатора,
+    # а организатор и админ потеряли бы историю заявок.
+    hidden_by_user: Mapped[bool] = mapped_column(Boolean, default=False)
 
     event: Mapped["Event"] = relationship(lazy="joined")  # noqa: F821
     user: Mapped["User"] = relationship(lazy="joined")  # noqa: F821
