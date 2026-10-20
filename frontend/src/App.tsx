@@ -11,6 +11,7 @@ import { HomePage } from "./pages/HomePage";
 import { LoginPage } from "./pages/LoginPage";
 import { MyPage } from "./pages/MyPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
+import { NotificationsPage } from "./pages/NotificationsPage";
 import { RegisterPage } from "./pages/RegisterPage";
 import { UserPage } from "./pages/UserPage";
 
@@ -34,6 +35,7 @@ export function App() {
         {/* Старый адрес профиля: ведёт на свой публичный профиль, чтобы не было битых ссылок */}
         <Route path="/profile" element={<RequireAuth><OwnProfileRedirect /></RequireAuth>} />
         <Route path="/users/:id" element={<UserPage />} />
+        <Route path="/notifications" element={<RequireAuth><NotificationsPage /></RequireAuth>} />
         <Route path="/admin" element={<RequireAuth admin><AdminPage /></RequireAuth>} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>

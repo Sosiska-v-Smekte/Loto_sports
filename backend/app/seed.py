@@ -25,6 +25,13 @@ from app.models import (
     User,
 )
 from app.models.base import now
+from app.services.notifications import (
+    notify_decision,
+    notify_event_unpublished,
+    notify_organization_request,
+    notify_organization_review,
+    notify_reply,
+)
 from app.services.security import hash_password
 from app.services.sports import ensure_base_sports, get_or_create_sport
 
@@ -277,13 +284,15 @@ def seed(db: Session) -> None:
     db.flush()
 
     def join(event, user, status, days_ago=1):
-        db.add(Participation(
+        participation = Participation(
             event_id=event.id,
             user_id=user.id,
             status=status,
             created_at=now() - timedelta(days=days_ago),
             decided_at=None if status == ParticipationStatus.pending else now() - timedelta(hours=days_ago * 12),
-        ))
+        )
+        db.add(participation)
+        return participation
 
     confirmed, pending, rejected = ParticipationStatus.confirmed, ParticipationStatus.pending, ParticipationStatus.rejected
     join(run_gorky, anna, confirmed)
@@ -292,14 +301,14 @@ def seed(db: Session) -> None:
     join(football, ivan, confirmed)
     join(tennis_pair, ilya, pending)
     join(blitz, anna, pending)
-    join(blitz, ilya, confirmed, days_ago=3)
+    ilya_blitz = join(blitz, ilya, confirmed, days_ago=3)
     join(blitz, ivan, confirmed, days_ago=2)
     join(chess_beginners, anna, pending)
     join(autumn_cup, maria, pending)
     join(autumn_cup, ilya, confirmed)
     join(streetball, ilya, confirmed)
     join(table_tennis, anna, pending)
-    join(sparring, ivan, rejected, days_ago=2)
+    ivan_sparring = join(sparring, ivan, rejected, days_ago=2)
     join(morning, maria, confirmed)
     join(nordic_walk, anna, confirmed)
     join(night_run, ilya, confirmed, days_ago=4)
@@ -314,6 +323,8 @@ def seed(db: Session) -> None:
         )
         db.add(comment)
         db.flush()
+        if reply_to is not None:
+            notify_reply(db, event, comment, reply_to)
         return comment
 
     rating = say(blitz, anna, "Здравствуйте! Можно прийти, если у меня нет рейтинга?", 30)
@@ -326,6 +337,14 @@ def seed(db: Session) -> None:
     say(run_gorky, ivan, "Около 6:30 на километр, будем ждать всех. Приходите!", 9, pace)
     pair = say(tennis_pair, ilya, "Можно подать заявку без пары?", 15)
     say(tennis_pair, anna, "Да, пары составим на месте по уровню.", 14, pair)
+
+    # Уведомления создаются теми же функциями, что и в работе приложения
+    db.flush()
+    notify_decision(db, ilya_blitz)
+    notify_decision(db, ivan_sparring)
+    notify_event_unpublished(db, night_run)
+    notify_organization_review(db, pulse)
+    notify_organization_request(db, beach)
 
     db.commit()
 

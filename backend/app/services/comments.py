@@ -5,6 +5,7 @@ from app.models import Comment, Event, EventStatus, User
 from app.schemas.events import CommentOut, ReplyTo
 from app.services.access import can_manage, get_event_for_viewer
 from app.services.errors import bad_request, conflict, not_found
+from app.services.notifications import notify_reply
 
 EXCERPT_LENGTH = 120
 
@@ -80,6 +81,9 @@ def add_comment(db: Session, event_id: int, author: User, text: str, parent_id: 
             raise bad_request("Сообщение, на которое вы отвечаете, не найдено в этом обсуждении")
     comment = Comment(event_id=event.id, author_id=author.id, text=text, parent_id=parent.id if parent else None)
     db.add(comment)
+    if parent is not None:
+        db.flush()
+        notify_reply(db, event, comment, parent)
     db.commit()
     db.refresh(comment)
     return _present_one(db, comment, event, author)

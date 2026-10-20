@@ -3,6 +3,7 @@ import { Link, NavLink, useLocation } from "react-router-dom";
 import { useAuth } from "@/features/auth";
 import { cn } from "@/lib/cn";
 import { AccountMenu } from "./AccountMenu";
+import { NotificationBell } from "./NotificationBell";
 import { isNavActive, NAV_ITEMS } from "./nav";
 import { ButtonLink } from "./ui/Button";
 
@@ -10,6 +11,8 @@ export function Header() {
   const { user } = useAuth();
   const { pathname } = useLocation();
   const items = NAV_ITEMS.filter((item) => !item.adminOnly || user?.is_admin);
+  // У админа лишний пункт «Админка»: полные подписи показываем только на очень широких экранах
+  const compact = Boolean(user?.is_admin);
 
   return (
     <header className="sticky top-0 z-30 border-b border-line/80 bg-[#f7f2e8]/90 backdrop-blur-md">
@@ -37,8 +40,8 @@ export function Header() {
                 )}
               >
                 {active && <item.icon className="size-5" aria-hidden />}
-                <span className="xl:hidden">{item.shortLabel}</span>
-                <span className="hidden xl:inline">{item.label}</span>
+                <span className={compact ? "2xl:hidden" : "xl:hidden"}>{item.shortLabel}</span>
+                <span className={cn("hidden", compact ? "2xl:inline" : "xl:inline")}>{item.label}</span>
               </NavLink>
             );
           })}
@@ -53,6 +56,7 @@ export function Header() {
             <span className="wide:hidden">Создать</span>
             <span className="hidden wide:inline">Создать активность</span>
           </ButtonLink>
+          {user && <NotificationBell />}
           <AccountMenu />
         </div>
       </div>

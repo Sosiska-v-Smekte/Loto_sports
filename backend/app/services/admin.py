@@ -6,6 +6,7 @@ from app.models import Event, EventStatus, Organization, OrganizationStatus, Use
 from app.models.base import now
 from app.schemas.organizations import AdminOrganizationOut, OrganizationOut
 from app.services.errors import conflict, not_found
+from app.services.notifications import notify_event_unpublished, notify_organization_review
 
 
 def list_organizations(db: Session, status: str | None, query: str | None) -> list[AdminOrganizationOut]:
@@ -53,6 +54,7 @@ def review_organization(db: Session, organization_id: int, approve: bool, reason
     # Причина отказа сохраняется и показывается владельцу в профиле
     organization.rejection_reason = None if approve else reason
     organization.reviewed_at = now()
+    notify_organization_review(db, organization)
     db.commit()
     db.refresh(organization)
     return organization
@@ -92,6 +94,8 @@ def moderate_event(db: Session, event_id: int, new_status: EventStatus, reason: 
         raise conflict("Мероприятие уже снято с публикации")
     event.status = new_status
     event.moderation_reason = reason
+    if new_status == EventStatus.unpublished:
+        notify_event_unpublished(db, event)
     db.commit()
     db.refresh(event)
     return event

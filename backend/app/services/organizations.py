@@ -5,6 +5,7 @@ from app.db import search_key
 from app.models import Organization, OrganizationStatus, User
 from app.schemas.organizations import OrganizationIn
 from app.services.errors import conflict, not_found
+from app.services.notifications import notify_organization_request
 
 
 def list_approved(db: Session, query: str | None = None) -> list[Organization]:
@@ -50,6 +51,8 @@ def submit(db: Session, user: User, data: OrganizationIn) -> Organization:
     organization.status = OrganizationStatus.pending
     organization.rejection_reason = None
     organization.reviewed_at = None
+    db.flush()
+    notify_organization_request(db, organization)
     db.commit()
     db.refresh(organization)
     return organization

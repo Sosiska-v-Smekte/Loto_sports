@@ -1,6 +1,7 @@
 import { api } from "./client";
 import type {
   AdminOrganization,
+  AppNotification,
   AuthResult,
   Comment,
   DemoAccount,
@@ -67,6 +68,13 @@ export const organizationsApi = {
 
 export const usersApi = {
   get: (id: number) => api.get<{ user: UserPublic; events: SportEvent[] }>(`/users/${id}`),
+};
+
+export const notificationsApi = {
+  list: () => api.get<AppNotification[]>("/notifications"),
+  unreadCount: () => api.get<{ count: number }>("/notifications/unread-count"),
+  read: (id: number) => api.post<AppNotification>(`/notifications/${id}/read`),
+  readAll: () => api.post<void>("/notifications/read-all"),
 };
 
 export const adminApi = {

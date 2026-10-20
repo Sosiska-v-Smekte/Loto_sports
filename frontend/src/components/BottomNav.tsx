@@ -1,15 +1,23 @@
-import { Plus } from "lucide-react";
+import { Bell, Plus } from "lucide-react";
+import type { ReactNode } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
+import { useAuth } from "@/features/auth";
+import { useUnreadCount } from "@/features/notifications";
 import { cn } from "@/lib/cn";
-import { isNavActive, NAV_ITEMS } from "./nav";
+import { isNavActive, NAV_ITEMS, type NavItem } from "./nav";
+import { UnreadBadge } from "./NotificationBell";
+
+const NOTIFICATIONS: NavItem = { to: "/notifications", label: "Уведомления", shortLabel: "Уведомления", icon: Bell };
 
 /** Нижний таб-бар для телефонов и планшетов; «Создать» — выделенная кнопка по центру. */
 export function BottomNav() {
   const { pathname } = useLocation();
+  const { user } = useAuth();
+  const unread = useUnreadCount();
   // Админка на телефоне открывается из меню аватара
   const [find, mine, communities] = NAV_ITEMS.filter((item) => !item.adminOnly);
 
-  const tab = (item: (typeof NAV_ITEMS)[number]) => {
+  const tab = (item: NavItem, badge?: ReactNode) => {
     const active = isNavActive(item.to, pathname);
     return (
       <NavLink
@@ -17,12 +25,13 @@ export function BottomNav() {
         to={item.to}
         end={item.to === "/"}
         className={cn(
-          "pressable flex min-h-14 flex-1 flex-col items-center justify-center gap-0.5 rounded-2xl text-[12px] font-medium",
+          "pressable flex min-h-14 min-w-0 flex-1 flex-col items-center justify-center gap-0.5 rounded-2xl text-[11px] font-medium sm:text-[12px]",
           active ? "text-primary" : "text-muted",
         )}
       >
-        <span className={cn("grid h-8 w-12 place-items-center rounded-full", active && "bg-primary-soft")}>
+        <span className={cn("relative grid h-8 w-12 place-items-center rounded-full", active && "bg-primary-soft")}>
           <item.icon className="size-[22px]" aria-hidden strokeWidth={active ? 2.4 : 2} />
+          {badge}
         </span>
         {item.shortLabel}
       </NavLink>
@@ -48,6 +57,7 @@ export function BottomNav() {
           Создать
         </Link>
         {tab(communities)}
+        {user && tab(NOTIFICATIONS, <UnreadBadge count={unread.data} className="absolute -right-0.5 -top-1" />)}
       </div>
     </nav>
   );

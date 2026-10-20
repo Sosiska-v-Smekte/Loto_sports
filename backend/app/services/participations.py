@@ -6,6 +6,7 @@ from app.models.base import now
 from app.schemas.events import ParticipantOut, ParticipantsOut
 from app.services.access import can_manage, get_event_for_viewer
 from app.services.errors import conflict, forbidden, not_found
+from app.services.notifications import notify_decision
 
 _ALREADY = {
     ParticipationStatus.confirmed: "Вы уже записаны на это мероприятие",
@@ -60,6 +61,7 @@ def decide(db: Session, participation_id: int, user: User, approve: bool) -> Par
 
     participation.status = ParticipationStatus.confirmed if approve else ParticipationStatus.rejected
     participation.decided_at = now()
+    notify_decision(db, participation)
     db.commit()
     db.refresh(participation)
     return participation

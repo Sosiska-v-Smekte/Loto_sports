@@ -142,6 +142,24 @@ export interface OrganizationInput {
   contacts: string;
 }
 
+export type NotificationType =
+  | "reminder"
+  | "reply"
+  | "participation_decision"
+  | "organization_review"
+  | "organization_request"
+  | "event_unpublished";
+
+export interface AppNotification {
+  id: number;
+  type: NotificationType;
+  title: string;
+  body: string;
+  link: string;
+  is_read: boolean;
+  created_at: string;
+}
+
 export interface ProfileInput {
   name: string;
   city: string;
