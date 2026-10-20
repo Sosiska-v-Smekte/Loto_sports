@@ -1,15 +1,23 @@
 import type { SportEvent } from "@/api/types";
 
-/** Палитра карточек. Значения совпадают с PALETTE в backend/app/services/sports.py. */
+/** Палитра выбора цвета карточки. Отдельна от PALETTE в backend/app/services/sports.py: там цвета направлений. */
 export const CARD_COLORS = [
   { hex: "#F6D46A", name: "Жёлтый" },
-  { hex: "#F2A9C8", name: "Розовый" },
-  { hex: "#AFC3EE", name: "Голубой" },
-  { hex: "#C3D69A", name: "Зелёный" },
+  { hex: "#F7B267", name: "Оранжевый" },
   { hex: "#F5BE92", name: "Персиковый" },
+  { hex: "#F29A94", name: "Коралловый" },
+  { hex: "#F2A9C8", name: "Розовый" },
+  { hex: "#D9A3E3", name: "Пурпурный" },
   { hex: "#CDB8EE", name: "Сиреневый" },
+  { hex: "#8DA9E8", name: "Васильковый" },
+  { hex: "#AFC3EE", name: "Голубой" },
+  { hex: "#9FD8F0", name: "Небесный" },
+  { hex: "#8FD3D0", name: "Бирюзовый" },
   { hex: "#A9D8C6", name: "Мятный" },
+  { hex: "#C3D69A", name: "Зелёный" },
+  { hex: "#DDE8A0", name: "Лаймовый" },
   { hex: "#E9CF9F", name: "Песочный" },
+  { hex: "#CFCBC4", name: "Серый" },
 ] as const;
 
 const HEX = /^#[0-9a-f]{6}$/i;
@@ -29,14 +37,8 @@ export function mutedColor(hex: string): string {
   return toHex(mix(mix(rgb, [gray, gray, gray], 0.22), [255, 255, 255], 0.1));
 }
 
-/** Тона для иконки: светлая сторона и тень одного цвета, из них собирается объём. */
-export function iconTones(hex: string): { light: string; dark: string } {
-  const rgb = toRgb(hex);
-  return { light: toHex(mix(rgb, [255, 255, 255], 0.35)), dark: toHex(mix(rgb, [0, 0, 0], 0.4)) };
-}
-
 /**
- * Фон карточки и цвет иконки. Если автор выбрал свой цвет, фон приглушён, а иконка перекрашивается в его тона;
+ * Фон карточки и цвет иконки. Если автор выбрал свой цвет, фон приглушён, а иконка перекрашивается в этот цвет;
  * иначе карточка выглядит как раньше: цвет направления и 3D-иконка.
  */
 export function eventPalette(event: Pick<SportEvent, "card_color" | "sport">): { background: string; tint?: string } {
