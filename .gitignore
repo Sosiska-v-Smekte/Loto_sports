@@ -12,6 +12,8 @@ __pycache__/
 *.db-journal
 backend/data/
 data/
+# справочники городов лежат в backend/app/data и должны попадать в репозиторий
+!backend/app/data/
 .env
 .env.*
 
