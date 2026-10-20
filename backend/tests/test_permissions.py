@@ -1,4 +1,4 @@
-"""Проверки прав: всё, что фронт мог бы «спрятать», должно запрещаться и на бэкенде."""
+"""Права доступа проверяются на сервере независимо от интерфейса."""
 
 from tests.conftest import event_payload, find_event
 
@@ -10,7 +10,7 @@ def _pending_request_id(client, oleg, title):
 
 def test_stranger_cannot_decide_application(client, login):
     request_id = _pending_request_id(client, login("org@demo.ru"), "Вечер быстрых шахмат")
-    for email in ("user@demo.ru", "admin@demo.ru"):  # админ заявки участников не рассматривает
+    for email in ("user@demo.ru", "admin@demo.ru"):  # администратор заявки участников не рассматривает
         response = client.post(f"/api/participations/{request_id}/approve", headers=login(email))
         assert response.status_code == 403
 
@@ -18,7 +18,12 @@ def test_stranger_cannot_decide_application(client, login):
 def test_non_admin_cannot_moderate(client, login):
     ilya = login("user@demo.ru")
     event = find_event(client, "Стритбол в Лужниках")
-    assert client.post(f"/api/admin/events/{event['id']}/unpublish", headers=ilya, json={"reason": "просто так"}).status_code == 403
+    assert (
+        client.post(
+            f"/api/admin/events/{event['id']}/unpublish", headers=ilya, json={"reason": "просто так"}
+        ).status_code
+        == 403
+    )
     assert client.get("/api/admin/organizations", headers=ilya).status_code == 403
     assert client.post("/api/admin/organizations/2/approve", headers=ilya).status_code == 403
     assert client.post("/api/admin/comments/1/hide", headers=ilya, json={"reason": "спам"}).status_code == 403
@@ -35,7 +40,9 @@ def test_pending_organization_cannot_publish(client, login):
 
 def test_cannot_publish_for_someone_elses_organization(client, login):
     oleg_org = client.get("/api/me/organization", headers=login("org@demo.ru")).json()
-    response = client.post("/api/events", headers=login("user@demo.ru"), json=event_payload(organization_id=oleg_org["id"]))
+    response = client.post(
+        "/api/events", headers=login("user@demo.ru"), json=event_payload(organization_id=oleg_org["id"])
+    )
     assert response.status_code == 403
 
 

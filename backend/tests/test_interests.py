@@ -32,17 +32,24 @@ def test_add_and_remove_interest(client, login):
     created = client.post(
         "/api/interests",
         headers=anna,
-        json={"sport_id": tennis["id"], "city": "Москва", "day_kinds": ["weekday", "weekend"], "day_parts": ["evening"]},
+        json={
+            "sport_id": tennis["id"],
+            "city": "Москва",
+            "day_kinds": ["weekday", "weekend"],
+            "day_parts": ["evening"],
+        },
     )
     assert created.status_code == 201 and len(created.json()) == 2
-    # Повтор не плодит дубли
+    # Повтор не создаёт дублей
     again = client.post(
         "/api/interests",
         headers=anna,
         json={"sport_id": tennis["id"], "city": "Москва", "day_kinds": ["weekday"], "day_parts": ["evening"]},
     )
     assert again.status_code == 201
-    assert len([i for i in client.get("/api/interests/mine", headers=anna).json() if i["sport"]["name"] == "Теннис"]) == 2
+    assert (
+        len([i for i in client.get("/api/interests/mine", headers=anna).json() if i["sport"]["name"] == "Теннис"]) == 2
+    )
     interest_id = created.json()[0]["id"]
     assert client.delete(f"/api/interests/{interest_id}", headers=login("ivan@demo.ru")).status_code == 403
     assert client.delete(f"/api/interests/{interest_id}", headers=anna).status_code == 204
@@ -55,7 +62,9 @@ def test_matching_event_invites_but_does_not_join(client, login):
     response = client.post(
         "/api/events",
         headers=organizer,
-        json=event_payload(title="Волейбол в субботу", sport_id=volleyball["id"], sport_name=None, starts_at=_next_weekday(5, 14)),
+        json=event_payload(
+            title="Волейбол в субботу", sport_id=volleyball["id"], sport_name=None, starts_at=_next_weekday(5, 14)
+        ),
     )
     assert response.status_code == 201
     event_id = response.json()["id"]
@@ -73,7 +82,9 @@ def test_matching_event_invites_but_does_not_join(client, login):
     evening = client.post(
         "/api/events",
         headers=organizer,
-        json=event_payload(title="Волейбол вечером", sport_id=volleyball["id"], sport_name=None, starts_at=_next_weekday(5, 19)),
+        json=event_payload(
+            title="Волейбол вечером", sport_id=volleyball["id"], sport_name=None, starts_at=_next_weekday(5, 19)
+        ),
     ).json()
     notes = client.get("/api/notifications", headers=anna).json()
     assert not [n for n in notes if n["link"] == f"/events/{evening['id']}"]
@@ -89,6 +100,9 @@ def test_custom_sport_interest_creates_sport(client, login):
     assert created.status_code == 201
     assert created.json()[0]["sport"]["name"] == "Дартс" and created.json()[0]["sport"]["is_custom"] is True
     assert "Дартс" in [s["name"] for s in client.get("/api/sports").json()]
-    assert client.post(
-        "/api/interests", headers=anna, json={"city": "Москва", "day_kinds": ["weekday"], "day_parts": ["day"]}
-    ).status_code == 422
+    assert (
+        client.post(
+            "/api/interests", headers=anna, json={"city": "Москва", "day_kinds": ["weekday"], "day_parts": ["day"]}
+        ).status_code
+        == 422
+    )

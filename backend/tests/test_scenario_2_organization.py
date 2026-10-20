@@ -38,7 +38,11 @@ def test_organization_lifecycle(client, login):
     assert mine["rejection_reason"] == reason
 
     # Владелец исправляет и отправляет снова, админ одобряет
-    resent = client.post("/api/me/organization", headers=maria, json={**ORG, "description": ORG["description"] + " Сбор у м. Сокольники."})
+    resent = client.post(
+        "/api/me/organization",
+        headers=maria,
+        json={**ORG, "description": ORG["description"] + " Сбор у м. Сокольники."},
+    )
     assert resent.json()["status"] == "pending"
     approved = client.post(f"/api/admin/organizations/{org['id']}/approve", headers=admin)
     assert approved.json()["status"] == "approved"

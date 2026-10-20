@@ -4,12 +4,11 @@ from pydantic import AfterValidator, BaseModel, ConfigDict, EmailStr, StringCons
 
 from app.services.cities import check_city
 
-# Город только из справочника, в каноническом написании
 City = Annotated[str, StringConstraints(strip_whitespace=True), AfterValidator(check_city)]
 
 
 def _ascii_lower(email: str) -> str:
-    # email-validator допускает кириллические домены (IDN); по требованиям такие адреса без punycode отклоняем
+    # email-validator допускает кириллические домены (IDN), но адреса без punycode не принимаются
     if not email.isascii():
         raise ValueError("Введите корректный email")
     return email.lower()

@@ -1,8 +1,8 @@
 """Уведомления внутри приложения.
 
 Создаются в сервисном слое в момент события (решение по заявке, ответ, модерация).
-Напоминания о скором начале создаются лениво — при запросе списка или счётчика,
-поэтому фоновые задачи не нужны. Повторы исключает уникальный dedup_key.
+Напоминания о скором начале создаются лениво при запросе списка или счётчика, без фоновых задач.
+Повторы исключает уникальный dedup_key.
 """
 
 from datetime import datetime, timedelta
@@ -73,9 +73,6 @@ def _when(moment: datetime) -> str:
     return f"{day} в {moment:%H:%M}"
 
 
-# ---------- Поводы для уведомлений ----------
-
-
 def notify_decision(db: Session, participation: Participation) -> None:
     approved = participation.status == ParticipationStatus.confirmed
     event = participation.event
@@ -91,7 +88,7 @@ def notify_decision(db: Session, participation: Participation) -> None:
 
 
 def notify_reply(db: Session, event: Event, reply: Comment, parent: Comment) -> None:
-    # Свой же ответ на своё сообщение уведомлением не считается
+    # Ответ на собственное сообщение не уведомляет
     if parent.author_id == reply.author_id:
         return
     notify(
@@ -107,8 +104,8 @@ def notify_reply(db: Session, event: Event, reply: Comment, parent: Comment) -> 
 
 
 def _moment_key() -> str:
-    # Каждая отправка заявки и каждое решение по ней — отдельный повод: ключ с точностью до микросекунд,
-    # иначе отказ и одобрение в одну секунду «склеились» бы в одно уведомление
+    # Каждая заявка и каждое решение по ней считаются отдельным поводом: ключ с точностью до микросекунд,
+    # иначе отказ и одобрение в одну секунду дали бы одно уведомление
     return datetime.now().isoformat()
 
 
@@ -201,11 +198,8 @@ def ensure_reminders(db: Session, user: User) -> None:
         try:
             db.commit()
         except IntegrityError:
-            # Список и счётчик запрашиваются параллельно: то же напоминание уже создал соседний запрос
+            # Список и счётчик запрашиваются параллельно, и напоминание мог уже создать соседний запрос
             db.rollback()
-
-
-# ---------- Чтение ----------
 
 
 def list_for(db: Session, user: User, limit: int = 50) -> list[Notification]:

@@ -11,8 +11,16 @@ def fake_geocoder(monkeypatch):
     """Геокодер «знает» только улицу Генерала Дорохова в Москве и остров Татышев в Красноярске."""
     calls: list[str] = []
     known = {
-        "ул. Генерала Дорохова, 10, Москва": {"lat": "55.70235", "lon": "37.440067", "display_name": "10, улица Генерала Дорохова, Москва"},
-        "Остров Татышев, Красноярск": {"lat": "56.028895", "lon": "92.945143", "display_name": "Остров Татышев, Красноярск"},
+        "ул. Генерала Дорохова, 10, Москва": {
+            "lat": "55.70235",
+            "lon": "37.440067",
+            "display_name": "10, улица Генерала Дорохова, Москва",
+        },
+        "Остров Татышев, Красноярск": {
+            "lat": "56.028895",
+            "lon": "92.945143",
+            "display_name": "Остров Татышев, Красноярск",
+        },
         "Ленина, 1, Красноярск": {"lat": "55.75", "lon": "37.61", "display_name": "улица Ленина, 1, Москва"},
     }
 
@@ -75,7 +83,9 @@ def test_geocoder_failure_does_not_break_creation(client, login, monkeypatch):
     monkeypatch.setattr(geocoding, "GEOCODING_ENABLED", True)
     monkeypatch.setattr(geocoding, "_search", broken)
     geocoding.geocode.cache_clear()
-    response = client.post("/api/events", headers=login("user@demo.ru"), json=event_payload(address="Остров Татышев", city="Красноярск"))
+    response = client.post(
+        "/api/events", headers=login("user@demo.ru"), json=event_payload(address="Остров Татышев", city="Красноярск")
+    )
     geocoding.geocode.cache_clear()
     assert response.status_code == 201 and response.json()["latitude"] is None
 

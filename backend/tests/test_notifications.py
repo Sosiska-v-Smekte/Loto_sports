@@ -1,4 +1,4 @@
-"""Правка 8: уведомления внутри приложения — по одному тесту на тип и защита от дублей."""
+"""Уведомления: по одному тесту на тип и защита от дублей."""
 
 from tests.conftest import event_payload, find_event
 
@@ -38,13 +38,19 @@ def test_no_reminder_for_far_or_unpublished_events(client, login):
 def test_reply_notifies_parent_author_but_not_self(client, login):
     anna, oleg = login("user2@demo.ru"), login("org@demo.ru")
     event = find_event(client, "Шахматы для начинающих")
-    question = client.post(f"/api/events/{event['id']}/comments", headers=anna, json={"text": "Сколько длится занятие?"}).json()
+    question = client.post(
+        f"/api/events/{event['id']}/comments", headers=anna, json={"text": "Сколько длится занятие?"}
+    ).json()
 
     before = len(_notifications(client, anna, "reply"))
-    client.post(f"/api/events/{event['id']}/comments", headers=anna, json={"text": "И ещё вопрос", "parent_id": question["id"]})
+    client.post(
+        f"/api/events/{event['id']}/comments", headers=anna, json={"text": "И ещё вопрос", "parent_id": question["id"]}
+    )
     assert len(_notifications(client, anna, "reply")) == before  # себе не уведомляем
 
-    client.post(f"/api/events/{event['id']}/comments", headers=oleg, json={"text": "Полтора часа", "parent_id": question["id"]})
+    client.post(
+        f"/api/events/{event['id']}/comments", headers=oleg, json={"text": "Полтора часа", "parent_id": question["id"]}
+    )
     replies = _notifications(client, anna, "reply")
     assert len(replies) == before + 1
     assert replies[0]["title"] == "Вам ответили" and "Полтора часа" in replies[0]["body"]
@@ -70,7 +76,13 @@ def test_organization_request_and_review(client, login):
     org = client.post(
         "/api/me/organization",
         headers=maria,
-        json={"name": "Клуб «Шаг»", "description": "Скандинавская ходьба по субботам", "sports": "Ходьба", "city": "Москва", "contacts": "+7 900"},
+        json={
+            "name": "Клуб «Шаг»",
+            "description": "Скандинавская ходьба по субботам",
+            "sports": "Ходьба",
+            "city": "Москва",
+            "contacts": "+7 900",
+        },
     ).json()
     requests = _notifications(client, admin, "organization_request")
     assert any("Клуб «Шаг»" in n["body"] for n in requests)
@@ -79,7 +91,11 @@ def test_organization_request_and_review(client, login):
     review = _notifications(client, maria, "organization_review")
     assert review[0]["title"] == "Заявку организации отклонили" and "Нет адреса" in review[0]["body"]
 
-    client.post("/api/me/organization", headers=maria, json={**{k: org[k] for k in ("name", "description", "sports", "city")}, "contacts": "+7 900 1"})
+    client.post(
+        "/api/me/organization",
+        headers=maria,
+        json={**{k: org[k] for k in ("name", "description", "sports", "city")}, "contacts": "+7 900 1"},
+    )
     client.post(f"/api/admin/organizations/{org['id']}/approve", headers=admin)
     assert _notifications(client, maria, "organization_review")[0]["title"] == "Организация одобрена"
 
@@ -108,8 +124,10 @@ def test_read_one_read_all_and_privacy(client, login):
 
 
 def test_new_event_does_not_need_moderation(client, login):
-    """Решение из задания: события пользователей публикуются сразу, модерация — постфактум."""
-    response = client.post("/api/events", headers=login("user@demo.ru"), json=event_payload(title="Пробежка без модерации"))
+    """События пользователей публикуются сразу, модерация выполняется постфактум."""
+    response = client.post(
+        "/api/events", headers=login("user@demo.ru"), json=event_payload(title="Пробежка без модерации")
+    )
     assert response.json()["status"] == "published"
 
 

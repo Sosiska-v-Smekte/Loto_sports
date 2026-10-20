@@ -1,4 +1,4 @@
-"""Аватарки: фронтенд сжимает фото до квадрата и присылает его строкой data:image/...;base64, файл хранится на диске."""
+"""Аватарки приходят строкой data:image/...;base64 и хранятся файлами на диске."""
 
 import base64
 import binascii
@@ -22,7 +22,7 @@ def _folder() -> Path:
 
 
 def _extension(data: bytes) -> str | None:
-    """Тип определяем по началу файла, а не по заявленному в строке: заявленному доверять нельзя."""
+    """Тип определяется по сигнатуре файла: заявленному в строке типу доверять нельзя."""
     if data.startswith(b"\xff\xd8\xff"):
         return "jpg"
     if data.startswith(b"\x89PNG\r\n\x1a\n"):
@@ -33,7 +33,6 @@ def _extension(data: bytes) -> str | None:
 
 
 def save(image: str) -> str:
-    """Сохраняет картинку и возвращает адрес, по которому её отдаёт API."""
     match = _DATA_URL.match(image.strip())
     if not match:
         raise bad_request("Загрузите картинку в формате JPEG, PNG или WebP")
@@ -52,7 +51,7 @@ def save(image: str) -> str:
 
 
 def remove(url: str | None) -> None:
-    """Удаляет файл прежней аватарки. Внешние адреса (из демо-данных) не трогаем."""
+    """Удаляет файл прежней аватарки; внешние адреса из демо-данных пропускаются."""
     if not url or not url.startswith(PUBLIC_PREFIX):
         return
     name = url.removeprefix(PUBLIC_PREFIX)

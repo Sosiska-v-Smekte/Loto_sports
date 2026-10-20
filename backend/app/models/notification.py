@@ -29,5 +29,5 @@ class Notification(Base):
     link: Mapped[str] = mapped_column(String(300), default="")
     is_read: Mapped[bool] = mapped_column(Boolean, default=False)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=now, index=True)
-    # Ключ события, ради которого создано уведомление: одно и то же не создаётся дважды
+    # Ключ повода уведомления: исключает повторное создание
     dedup_key: Mapped[str] = mapped_column(String(200), unique=True)

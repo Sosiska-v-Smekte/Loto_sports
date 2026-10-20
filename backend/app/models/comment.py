@@ -13,7 +13,7 @@ class Comment(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     event_id: Mapped[int] = mapped_column(ForeignKey("events.id"), index=True)
     author_id: Mapped[int] = mapped_column(ForeignKey("users.id"))
-    # Сообщение, на которое отвечают (прямая цель). Корень ветки вычисляется при выдаче
+    # Прямая цель ответа; корень ветки вычисляется при выдаче
     parent_id: Mapped[int | None] = mapped_column(ForeignKey("comments.id"), index=True)
     text: Mapped[str] = mapped_column(Text)
     is_hidden: Mapped[bool] = mapped_column(Boolean, default=False)

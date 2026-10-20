@@ -4,7 +4,9 @@ from tests.conftest import find_event
 
 
 def _post(client, event_id, headers, text, parent_id=None):
-    response = client.post(f"/api/events/{event_id}/comments", headers=headers, json={"text": text, "parent_id": parent_id})
+    response = client.post(
+        f"/api/events/{event_id}/comments", headers=headers, json={"text": text, "parent_id": parent_id}
+    )
     assert response.status_code == 201, response.text
     return response.json()
 
@@ -43,7 +45,11 @@ def test_hidden_parent_keeps_replies(client, login):
     admin = login("admin@demo.ru")
     event = find_event(client, "Вечер быстрых шахмат")
     thread = client.get(f"/api/events/{event['id']}/comments").json()
-    root = next(c for c in thread if c["reply_to"] is None and any(r["root_id"] == c["id"] and r["id"] != c["id"] for r in thread))
+    root = next(
+        c
+        for c in thread
+        if c["reply_to"] is None and any(r["root_id"] == c["id"] and r["id"] != c["id"] for r in thread)
+    )
     replies = [c["id"] for c in thread if c["root_id"] == root["id"] and c["id"] != root["id"]]
 
     client.post(f"/api/admin/comments/{root['id']}/hide", headers=admin, json={"reason": "Не по теме"})

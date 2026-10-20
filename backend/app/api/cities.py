@@ -12,5 +12,5 @@ def cities():
 
 @router.get("/centers", response_model=dict[str, tuple[float, float]])
 def centers():
-    """Центр каждого города — куда смотрит карта, если в городе ещё нет мероприятий."""
+    """Центры городов: начальное положение карты, если в городе нет мероприятий."""
     return city_centers()

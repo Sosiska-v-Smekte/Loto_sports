@@ -43,7 +43,7 @@ class VenueOut(ORMModel):
 
 
 class EventZone(ORMModel):
-    """Зона в карточке мероприятия: что за площадка и на сколько человек рассчитана."""
+    """Зона в карточке мероприятия."""
 
     id: int
     name: str
@@ -68,5 +68,4 @@ class Availability(BaseModel):
     free: bool
     message: str | None = None
     suggestion: Slot | None = None
-    # Что занимает зону в этот день: помогает выбрать время, не подбирая его вслепую
     busy: list[BusyInterval] = Field(default_factory=list)

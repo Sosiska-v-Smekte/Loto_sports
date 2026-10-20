@@ -9,7 +9,11 @@ def test_user_edits_own_profile(client, login):
     )
     assert response.status_code == 200
     public = client.get(f"/api/users/{me['id']}").json()["user"]
-    assert (public["name"], public["city"], public["about"]) == ("Анна Иванова", "Санкт-Петербург", "Теннис по выходным")
+    assert (public["name"], public["city"], public["about"]) == (
+        "Анна Иванова",
+        "Санкт-Петербург",
+        "Теннис по выходным",
+    )
 
 
 def test_profile_update_requires_login_and_valid_name(client, login):

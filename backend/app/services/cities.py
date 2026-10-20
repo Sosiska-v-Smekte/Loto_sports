@@ -6,7 +6,7 @@ from pathlib import Path
 
 _DATA = Path(__file__).resolve().parent.parent / "data"
 _FILE = _DATA / "cities.json"
-# Центры городов для карты: найдены геокодером OpenStreetMap (Nominatim) один раз и хранятся рядом со справочником
+# Центры городов для карты, полученные через Nominatim
 _CENTERS_FILE = _DATA / "city_centers.json"
 
 

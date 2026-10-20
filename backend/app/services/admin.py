@@ -87,7 +87,7 @@ def list_events(
 
 
 def moderate_event(db: Session, event_id: int, new_status: EventStatus, reason: str) -> Event:
-    """Снятие или мягкое удаление. Записи участников не трогаем — они видят статус «Мероприятие снято»."""
+    """Снятие или мягкое удаление. Записи участников сохраняются, чтобы они видели статус мероприятия."""
     event = db.get(Event, event_id)
     if event is None:
         raise not_found("Мероприятие не найдено")

@@ -85,7 +85,7 @@ def set_avatar(db: Session, user: User, image: str | None) -> Organization:
 
 
 def present(db: Session, organizations: list[Organization], viewer: User | None) -> list[OrganizationOut]:
-    """Карточки сообществ: направление для цвета и иконки, число участников и живых событий, моя роль."""
+    """Карточки сообществ: направление, число участников и активных событий, роль зрителя."""
     if not organizations:
         return []
     ids = [o.id for o in organizations]

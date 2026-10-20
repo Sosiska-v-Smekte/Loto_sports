@@ -8,7 +8,9 @@ def test_question_and_organizer_reply(client, login):
     oleg = login("org@demo.ru")
     event = find_event(client, "Блиц-турнир «Осенний ход»")
 
-    question = client.post(f"/api/events/{event['id']}/comments", headers=maria, json={"text": "Нужен ли свой комплект?"})
+    question = client.post(
+        f"/api/events/{event['id']}/comments", headers=maria, json={"text": "Нужен ли свой комплект?"}
+    )
     assert question.status_code == 201
     assert question.json()["is_organizer_reply"] is False
 

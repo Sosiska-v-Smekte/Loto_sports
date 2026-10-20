@@ -44,8 +44,10 @@ def test_deleted_event_is_gone_everywhere(client, login):
 
     assert client.get(f"/api/events/{event['id']}", headers=ilya).status_code == 404
     assert event["id"] not in [e["id"] for e in client.get("/api/events").json()]
-    # Записавшийся видит в «Моих активностях», что мероприятие удалено, и может убрать запись (правка 7)
-    record = next(p for p in client.get("/api/me/participations", headers=ilya).json() if p["event"]["id"] == event["id"])
+    # Записавшийся видит в «Моих активностях», что мероприятие удалено и может скрыть запись
+    record = next(
+        p for p in client.get("/api/me/participations", headers=ilya).json() if p["event"]["id"] == event["id"]
+    )
     assert record["event"]["status"] == "deleted" and record["event"]["moderation_reason"] == "Дубликат"
     assert client.post(f"/api/events/{event['id']}/join", headers=login("neworg@demo.ru")).status_code == 404
     # Админ продолжает видеть удалённое в своём списке

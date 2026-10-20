@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session
 from app.models import Sport, User
 from app.services.errors import bad_request
 
-# Пастельная палитра шапок карточек (снята с макета + дополнительные оттенки)
+# Палитра шапок карточек
 PALETTE = ["#F6D46A", "#F2A9C8", "#AFC3EE", "#C3D69A", "#F5BE92", "#CDB8EE", "#A9D8C6", "#E9CF9F"]
 CUSTOM_SPORT_ICON = "🏅"
 
@@ -42,7 +42,7 @@ def display_sport_name(name: str) -> str:
 
 
 def color_for(normalized_name: str) -> str:
-    # crc32 стабилен между запусками (в отличие от hash()), поэтому цвет не «прыгает»
+    # crc32, в отличие от hash(), стабилен между запусками
     return PALETTE[zlib.crc32(normalized_name.encode()) % len(PALETTE)]
 
 
@@ -83,6 +83,6 @@ def ensure_base_sports(db: Session) -> None:
         if not existing:
             db.add(Sport(name=name, normalized_name=normalized, slug=slug, color=color, icon=icon))
         elif existing.slug is None:
-            # Пользователь уже завёл такое направление сам — теперь оно базовое, со своей иконкой
+            # Пользовательское направление с таким названием становится базовым
             existing.slug, existing.icon, existing.is_custom = slug, icon, False
     db.flush()

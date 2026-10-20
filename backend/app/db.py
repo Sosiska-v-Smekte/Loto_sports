@@ -26,7 +26,6 @@ SessionLocal = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False
 
 
 def migrate(bind: Engine = engine) -> None:
-    """Применяет миграции Alembic до последней версии."""
     from alembic import command
     from alembic.config import Config
 

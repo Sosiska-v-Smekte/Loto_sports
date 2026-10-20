@@ -39,11 +39,11 @@ class EventOut(ORMModel):
     card_color: str | None
     card_pattern: str | None
     status: str
-    # Причина видна только тем, кому показывается снятое событие (организатор, записавшиеся, админ)
+    # Причина видна тем, кому доступно снятое событие: организатору, записавшимся и администратору
     moderation_reason: str | None
     created_at: datetime
     participants_count: int
-    # Число ожидающих заявок — только для организатора и админа, остальным null
+    # Число ожидающих заявок заполняется только для организатора и администратора
     pending_count: int | None
     my_participation: MyParticipation | None
     can_manage: bool
@@ -89,7 +89,7 @@ class ParticipantOut(ORMModel):
 
 class ParticipantsOut(BaseModel):
     confirmed: list[ParticipantOut]
-    # Заявки и отказы видит только организатор; остальным — пустые списки
+    # Заявки и отказы видит только организатор, остальным отдаются пустые списки
     pending: list[ParticipantOut] = Field(default_factory=list)
     rejected: list[ParticipantOut] = Field(default_factory=list)
 

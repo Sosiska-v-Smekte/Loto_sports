@@ -30,5 +30,7 @@ def test_rejected_applicant_is_not_a_participant(client, login):
     organized = next(e for e in client.get("/api/me/events", headers=oleg).json() if e["id"] == event["id"])
     assert organized["participants_count"] == count_before
     # У самой Марии запись видна как отклонённая, а не как участие
-    mine = next(p for p in client.get("/api/me/participations", headers=maria).json() if p["event"]["id"] == event["id"])
+    mine = next(
+        p for p in client.get("/api/me/participations", headers=maria).json() if p["event"]["id"] == event["id"]
+    )
     assert mine["status"] == "rejected"

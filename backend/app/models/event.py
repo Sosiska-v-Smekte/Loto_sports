@@ -42,18 +42,16 @@ class Event(Base):
     place_details: Mapped[str] = mapped_column(Text, default="")
     # Конкретная зона площадки: на неё распространяется правило «одно мероприятие одновременно»
     zone_id: Mapped[int | None] = mapped_column(ForeignKey("zones.id"), index=True)
-    # Координаты точки на карте. Необязательны: без них мероприятие просто не показывается на карте
+    # Без координат мероприятие не показывается на карте
     latitude: Mapped[float | None] = mapped_column(Float)
     longitude: Mapped[float | None] = mapped_column(Float)
     level: Mapped[EventLevel] = mapped_column(String(20), default=EventLevel.any)
     requirements: Mapped[str] = mapped_column(Text, default="")
     join_mode: Mapped[JoinMode] = mapped_column(String(20), default=JoinMode.open)
-    # Свой цвет карточки (#RRGGBB); пусто — берётся цвет направления
+    # Цвет карточки #RRGGBB; если не задан, берётся цвет направления
     card_color: Mapped[str | None] = mapped_column(String(7))
     card_pattern: Mapped[str | None] = mapped_column(String(16))
-    status: Mapped[EventStatus] = mapped_column(
-        String(20), default=EventStatus.published, index=True
-    )
+    status: Mapped[EventStatus] = mapped_column(String(20), default=EventStatus.published, index=True)
     moderation_reason: Mapped[str | None] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=now)
 

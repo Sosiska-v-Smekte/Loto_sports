@@ -8,7 +8,7 @@ from app.schemas.common import City, ORMModel, SportOut
 
 class InterestIn(BaseModel):
     sport_id: int | None = None
-    # Своё направление, как при создании мероприятия: появится в каталоге и будет доступно всем
+    # Новое направление, как при создании мероприятия, попадает в общий каталог
     sport_name: Annotated[str, StringConstraints(strip_whitespace=True, max_length=60)] | None = None
     city: City
     district: Annotated[str, StringConstraints(strip_whitespace=True, max_length=80)] = ""

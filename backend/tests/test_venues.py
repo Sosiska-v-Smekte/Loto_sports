@@ -93,7 +93,12 @@ def test_unpublished_event_releases_zone(client, login):
     hall = zones["Малый зал"]
     event = _create(client, oleg, hall, 18, 19).json()
     assert _create(client, oleg, hall, 18, 19, title="Другая").status_code == 409
-    assert client.post(f"/api/admin/events/{event['id']}/unpublish", headers=admin, json={"reason": "Нарушение"}).status_code == 200
+    assert (
+        client.post(
+            f"/api/admin/events/{event['id']}/unpublish", headers=admin, json={"reason": "Нарушение"}
+        ).status_code
+        == 200
+    )
     assert _create(client, oleg, hall, 18, 19, title="Другая").status_code == 201
 
 
@@ -133,8 +138,11 @@ def test_only_approved_organization_or_admin_can_add_venue(client, login):
         f"/api/venues/{venue['id']}/zones", headers=login("org@demo.ru"), json={"name": "Зал 2", "capacity": 8}
     )
     assert len(added.json()["zones"]) == 2
-    assert client.post(
-        f"/api/venues/{venue['id']}/zones", headers=login("user@demo.ru"), json={"name": "Зал 3", "capacity": 8}
-    ).status_code == 403
+    assert (
+        client.post(
+            f"/api/venues/{venue['id']}/zones", headers=login("user@demo.ru"), json={"name": "Зал 3", "capacity": 8}
+        ).status_code
+        == 403
+    )
     zone_id = added.json()["zones"][1]["id"]
     assert client.delete(f"/api/zones/{zone_id}", headers=login("org@demo.ru")).status_code == 200

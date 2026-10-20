@@ -13,7 +13,7 @@ class SportLevel(StrEnum):
 
 
 class UserSport(Base):
-    """«Мои спортивные направления» в профиле: направление и уровень, который человек указал о себе."""
+    """Направление и уровень, указанные пользователем о себе."""
 
     __tablename__ = "user_sports"
     __table_args__ = (UniqueConstraint("user_id", "sport_id", name="uq_user_sport"),)

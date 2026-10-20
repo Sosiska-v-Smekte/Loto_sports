@@ -24,9 +24,8 @@ class Participation(Base):
     status: Mapped[ParticipationStatus] = mapped_column(String(20))
     created_at: Mapped[datetime] = mapped_column(DateTime, default=now)
     decided_at: Mapped[datetime | None] = mapped_column(DateTime)
-    # «Убрать из списка» в «Моих активностях» только прячет запись от самого пользователя.
-    # Строку не удаляем: иначе отклонённый смог бы подать заявку повторно в обход решения организатора,
-    # а организатор и админ потеряли бы историю заявок.
+    # Скрытие убирает запись только из списка самого пользователя. Строка не удаляется, чтобы отклонённый
+    # не мог подать заявку повторно, а у организатора и администратора сохранялась история заявок.
     hidden_by_user: Mapped[bool] = mapped_column(Boolean, default=False)
 
     event: Mapped["Event"] = relationship(lazy="joined")  # noqa: F821

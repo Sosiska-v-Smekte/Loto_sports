@@ -16,9 +16,11 @@ def test_user_avatar_upload_replace_and_delete(client, login, tmp_path, monkeypa
     assert url.startswith("/api/uploads/avatars/") and url.endswith(".png")
     assert client.get(url).content == PNG
 
-    second = client.put("/api/me/avatar", json={"image": data_url(b"\xff\xd8\xff" + b"\x00" * 32, "image/jpeg")}, headers=headers)
+    second = client.put(
+        "/api/me/avatar", json={"image": data_url(b"\xff\xd8\xff" + b"\x00" * 32, "image/jpeg")}, headers=headers
+    )
     assert second.json()["avatar_url"] != url
-    assert client.get(url).status_code == 404  # прежний файл удалён
+    assert client.get(url).status_code == 404
 
     removed = client.delete("/api/me/avatar", headers=headers)
     assert removed.json()["avatar_url"] is None
@@ -29,8 +31,16 @@ def test_avatar_rejects_non_images_and_big_files(client, login, tmp_path, monkey
     headers = login("user@demo.ru")
     assert client.put("/api/me/avatar", json={"image": "https://example.com/a.png"}, headers=headers).status_code == 400
     # Заявлен PNG, а внутри не картинка
-    assert client.put("/api/me/avatar", json={"image": data_url(b"<script>alert(1)</script>")}, headers=headers).status_code == 400
-    assert client.put("/api/me/avatar", json={"image": data_url(PNG + b"\x00" * 600_000)}, headers=headers).status_code == 400
+    assert (
+        client.put(
+            "/api/me/avatar", json={"image": data_url(b"<script>alert(1)</script>")}, headers=headers
+        ).status_code
+        == 400
+    )
+    assert (
+        client.put("/api/me/avatar", json={"image": data_url(PNG + b"\x00" * 600_000)}, headers=headers).status_code
+        == 400
+    )
     assert client.put("/api/me/avatar", json={"image": data_url(PNG)}).status_code == 401
 
 
@@ -46,4 +56,7 @@ def test_organization_avatar_needs_an_organization(client, login, tmp_path, monk
     owner = client.put("/api/me/organization/avatar", json={"image": data_url(PNG)}, headers=login("org@demo.ru"))
     assert owner.status_code == 200
     organization_id = owner.json()["id"]
-    assert client.get(f"/api/organizations/{organization_id}").json()["organization"]["avatar_url"] == owner.json()["avatar_url"]
+    assert (
+        client.get(f"/api/organizations/{organization_id}").json()["organization"]["avatar_url"]
+        == owner.json()["avatar_url"]
+    )

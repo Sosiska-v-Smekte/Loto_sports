@@ -1,4 +1,4 @@
-"""Правила доступа к мероприятиям — единая точка для всех сервисов."""
+"""Правила доступа к мероприятиям для всех сервисов."""
 
 from sqlalchemy import select
 from sqlalchemy.orm import Session
@@ -22,8 +22,7 @@ def can_manage(event: Event, user: User | None) -> bool:
 def get_event_for_viewer(db: Session, event_id: int, viewer: User | None) -> Event:
     """Событие, которое этот пользователь вправе открыть.
 
-    Снятое с публикации видят организатор, уже записавшиеся и админ (чтобы понять, что произошло);
-    остальным оно недоступно. Удалённое видит только админ.
+    Снятое с публикации видят организатор, записавшиеся и администратор, удалённое только администратор.
     """
     event = db.get(Event, event_id)
     if event is None:
@@ -32,9 +31,12 @@ def get_event_for_viewer(db: Session, event_id: int, viewer: User | None) -> Eve
         return event
     if viewer is not None and viewer.is_admin:
         return event
-    if event.status == EventStatus.unpublished and viewer is not None:
-        if can_manage(event, viewer) or _has_participation(db, event.id, viewer.id):
-            return event
+    if (
+        event.status == EventStatus.unpublished
+        and viewer is not None
+        and (can_manage(event, viewer) or _has_participation(db, event.id, viewer.id))
+    ):
+        return event
     raise not_found("Мероприятие недоступно")
 
 

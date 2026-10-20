@@ -20,7 +20,7 @@ class OrganizationOut(ORMModel):
     rejection_reason: str | None
     created_at: datetime
     reviewed_at: datetime | None
-    # Вычисляемые поля для списка сообществ; в остальных ответах остаются значениями по умолчанию
+    # Вычисляются только для списка сообществ
     sport: SportOut | None = None
     members_count: int = 0
     active_events_count: int = 0

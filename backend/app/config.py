@@ -14,11 +14,10 @@ CORS_ORIGINS = [
     if origin.strip()
 ]
 
-# Загруженные аватарки пользователей и сообществ (файлы лежат рядом с базой)
 UPLOADS_DIR = Path(os.getenv("UPLOADS_DIR", BASE_DIR / "data" / "uploads"))
 
 SEED_ON_STARTUP = os.getenv("SEED_ON_STARTUP", "1") == "1"
 
-# Координаты новых мероприятий по адресу через Nominatim (OpenStreetMap). В тестах отключено — без сети
+# Геокодирование адресов через Nominatim; в тестах отключено, чтобы не обращаться к сети
 GEOCODING_ENABLED = os.getenv("GEOCODING_ENABLED", "1") == "1"
 GEOCODER_URL = os.getenv("GEOCODER_URL", "https://nominatim.openstreetmap.org/search")

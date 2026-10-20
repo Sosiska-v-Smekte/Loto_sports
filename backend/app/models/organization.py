@@ -26,9 +26,7 @@ class Organization(Base):
     city: Mapped[str] = mapped_column(String(120))
     contacts: Mapped[str] = mapped_column(String(500), default="")
     avatar_url: Mapped[str | None] = mapped_column(String(500))
-    status: Mapped[OrganizationStatus] = mapped_column(
-        String(20), default=OrganizationStatus.pending, index=True
-    )
+    status: Mapped[OrganizationStatus] = mapped_column(String(20), default=OrganizationStatus.pending, index=True)
     rejection_reason: Mapped[str | None] = mapped_column(Text)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=now)
     reviewed_at: Mapped[datetime | None] = mapped_column(DateTime)

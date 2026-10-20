@@ -35,10 +35,10 @@ class Zone(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     venue_id: Mapped[int] = mapped_column(ForeignKey("venues.id"), index=True)
     name: Mapped[str] = mapped_column(String(120))
-    # Необязательная группа для показа: «Зал настольного тенниса» → «Стол №1», «Стол №2»
+    # Необязательная группа для отображения: «Зал настольного тенниса» → «Стол №1», «Стол №2»
     group_name: Mapped[str | None] = mapped_column(String(120))
     capacity: Mapped[int] = mapped_column(Integer)
-    # Время на подготовку и уборку после мероприятия: зона освобождается на это число минут позже
+    # Время на подготовку и уборку: зона освобождается на это число минут позже окончания
     buffer_minutes: Mapped[int] = mapped_column(Integer, default=0)
     sort_order: Mapped[int] = mapped_column(Integer, default=0)
 

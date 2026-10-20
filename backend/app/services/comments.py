@@ -11,7 +11,7 @@ EXCERPT_LENGTH = 120
 
 
 def _visible_text(comment: Comment, viewer: User | None) -> str | None:
-    # Скрытое сообщение остаётся в ленте как заглушка; оригинал видит только администратор
+    # Скрытое сообщение остаётся в ленте заглушкой, текст видит только администратор
     if comment.is_hidden and not (viewer and viewer.is_admin):
         return None
     return comment.text

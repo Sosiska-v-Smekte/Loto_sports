@@ -17,7 +17,7 @@ def test_custom_sport_event_is_searchable(client, login):
     assert event["sport"]["is_custom"] is True
     assert event["status"] == "published"
 
-    # Повторный ввод в другом регистре не плодит дубли
+    # Повторный ввод в другом регистре не создаёт дублей
     again = client.post(
         "/api/events", headers=ilya, json=event_payload(title="Ещё фрисби", sport_name="АЛТИМАТ Фрисби")
     ).json()

@@ -36,7 +36,7 @@ def _ensure_capacity(db: Session, event: Event) -> None:
 
 
 def join_event(db: Session, event_id: int, user: User) -> Participation:
-    """Запись на событие. Все проверки — здесь, даже если кнопку на фронте не показали (прямой запрос к API)."""
+    """Запись на событие. Все проверки выполняются здесь, независимо от интерфейса."""
     event = db.get(Event, event_id)
     if event is None or event.status == EventStatus.deleted:
         raise not_found("Мероприятие не найдено")
@@ -55,7 +55,7 @@ def join_event(db: Session, event_id: int, user: User) -> Participation:
 
     _ensure_capacity(db, event)
 
-    # Свободная запись сразу делает участником, «по заявке» — только после решения организатора
+    # При свободной записи участие подтверждается сразу, по заявке только после решения организатора
     is_open = event.join_mode == JoinMode.open
     participation = Participation(
         event_id=event.id,
@@ -119,7 +119,7 @@ def my_participations(db: Session, user: User) -> list[Participation]:
 
 
 def hide_for_user(db: Session, participation_id: int, user: User) -> None:
-    """Убрать неактуальную запись из «Моих активностей»: отклонённую заявку или запись на снятое/удалённое событие."""
+    """Скрывает отклонённую заявку или запись на снятое или удалённое событие."""
     participation = db.get(Participation, participation_id)
     if participation is None or participation.user_id != user.id:
         raise not_found("Запись не найдена")
@@ -133,7 +133,7 @@ def hide_for_user(db: Session, participation_id: int, user: User) -> None:
 
 
 def cancel(db: Session, participation_id: int, user: User) -> None:
-    """Участник сам отменяет запись или заявку до начала. Строка удаляется, записаться заново можно."""
+    """Отмена записи или заявки до начала. Строка удаляется, поэтому записаться можно снова."""
     participation = db.get(Participation, participation_id)
     if participation is None or participation.user_id != user.id:
         raise not_found("Запись не найдена")

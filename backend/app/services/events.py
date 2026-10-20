@@ -86,9 +86,7 @@ def _zone_brief(event: Event) -> dict | None:
 def _feed_query() -> Select[tuple[Event]]:
     """Основная выдача: только опубликованные и ещё не начавшиеся события."""
     return (
-        select(Event)
-        .where(Event.status == EventStatus.published, Event.starts_at >= now())
-        .order_by(Event.starts_at)
+        select(Event).where(Event.status == EventStatus.published, Event.starts_at >= now()).order_by(Event.starts_at)
     )
 
 
@@ -179,7 +177,7 @@ def create_event(db: Session, data: EventCreate, author: User) -> Event:
             raise bad_request("Для площадки укажите время окончания: по нему проверяется, свободна ли зона")
         ensure_free(db, zone, data.starts_at, data.ends_at)
         venue = zone.venue
-        # Адрес и точка на карте берутся с площадки: мероприятие привязано к зоне, а не к произвольной строке
+        # Мероприятие в зоне получает адрес и координаты площадки
         values.update(city=venue.city, address=venue.address)
         if venue.latitude is not None and venue.longitude is not None:
             values.update(latitude=venue.latitude, longitude=venue.longitude)

@@ -23,9 +23,7 @@ class Interest(Base):
     """«Я бы пошёл»: намерение без записи на конкретное мероприятие."""
 
     __tablename__ = "interests"
-    __table_args__ = (
-        UniqueConstraint("user_id", "sport_id", "city", "day_kind", "day_part", name="uq_interest"),
-    )
+    __table_args__ = (UniqueConstraint("user_id", "sport_id", "city", "day_kind", "day_part", name="uq_interest"),)
 
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)

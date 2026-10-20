@@ -8,8 +8,6 @@ from app.models.base import now
 
 
 class OrganizationMember(Base):
-    """Участник сообщества: «Вступить» / «Подписаться» на странице сообществ."""
-
     __tablename__ = "organization_members"
     __table_args__ = (UniqueConstraint("organization_id", "user_id", name="uq_org_member"),)
 

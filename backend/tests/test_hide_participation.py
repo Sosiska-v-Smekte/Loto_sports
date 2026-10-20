@@ -1,4 +1,4 @@
-"""Правка 7: пользователь убирает неактуальные записи из «Моих активностей»."""
+"""Скрытие неактуальных записей из списка участий пользователя."""
 
 from tests.conftest import find_event
 
@@ -36,7 +36,9 @@ def test_hide_record_of_unpublished_event(client, login):
 
 def test_active_records_cannot_be_hidden(client, login):
     anna = login("user2@demo.ru")
-    confirmed = next(p for p in _mine(client, anna) if p["status"] == "confirmed" and p["event"]["status"] == "published")
+    confirmed = next(
+        p for p in _mine(client, anna) if p["status"] == "confirmed" and p["event"]["status"] == "published"
+    )
     pending = next(p for p in _mine(client, anna) if p["status"] == "pending")
     for record in (confirmed, pending):
         response = client.post(f"/api/me/participations/{record['id']}/hide", headers=anna)

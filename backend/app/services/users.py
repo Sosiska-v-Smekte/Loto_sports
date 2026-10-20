@@ -40,7 +40,7 @@ def update_profile(db: Session, user: User, data: ProfileUpdate) -> User:
 
 
 def set_avatar(db: Session, user: User, image: str | None) -> User:
-    """Загружает новую аватарку или (image=None) убирает текущую."""
+    """Загружает новую аватарку или при image=None убирает текущую."""
     url = avatars.save(image) if image else None
     avatars.remove(user.avatar_url)
     user.avatar_url = url
@@ -61,7 +61,6 @@ def sports_of(db: Session, user_id: int) -> list[UserSport]:
 
 
 def set_sports(db: Session, user: User, items: list[UserSportIn]) -> list[UserSport]:
-    """Заменяет список «Моих спортивных направлений» целиком."""
     unique = {item.sport_id: item for item in items}
     found = set(db.scalars(select(Sport.id).where(Sport.id.in_(unique))))
     if found != set(unique):
@@ -76,7 +75,7 @@ def set_sports(db: Session, user: User, items: list[UserSportIn]) -> list[UserSp
 
 
 def stats_of(db: Session, user: User) -> UserStats:
-    """Счётчики для карточки «Активность»: сколько посетил, организовал и в скольких клубах состоит."""
+    """Число посещённых и организованных мероприятий и сообществ пользователя."""
     attended = db.scalar(
         select(func.count())
         .select_from(Participation)
@@ -89,8 +88,12 @@ def stats_of(db: Session, user: User) -> UserStats:
         )
     )
     organized = db.scalar(
-        select(func.count()).select_from(Event).where(Event.organizer_user_id == user.id, Event.status != EventStatus.deleted)
+        select(func.count())
+        .select_from(Event)
+        .where(Event.organizer_user_id == user.id, Event.status != EventStatus.deleted)
     )
-    joined = db.scalar(select(func.count()).select_from(OrganizationMember).where(OrganizationMember.user_id == user.id))
+    joined = db.scalar(
+        select(func.count()).select_from(OrganizationMember).where(OrganizationMember.user_id == user.id)
+    )
     owns = 1 if user.organization is not None and user.organization.status == OrganizationStatus.approved else 0
     return UserStats(attended=attended or 0, organized=organized or 0, clubs=(joined or 0) + owns)

@@ -9,7 +9,7 @@ class Sport(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(120))
-    # Ключ для поиска дублей: «Скандинавская Ходьба » и «скандинавская ходьба» — одно направление
+    # Ключ поиска дублей: «Скандинавская Ходьба » и «скандинавская ходьба» считаются одним направлением
     normalized_name: Mapped[str] = mapped_column(String(120), unique=True, index=True)
     slug: Mapped[str | None] = mapped_column(String(60))
     color: Mapped[str] = mapped_column(String(9))

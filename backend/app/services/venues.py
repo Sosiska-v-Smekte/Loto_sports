@@ -1,7 +1,7 @@
 """Площадки и зоны. Зона принимает одно мероприятие за раз: пересечение по времени — конфликт.
 
-Вместимость и занятость — разные ограничения: вместимость ограничивает число участников,
-занятость не пускает вторую группу в зону, уже выделенную первой, сколько бы человек ни записалось.
+Вместимость ограничивает число участников, занятость не пускает второе мероприятие в зону,
+уже выделенную первому, независимо от числа записавшихся.
 """
 
 from datetime import datetime, time, timedelta
@@ -108,7 +108,9 @@ def remove_zone(db: Session, zone_id: int, user: User) -> Venue:
     return venue
 
 
-def _busy(db: Session, zone: Zone, after: datetime, before: datetime | None = None) -> list[tuple[datetime, datetime, str]]:
+def _busy(
+    db: Session, zone: Zone, after: datetime, before: datetime | None = None
+) -> list[tuple[datetime, datetime, str]]:
     """Занятые интервалы зоны с учётом буфера. Снятые и удалённые мероприятия зону не держат."""
     buffer = timedelta(minutes=zone.buffer_minutes)
     stmt = (
@@ -156,7 +158,9 @@ def availability(db: Session, zone: Zone, starts_at: datetime, ends_at: datetime
         f" («{first[2]}»). Выберите другое время или площадку. "
         f"Ближайшее свободное время: {_clock(moment, starts_at)}–{_clock(moment + duration, starts_at)}."
     )
-    return Availability(free=False, message=message, suggestion=Slot(starts_at=moment, ends_at=moment + duration), busy=day)
+    return Availability(
+        free=False, message=message, suggestion=Slot(starts_at=moment, ends_at=moment + duration), busy=day
+    )
 
 
 def ensure_free(db: Session, zone: Zone, starts_at: datetime, ends_at: datetime) -> None:
