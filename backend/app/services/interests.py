@@ -16,6 +16,7 @@ from app.schemas.interests import DemandGroup, InterestIn
 from app.schemas.common import SportOut
 from app.services.errors import bad_request, forbidden, not_found
 from app.services.notifications import notify
+from app.services.sports import get_or_create_sport
 
 DAY_KIND_LABEL = {DayKind.weekday: "в будни", DayKind.weekend: "в выходные"}
 DAY_PART_LABEL = {DayPart.morning: "утром", DayPart.day: "днём", DayPart.evening: "вечером"}
@@ -32,15 +33,19 @@ def day_part_of(moment: datetime) -> DayPart:
 
 
 def add_interests(db: Session, data: InterestIn, user: User) -> list[Interest]:
-    if db.get(Sport, data.sport_id) is None:
-        raise bad_request("Направление не найдено")
+    if data.sport_id is not None:
+        sport = db.get(Sport, data.sport_id)
+        if sport is None:
+            raise bad_request("Направление не найдено")
+    else:
+        sport = get_or_create_sport(db, data.sport_name or "", user)
     created = []
     for kind in dict.fromkeys(data.day_kinds):
         for part in dict.fromkeys(data.day_parts):
             existing = db.scalar(
                 select(Interest).where(
                     Interest.user_id == user.id,
-                    Interest.sport_id == data.sport_id,
+                    Interest.sport_id == sport.id,
                     Interest.city == data.city,
                     Interest.day_kind == kind,
                     Interest.day_part == part,
@@ -52,7 +57,7 @@ def add_interests(db: Session, data: InterestIn, user: User) -> list[Interest]:
                 continue
             interest = Interest(
                 user_id=user.id,
-                sport_id=data.sport_id,
+                sport_id=sport.id,
                 city=data.city,
                 district=data.district,
                 day_kind=kind,
@@ -114,7 +119,9 @@ def notify_interested(db: Session, event: Event) -> None:
         Interest.day_part == day_part_of(event.starts_at),
         Interest.user_id != event.organizer_user_id,
     )
-    for user_id in {row.user_id for row in db.scalars(stmt).unique()}:
+    wanted = {row.user_id for row in db.scalars(stmt).unique()}
+    muted = set(db.scalars(select(User.id).where(User.id.in_(wanted), User.notify_new.is_(False)))) if wanted else set()
+    for user_id in wanted - muted:
         notify(
             db,
             user_id,

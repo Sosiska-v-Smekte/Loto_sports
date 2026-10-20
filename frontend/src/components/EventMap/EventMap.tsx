@@ -57,6 +57,12 @@ const escapeHtml = (value: string) =>
 
 const safeColor = (color: string | undefined) => (color && /^#[0-9a-f]{3,8}$/i.test(color) ? color : DEFAULT_COLOR);
 
+/** Иконка направления: 3D-картинка из каталога, а если её нет — эмодзи. */
+const markerGlyph = (event: Event) =>
+  event.sportImage
+    ? `<img src="${escapeHtml(event.sportImage)}" alt="" width="28" height="28" draggable="false" />`
+    : escapeHtml(event.sportIcon || DEFAULT_ICON);
+
 function placeIcon(place: Place): L.DivIcon {
   const first = place.events[0];
   const extra = place.events.length - 1;
@@ -68,7 +74,7 @@ function placeIcon(place: Place): L.DivIcon {
         <svg class="${styles.markerShape}" viewBox="0 0 44 52" aria-hidden="true">
           <path d="M22 51 L13 38 A20 20 0 1 1 31 38 Z" />
         </svg>
-        <span class="${styles.markerIcon}">${escapeHtml(first.sportIcon || DEFAULT_ICON)}</span>
+        <span class="${styles.markerIcon}">${markerGlyph(first)}</span>
         ${extra > 0 ? `<span class="${styles.markerBadge}">+${extra}</span>` : ""}
       </div>`,
     iconSize: [44, 52],
@@ -140,7 +146,7 @@ function PlaceCard({ place, onEventSelect }: { place: Place; onEventSelect: MapP
           <li key={event.id}>
             <button type="button" className={styles.cardItem} onClick={() => onEventSelect(event.id)}>
               <span className={styles.cardIcon} style={{ backgroundColor: safeColor(event.sportColor) }} aria-hidden>
-                {event.sportIcon || DEFAULT_ICON}
+                {event.sportImage ? <img src={event.sportImage} alt="" width={28} height={28} draggable={false} /> : event.sportIcon || DEFAULT_ICON}
               </span>
               <span className={styles.cardText}>
                 <span className={styles.cardTitle}>{event.title}</span>

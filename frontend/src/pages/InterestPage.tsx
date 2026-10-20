@@ -5,7 +5,7 @@ import type { DayKind, DayPart } from "@/api/types";
 import { BackLink } from "@/components/BackLink";
 import { CityCombobox } from "@/components/CityCombobox";
 import { DemandList } from "@/components/DemandList";
-import { SportIllustration } from "@/components/SportIllustration";
+import { SportPicker, type SportChoice } from "@/components/SportPicker";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { Card, SectionTitle } from "@/components/ui/Card";
 import { Input } from "@/components/ui/Field";
@@ -28,7 +28,7 @@ export function InterestPage() {
   const { user } = useAuth();
   const sports = useSports();
   const [city, setCity] = useState(user?.city ?? "Москва");
-  const [sportId, setSportId] = useState<number | null>(null);
+  const [sport, setSport] = useState<SportChoice>(null);
   const [district, setDistrict] = useState("");
   const [kinds, setKinds] = useState<DayKind[]>(["weekend"]);
   const [parts, setParts] = useState<DayPart[]>(["day"]);
@@ -40,7 +40,7 @@ export function InterestPage() {
   const remove = useAction(interestsApi.remove, "Отметка убрана");
 
   const errors = {
-    sport: sportId ? undefined : "Выберите направление",
+    sport: sport ? undefined : "Выберите направление или добавьте своё",
     kinds: kinds.length ? undefined : "Выберите будни, выходные или оба варианта",
     parts: parts.length ? undefined : "Выберите хотя бы одно время суток",
   };
@@ -48,8 +48,14 @@ export function InterestPage() {
 
   const submit = () => {
     setTouched(true);
-    if (!valid || !sportId) return;
-    add.mutate({ sport_id: sportId, city, district: district.trim(), day_kinds: kinds, day_parts: parts });
+    if (!valid || !sport) return;
+    add.mutate({
+      sport_id: "sportId" in sport ? sport.sportId : null,
+      sport_name: "customName" in sport ? sport.customName : null,
+      city, district: district.trim(),
+      day_kinds: kinds,
+      day_parts: parts,
+    });
   };
 
   return (
@@ -68,24 +74,7 @@ export function InterestPage() {
             Чтобы отметить интерес, нужно войти. Посмотреть, что хотят другие, можно и без входа.
           </p>
         )}
-        <div>
-          <p className="mb-2 text-[15px] font-medium">Направление</p>
-          <div role="group" aria-label="Направление" className="flex flex-wrap gap-2">
-            {sports.data
-              ?.filter((s) => !s.is_custom)
-              .map((sport) => (
-                <Pill
-                  key={sport.id}
-                  active={sportId === sport.id}
-                  onClick={() => setSportId(sport.id)}
-                  icon={<SportIllustration sport={sport} compact className="text-[22px]" />}
-                >
-                  {sport.name}
-                </Pill>
-              ))}
-          </div>
-          {touched && errors.sport && <p role="alert" className="mt-1.5 text-sm font-medium text-danger-ink">{errors.sport}</p>}
-        </div>
+        <SportPicker sports={sports.data} value={sport} onChange={setSport} error={touched ? errors.sport : undefined} />
         <div className="grid gap-4 sm:grid-cols-2">
           <CityCombobox label="Город" required value={city} onChange={setCity} />
           <Input

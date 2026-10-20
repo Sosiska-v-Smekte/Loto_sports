@@ -42,6 +42,13 @@ const NATURAL: Record<string, string> = {
 /** В маленьком размере (чипы) сложная композиция не читается — показываем один предмет. */
 const COMPACT: Record<string, string> = { bowling: "bowling-pin" };
 
+/** Адрес иконки направления и цвет, в который нужно перекрасить фиолетовый акцент (если нужно). Для карты и списков. */
+export function sportIconSource(sport: Pick<Sport, "slug">, compact = false) {
+  const base = (sport.slug && ICONS[sport.slug]) || "custom";
+  const file = (compact && COMPACT[base]) || base;
+  return { src: `/sport-icons/${file}.webp`, color: NATURAL[file] as string | undefined };
+}
+
 /** Адрес перекрашенной картинки; пока считается (или цвет не нужен), возвращает null. */
 function useRecoloredIcon(src: string, color: string | undefined): string | null {
   const [done, setDone] = useState<{ key: string; url: string } | null>(null);

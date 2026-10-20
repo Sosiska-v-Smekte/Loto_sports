@@ -42,3 +42,9 @@ export function formatShortDate(iso: string): string {
 }
 
 export const toIsoDate = (d: Dayjs) => d.format("YYYY-MM-DD");
+
+/** «19 Окт, 18:00» — коротко для строк расписания. */
+export function formatShortWhen(iso: string): string {
+  const d = dayjs(iso);
+  return `${d.date()} ${capitalize(shortMonth(d))}, ${d.format("HH:mm")}`;
+}

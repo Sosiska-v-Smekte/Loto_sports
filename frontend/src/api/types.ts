@@ -18,6 +18,8 @@ export interface OrganizationBrief {
 
 export interface User extends UserBrief {
   email: string;
+  notify_new: boolean;
+  notify_remind: boolean;
   city: string | null;
   about: string | null;
   is_admin: boolean;
@@ -28,6 +30,19 @@ export interface UserPublic extends UserBrief {
   city: string | null;
   about: string | null;
   organization: OrganizationBrief | null;
+}
+
+export type SportLevel = "beginner" | "amateur" | "pro";
+
+export interface UserSport {
+  sport: Sport;
+  level: SportLevel;
+}
+
+export interface UserStats {
+  attended: number;
+  organized: number;
+  clubs: number;
 }
 
 export interface Sport {
@@ -127,7 +142,8 @@ export interface Interest {
 }
 
 export interface InterestInput {
-  sport_id: number;
+  sport_id: number | null;
+  sport_name: string | null;
   city: string;
   district: string;
   day_kinds: DayKind[];
@@ -214,6 +230,12 @@ export interface Organization {
   rejection_reason: string | null;
   created_at: string;
   reviewed_at: string | null;
+  /** Направление для цвета и иконки карточки; null, если не удалось определить */
+  sport: Sport | null;
+  members_count: number;
+  active_events_count: number;
+  is_member: boolean;
+  is_owner: boolean;
 }
 
 export interface AdminOrganization extends Organization {
@@ -252,6 +274,8 @@ export interface ProfileInput {
   name: string;
   city: string;
   about: string;
+  notify_new?: boolean;
+  notify_remind?: boolean;
 }
 
 export interface DemoAccount {

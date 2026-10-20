@@ -1,11 +1,12 @@
 import { useQueryClient } from "@tanstack/react-query";
-import { Building2, CalendarPlus, Camera, MapPin, Phone } from "lucide-react";
+import { Building2, CalendarPlus, Camera, MapPin, Phone, UsersRound } from "lucide-react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { meApi } from "@/api/endpoints";
 import { AvatarModal } from "@/components/AvatarModal";
 import { BackLink } from "@/components/BackLink";
 import { EventGrid } from "@/components/EventGrid";
+import { JoinCommunityButton } from "@/components/JoinCommunityButton";
 import { Avatar } from "@/components/ui/Avatar";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { Card, SectionTitle } from "@/components/ui/Card";
@@ -14,6 +15,7 @@ import { EmptyState } from "@/components/ui/States";
 import { Tag } from "@/components/ui/Tag";
 import { useAuth } from "@/features/auth";
 import { useOrganization } from "@/features/organizations";
+import { membersLabel } from "@/lib/interests";
 
 export function CommunityPage() {
   const id = Number(useParams().id);
@@ -46,6 +48,7 @@ export function CommunityPage() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
           <Avatar name={organization.name} id={organization.id} src={organization.avatar_url} size="xl" />
           <h1 className="min-w-0 flex-1 text-[30px] font-bold leading-tight [overflow-wrap:anywhere] sm:text-[40px]">{organization.name}</h1>
+          {!isOwner && <JoinCommunityButton organization={organization} className="self-start sm:self-center" />}
           {isOwner && (
             <Button variant="secondary" size="sm" icon={<Camera className="size-4" aria-hidden />} onClick={() => setChangingPhoto(true)} className="self-start sm:self-center">
               Сменить фото
@@ -64,6 +67,10 @@ export function CommunityPage() {
           <span className="flex items-center gap-1.5">
             <MapPin className="size-4" aria-hidden />
             {organization.city}
+          </span>
+          <span className="flex items-center gap-1.5">
+            <UsersRound className="size-4" aria-hidden />
+            {membersLabel(organization.members_count)}
           </span>
           {organization.contacts && (
             <span className="flex items-center gap-1.5">

@@ -21,8 +21,11 @@ import type {
   ProfileInput,
   Sport,
   SportEvent,
+  SportLevel,
   User,
   UserPublic,
+  UserSport,
+  UserStats,
   Venue,
   VenueInput,
 } from "./types";
@@ -62,6 +65,8 @@ export const eventsApi = {
 export const meApi = {
   participations: () => api.get<MyParticipation[]>("/me/participations"),
   hideParticipation: (id: number) => api.post<void>(`/me/participations/${id}/hide`),
+  cancelParticipation: (id: number) => api.delete<void>(`/me/participations/${id}`),
+  setSports: (items: { sport_id: number; level: SportLevel }[]) => api.put<UserSport[]>("/me/sports", items),
   events: () => api.get<SportEvent[]>("/me/events"),
   organization: () => api.get<Organization | null>("/me/organization"),
   submitOrganization: (data: OrganizationInput) => api.post<Organization>("/me/organization", data),
@@ -75,10 +80,13 @@ export const meApi = {
 export const organizationsApi = {
   list: (q?: string) => api.get<Organization[]>("/organizations", { q }),
   get: (id: number) => api.get<{ organization: Organization; events: SportEvent[] }>(`/organizations/${id}`),
+  join: (id: number) => api.post<Organization>(`/organizations/${id}/join`),
+  leave: (id: number) => api.delete<Organization>(`/organizations/${id}/join`),
 };
 
 export const usersApi = {
-  get: (id: number) => api.get<{ user: UserPublic; events: SportEvent[] }>(`/users/${id}`),
+  get: (id: number) =>
+    api.get<{ user: UserPublic; events: SportEvent[]; sports: UserSport[]; stats: UserStats }>(`/users/${id}`),
 };
 
 export const notificationsApi = {

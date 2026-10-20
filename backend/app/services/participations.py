@@ -123,3 +123,16 @@ def hide_for_user(db: Session, participation_id: int, user: User) -> None:
         raise conflict("Активную запись убрать нельзя: вы участвуете или ждёте решения организатора")
     participation.hidden_by_user = True
     db.commit()
+
+
+def cancel(db: Session, participation_id: int, user: User) -> None:
+    """Участник сам отменяет запись или заявку до начала. Строка удаляется, записаться заново можно."""
+    participation = db.get(Participation, participation_id)
+    if participation is None or participation.user_id != user.id:
+        raise not_found("Запись не найдена")
+    if participation.status == ParticipationStatus.rejected:
+        raise conflict("Заявка уже отклонена, отменять нечего")
+    if participation.event.starts_at < now():
+        raise conflict("Мероприятие уже началось, отменить запись нельзя")
+    db.delete(participation)
+    db.commit()

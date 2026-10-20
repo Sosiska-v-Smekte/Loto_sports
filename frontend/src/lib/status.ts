@@ -1,5 +1,5 @@
 import { Ban, CheckCircle2, Clock, EyeOff, Trash2, XCircle, type LucideIcon } from "lucide-react";
-import type { EventStatus, JoinMode, Level, OrganizationStatus, ParticipationStatus } from "@/api/types";
+import type { EventStatus, JoinMode, Level, OrganizationStatus, ParticipationStatus, SportLevel } from "@/api/types";
 
 export type Tone = "success" | "warning" | "danger" | "info" | "neutral" | "level";
 
@@ -21,6 +21,13 @@ export const LEVEL_HINT: Record<Level, string> = {
   beginner: "Нужны самые базовые навыки",
   amateur: "Для тех, кто уже регулярно играет",
   pro: "Высокий уровень подготовки",
+};
+
+/** Уровень, который человек указывает о себе в профиле. */
+export const SPORT_LEVEL_LABEL: Record<SportLevel, string> = {
+  beginner: "Начинающий",
+  amateur: "Любитель",
+  pro: "Опытный",
 };
 
 /** Тип организатора — одинаковая подпись на карточках и странице события. */

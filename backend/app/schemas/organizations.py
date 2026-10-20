@@ -3,7 +3,7 @@ from typing import Annotated
 
 from pydantic import BaseModel, StringConstraints
 
-from app.schemas.common import City, ORMModel, UserBrief
+from app.schemas.common import City, ORMModel, SportOut, UserBrief
 from app.schemas.events import EventOut
 
 
@@ -20,6 +20,12 @@ class OrganizationOut(ORMModel):
     rejection_reason: str | None
     created_at: datetime
     reviewed_at: datetime | None
+    # Вычисляемые поля для списка сообществ; в остальных ответах остаются значениями по умолчанию
+    sport: SportOut | None = None
+    members_count: int = 0
+    active_events_count: int = 0
+    is_member: bool = False
+    is_owner: bool = False
 
 
 class OrganizationPage(BaseModel):

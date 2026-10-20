@@ -18,3 +18,11 @@ export const peopleCount = (n: number) => {
   const word = tail >= 11 && tail <= 14 ? "человек" : last === 1 ? "человек" : last >= 2 && last <= 4 ? "человека" : "человек";
   return `${n} ${word}`;
 };
+
+/** «1 участник», «3 участника», «5 участников». */
+export const membersLabel = (n: number) => {
+  const tail = n % 100;
+  const last = n % 10;
+  const word = tail >= 11 && tail <= 14 ? "участников" : last === 1 ? "участник" : last >= 2 && last <= 4 ? "участника" : "участников";
+  return `${n} ${word}`;
+};

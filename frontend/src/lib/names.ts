@@ -45,9 +45,11 @@ export function eventsInCityTitle(city: string): string {
 export function initials(name: string): string {
   return name
     .split(/\s+/)
-    .filter(Boolean)
+    // Кавычки и знаки в начале слова («Авангард») в инициалы не попадают
+    .map((part) => part.match(/\p{L}/u)?.[0])
+    .filter((letter): letter is string => Boolean(letter))
     .slice(0, 2)
-    .map((part) => part[0]?.toUpperCase())
+    .map((letter) => letter.toUpperCase())
     .join("");
 }
 

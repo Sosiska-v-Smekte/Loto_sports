@@ -18,6 +18,7 @@ from app.models import (
     Event,
     EventLevel,
     Interest,
+    OrganizationMember,
     EventStatus,
     JoinMode,
     Organization,
@@ -25,7 +26,9 @@ from app.models import (
     Participation,
     ParticipationStatus,
     Sport,
+    SportLevel,
     User,
+    UserSport,
     Venue,
     Zone,
 )
@@ -80,6 +83,10 @@ PLACE_COORDINATES: dict[str, tuple[float, float]] = {
     "Арена «Север», ул. 9 Мая, 74": (56.050787, 92.894608),
     "Николаевский проспект, сквер у Николаевского моста": (55.983631, 92.812124),
     "Парк Горького, Крымский Вал, 9": (55.730032, 37.608461),
+    "Крымский Вал, 9": (55.730032, 37.608461),
+    "Лужнецкая наб., 24": (55.715, 37.553),
+    "ул. Остоженка, 7": (55.7415, 37.5985),
+    "Ленинградский пр., 33": (55.7905, 37.5535),
     "Манеж «Запад», ул. Генерала Дорохова, 10": (55.70235, 37.440067),
     "СК «Спартак», Майская аллея, 7": (55.7929, 37.6764),
     "Клуб «Ход», ул. Покровка, 17": (55.759704, 37.64527),
@@ -512,15 +519,94 @@ def seed_planning(db: Session) -> None:
     db.commit()
 
 
+CLUBS = [
+    # email владельца, имя, название, направление, описание, адрес, дни до события, час
+    ("run@demo.ru", "Алексей С.", "Беговой клуб Парка Горького", "Бег", "Пробежки по набережной для всех уровней, по вечерам и выходным.", "Крымский Вал, 9", 2, 19),
+    ("avangard@demo.ru", "Роман Т.", "ФК «Авангард»", "Футбол", "Любительский футбол 7×7, набираем составы на каждую неделю.", "Лужнецкая наб., 24", 3, 20),
+    ("set@demo.ru", "Ирина М.", "Теннисный клуб «Сет»", "Теннис", "Корты и тренировки для взрослых и детей, парные турниры.", "ул. Остоженка, 7", 4, 18),
+    ("sparta@demo.ru", "Игорь Л.", "БК «Спарта»", "Баскетбол", "Баскетбол 3×3 и командные тренировки в зале.", "Ленинградский пр., 33", 5, 19),
+]
+
+
+def seed_communities(db: Session) -> None:
+    """Дополнительные сообщества, участники и «мои направления» для демо. Добавляется и в уже заполненную базу."""
+    if db.scalar(select(Organization.id).where(Organization.name == CLUBS[0][2])) is not None:
+        return
+    users = {u.email: u for u in db.scalars(select(User))}
+    if "org@demo.ru" not in users:
+        return
+    sports = {s.name: s for s in db.scalars(select(Sport)) if s.slug}
+    clubs = []
+    for email, name, title, sport, description, address, days, hour in CLUBS:
+        owner = User(
+            email=email, name=name, city="Москва", about=f"Руковожу клубом «{title}».", password_hash=hash_password(DEMO_PASSWORD)
+        )
+        db.add(owner)
+        db.flush()
+        organization = Organization(
+            owner_id=owner.id,
+            name=title,
+            description=description,
+            sports=sport,
+            city="Москва",
+            contacts="club@example.ru",
+            status=OrganizationStatus.approved,
+            reviewed_at=now() - timedelta(days=20),
+        )
+        db.add(organization)
+        db.flush()
+        starts = _at(days, hour)
+        db.add(
+            Event(
+                title=f"Открытая тренировка: {title}",
+                description=description,
+                sport_id=sports[sport].id,
+                organizer_user_id=owner.id,
+                organization_id=organization.id,
+                starts_at=starts,
+                ends_at=starts + timedelta(hours=2),
+                city="Москва",
+                address=address,
+                latitude=PLACE_COORDINATES[address][0],
+                longitude=PLACE_COORDINATES[address][1],
+                join_mode=JoinMode.open,
+            )
+        )
+        clubs.append(organization)
+    hod = db.scalar(select(Organization).where(Organization.owner_id == users["org@demo.ru"].id))
+    members = {
+        "user@demo.ru": [clubs[0], clubs[1]] + ([hod] if hod else []),
+        "user2@demo.ru": [clubs[0], clubs[2]],
+        "ivan@demo.ru": [clubs[0], clubs[3]],
+    }
+    for email, orgs in members.items():
+        if email in users:
+            for organization in orgs:
+                db.add(OrganizationMember(organization_id=organization.id, user_id=users[email].id))
+    if db.scalar(select(UserSport.id).limit(1)) is None:
+        levels = {
+            "user@demo.ru": [("Бег", SportLevel.amateur), ("Футбол", SportLevel.amateur), ("Шахматы", SportLevel.beginner)],
+            "user2@demo.ru": [("Теннис", SportLevel.amateur), ("Бег", SportLevel.beginner)],
+            "ivan@demo.ru": [("Баскетбол", SportLevel.pro), ("Бег", SportLevel.amateur)],
+        }
+        for email, rows in levels.items():
+            if email in users:
+                for sport, level in rows:
+                    db.add(UserSport(user_id=users[email].id, sport_id=sports[sport].id, level=level))
+    db.commit()
+
+
 def seed_if_empty(db: Session) -> bool:
     if db.scalar(select(User.id).limit(1)) is not None:
         # Новые базовые направления появляются и в уже заполненной базе
         ensure_base_sports(db)
         db.commit()
         seed_planning(db)
+        seed_communities(db)
         return False
     seed(db)
     seed_planning(db)
+    seed_communities(db)
     return True
 
 

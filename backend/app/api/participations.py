@@ -43,6 +43,11 @@ def hide_participation(participation_id: int, db: Db, user: CurrentUser):
     service.hide_for_user(db, participation_id, user)
 
 
+@router.delete("/me/participations/{participation_id}", status_code=status.HTTP_204_NO_CONTENT)
+def cancel_participation(participation_id: int, db: Db, user: CurrentUser):
+    service.cancel(db, participation_id, user)
+
+
 @router.get("/me/events", response_model=list[EventOut])
 def my_events(db: Db, user: CurrentUser):
     return present_events(db, organized_by(db, user), user)

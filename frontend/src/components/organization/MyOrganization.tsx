@@ -20,10 +20,19 @@ import { VenuesManager } from "./VenuesManager";
  * Верх страницы «Сообщества»: кнопка «Создать организацию», если её ещё нет,
  * или карточка «Моя организация» со статусом заявки и доступными действиями.
  */
-export function MyOrganization() {
+export function MyOrganization({
+  applying,
+  onApplyingChange,
+}: {
+  /** Форма заявки открыта извне (баннер «Хотите проводить тренировки от лица клуба?») */
+  applying?: boolean;
+  onApplyingChange?: (open: boolean) => void;
+}) {
   const { user } = useAuth();
   const organization = useMyOrganization(Boolean(user));
-  const [formOpen, setFormOpen] = useState(false);
+  const [ownFormOpen, setOwnFormOpen] = useState(false);
+  const formOpen = applying ?? ownFormOpen;
+  const setFormOpen = (open: boolean) => (onApplyingChange ? onApplyingChange(open) : setOwnFormOpen(open));
 
   if (!user) {
     return (

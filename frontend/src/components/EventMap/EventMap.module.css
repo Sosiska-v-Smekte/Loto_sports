@@ -91,6 +91,15 @@
   font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
 }
 
+.markerIcon img {
+  display: inline-block;
+  width: 28px;
+  height: 28px;
+  margin-top: -2px;
+  vertical-align: top;
+  pointer-events: none;
+}
+
 .markerBadge {
   position: absolute;
   z-index: 2;
@@ -219,6 +228,11 @@
   border-radius: 999px;
   font-size: 18px;
   font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+}
+
+.cardIcon img {
+  width: 28px;
+  height: 28px;
 }
 
 .cardText {

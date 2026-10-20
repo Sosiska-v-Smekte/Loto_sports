@@ -18,6 +18,9 @@ class User(Base):
     city: Mapped[str | None] = mapped_column(String(120))
     about: Mapped[str | None] = mapped_column(Text)
     is_admin: Mapped[bool] = mapped_column(Boolean, default=False)
+    # Настройки уведомлений. Пусто (старые записи) считается «включено»
+    notify_new: Mapped[bool | None] = mapped_column(Boolean, default=True)
+    notify_remind: Mapped[bool | None] = mapped_column(Boolean, default=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=now)
 
     organization: Mapped["Organization | None"] = relationship(  # noqa: F821

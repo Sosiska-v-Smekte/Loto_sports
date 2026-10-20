@@ -77,3 +77,18 @@ def test_matching_event_invites_but_does_not_join(client, login):
     ).json()
     notes = client.get("/api/notifications", headers=anna).json()
     assert not [n for n in notes if n["link"] == f"/events/{evening['id']}"]
+
+
+def test_custom_sport_interest_creates_sport(client, login):
+    anna = login("user2@demo.ru")
+    created = client.post(
+        "/api/interests",
+        headers=anna,
+        json={"sport_name": "Дартс", "city": "Москва", "day_kinds": ["weekday"], "day_parts": ["evening"]},
+    )
+    assert created.status_code == 201
+    assert created.json()[0]["sport"]["name"] == "Дартс" and created.json()[0]["sport"]["is_custom"] is True
+    assert "Дартс" in [s["name"] for s in client.get("/api/sports").json()]
+    assert client.post(
+        "/api/interests", headers=anna, json={"city": "Москва", "day_kinds": ["weekday"], "day_parts": ["day"]}
+    ).status_code == 422
