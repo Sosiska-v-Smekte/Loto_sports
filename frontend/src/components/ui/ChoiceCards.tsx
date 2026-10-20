@@ -31,7 +31,7 @@ export function ChoiceCards<T extends string>({ legend, name, value, onChange, c
               key={choice.value}
               className={cn(
                 "pressable relative flex cursor-pointer gap-3 rounded-[20px] border-2 bg-white/70 p-4 has-[:focus-visible]:outline has-[:focus-visible]:outline-[3px] has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-primary",
-                checked ? "border-primary bg-primary-soft" : "border-line hover:border-[#d3c6ad]",
+                checked ? "neu-inset border-primary bg-primary-soft" : "neu-raised-sm border-white/80 hover:border-[#d3c6ad]",
               )}
             >
               <input

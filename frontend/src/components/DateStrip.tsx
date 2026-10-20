@@ -38,7 +38,7 @@ export function DateStrip({ value, onChange }: DateStripProps) {
   };
 
   const arrowClass =
-    "pressable absolute top-[38px] z-10 hidden size-11 place-items-center rounded-full border border-line bg-surface shadow-soft hover:bg-white sm:grid";
+    "pressable absolute top-[38px] z-10 hidden size-11 place-items-center neu-control rounded-full border border-white/70 bg-surface sm:grid";
 
   return (
     <div className="relative">
@@ -70,12 +70,13 @@ export function DateStrip({ value, onChange }: DateStripProps) {
                 type="button"
                 onClick={() => onChange(selected ? null : iso)}
                 aria-pressed={selected}
+                data-weekend={weekend || undefined}
                 aria-label={`${isToday ? "Сегодня, " : ""}${day.format("dddd, D MMMM")}`}
                 className={cn(
-                  "pressable flex h-[66px] w-[50px] flex-col items-center justify-center rounded-2xl leading-none sm:w-[54px]",
+                  "pressable relative flex h-[66px] w-[50px] flex-col items-center justify-center rounded-2xl leading-none sm:w-[54px]",
                   selected
-                    ? "bg-primary text-white shadow-soft"
-                    : cn(isToday && "bg-today", "hover:bg-surface-muted", weekend ? "text-weekend" : "text-ink"),
+                    ? "neu-primary bg-primary text-white"
+                    : cn(isToday && "neu-inset bg-today", "hover:bg-surface-muted", weekend ? "text-weekend" : "text-ink"),
                 )}
               >
                 <span className="text-[22px] font-medium tabular-nums sm:text-[24px]">{day.date()}</span>

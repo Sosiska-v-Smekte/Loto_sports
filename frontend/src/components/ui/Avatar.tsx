@@ -14,7 +14,7 @@ interface AvatarProps {
 const SIZES = { sm: "size-8 text-xs", md: "size-10 text-sm", lg: "size-16 text-xl" };
 
 export function Avatar({ name, id, src, size = "sm", className }: AvatarProps) {
-  const classes = cn("shrink-0 rounded-full ring-2 ring-white", SIZES[size], className);
+  const classes = cn("shrink-0 rounded-full shadow-soft ring-2 ring-white", SIZES[size], className);
   if (src) return <img src={src} alt="" className={cn(classes, "object-cover")} />;
   return (
     <span

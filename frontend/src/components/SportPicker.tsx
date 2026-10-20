@@ -2,6 +2,7 @@ import { Plus, Search } from "lucide-react";
 import { useId, useState } from "react";
 import type { Sport } from "@/api/types";
 import { cn } from "@/lib/cn";
+import { SportIllustration } from "./SportIllustration";
 import { Pill } from "./ui/Pill";
 import { Skeleton } from "./ui/Skeleton";
 
@@ -53,7 +54,7 @@ export function SportPicker({ sports, value, onChange, error }: SportPickerProps
             key={sport.id}
             active={value !== null && "sportId" in value && value.sportId === sport.id}
             onClick={() => onChange({ sportId: sport.id, name: sport.name })}
-            icon={<span aria-hidden className="text-lg leading-none">{sport.icon}</span>}
+            icon={<SportIllustration sport={sport} className="text-[24px]" />}
           >
             {sport.name}
           </Pill>

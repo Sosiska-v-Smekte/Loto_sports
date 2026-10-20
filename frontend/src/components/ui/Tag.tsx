@@ -14,8 +14,9 @@ interface TagProps {
 export function Tag({ tone = "level", icon: Icon, size = "sm", className, children }: TagProps) {
   return (
     <span
+      data-tone={tone}
       className={cn(
-        "inline-flex max-w-full items-center gap-1.5 whitespace-nowrap rounded-full font-medium",
+        "chip-3d inline-flex max-w-full items-center gap-1.5 whitespace-nowrap rounded-full font-medium",
         size === "sm" ? "px-3 py-1 text-sm" : "px-4 py-1.5 text-[15px]",
         TONE_CLASS[tone],
         className,

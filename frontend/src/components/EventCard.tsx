@@ -1,4 +1,4 @@
-import { CalendarDays, MapPin } from "lucide-react";
+import { ArrowRight, CalendarDays, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { SportEvent } from "@/api/types";
 import { formatEventDate } from "@/lib/dates";
@@ -16,9 +16,9 @@ export function EventCard({ event }: { event: SportEvent }) {
   const ModeIcon = JOIN_MODE_ICON[event.join_mode];
 
   return (
-    <article className="lift group relative flex flex-col rounded-card border border-line/70 bg-surface p-2.5 shadow-card">
+    <article className="neu-raised lift group relative flex flex-col rounded-card border border-white/70 bg-surface p-2.5">
       <div
-        className="relative h-[124px] rounded-[18px] px-4 pt-3.5"
+        className="tinted-3d relative h-[124px] rounded-[18px] px-4 pt-3.5"
         style={{ backgroundColor: event.sport.color }}
       >
         <h3 className="line-clamp-3 text-[21px] font-medium leading-[1.1] tracking-[-0.01em]">
@@ -31,7 +31,7 @@ export function EventCard({ event }: { event: SportEvent }) {
         </h3>
         <SportIllustration
           sport={event.sport}
-          className="absolute -bottom-10 right-3 text-[80px] transition-transform duration-300 ease-out group-hover:-translate-y-1 group-hover:rotate-[-4deg]"
+          className="absolute -bottom-9 right-2 text-[92px] transition-transform duration-300 ease-out group-hover:-translate-y-1.5 group-hover:rotate-[-6deg]"
         />
       </div>
 
@@ -62,6 +62,15 @@ export function EventCard({ event }: { event: SportEvent }) {
             <StatusBadge status={event.my_participation.status} eventStatus={event.status} className="min-w-0" />
           )}
         </div>
+        {/* Простой режим: явная «кнопка» вместо неочевидной кликабельной карточки */}
+        <span
+          data-simple-only
+          aria-hidden
+          className="neu-primary mt-4 min-h-12 items-center justify-center gap-2 rounded-full bg-primary px-5 text-[17px] font-semibold text-white"
+        >
+          Подробнее и запись
+          <ArrowRight className="size-5" />
+        </span>
       </div>
     </article>
   );
@@ -69,7 +78,7 @@ export function EventCard({ event }: { event: SportEvent }) {
 
 export function EventCardSkeleton() {
   return (
-    <div className="rounded-card border border-line/70 bg-surface p-2.5 shadow-card" aria-hidden>
+    <div className="neu-raised rounded-card border border-white/70 bg-surface p-2.5" aria-hidden>
       <Skeleton className="h-[124px] rounded-[18px]" />
       <div className="space-y-2.5 px-3 pb-2 pt-4">
         <Skeleton className="h-5 w-1/2" />

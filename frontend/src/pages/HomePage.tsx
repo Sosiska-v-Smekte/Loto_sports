@@ -5,10 +5,13 @@ import { DateStrip } from "@/components/DateStrip";
 import { EventGrid } from "@/components/EventGrid";
 import { FeaturedBanner, FeaturedBannerSkeleton } from "@/components/FeaturedBanner";
 import { SearchBar } from "@/components/SearchBar";
+import { SimpleDatePicker } from "@/components/SimpleDatePicker";
+import { SimpleSteps } from "@/components/SimpleSteps";
 import { SportChips } from "@/components/SportChips";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { SectionTitle } from "@/components/ui/Card";
 import { EmptyState } from "@/components/ui/States";
+import { useAccessibility } from "@/features/accessibility";
 import { useEvents, useFeaturedEvent, useSports } from "@/features/events";
 import { dayjs } from "@/lib/dates";
 import { eventsInCityTitle } from "@/lib/names";
@@ -42,6 +45,7 @@ export function HomePage() {
   const events = useEvents({ q: q || undefined, city, date: date ?? undefined, sport_id: sportId ?? undefined });
   const featured = useFeaturedEvent(city);
   const sports = useSports();
+  const { simple } = useAccessibility().settings;
 
   const hasFilters = Boolean(q || date || sportId);
   const resetFilters = () => setParams(city === DEFAULT_CITY ? {} : { city }, { replace: true });
@@ -61,8 +65,14 @@ export function HomePage() {
         />
       </div>
 
+      <SimpleSteps />
+
       <div className="mt-5">
-        <DateStrip value={date} onChange={(value) => update("date", value)} />
+        {simple ? (
+          <SimpleDatePicker value={date} onChange={(value) => update("date", value)} />
+        ) : (
+          <DateStrip value={date} onChange={(value) => update("date", value)} />
+        )}
       </div>
 
       <div className="mt-4">

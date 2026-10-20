@@ -14,7 +14,7 @@ export function FeaturedBanner({ event }: { event: SportEvent }) {
   return (
     <section
       aria-label="Ближайшая активность"
-      className="relative flex flex-col gap-4 overflow-hidden rounded-card px-5 py-5 shadow-soft sm:flex-row sm:items-center sm:gap-6 sm:px-6 sm:py-4"
+      className="tinted-3d relative flex flex-col gap-4 overflow-hidden rounded-card px-5 py-5 [box-shadow:var(--shadow-card)] sm:flex-row sm:items-center sm:gap-6 sm:px-6 sm:py-4"
       style={{ backgroundColor: event.sport.color }}
     >
       <div className="min-w-0 flex-1 pr-20 sm:pr-0">

@@ -42,14 +42,14 @@ export function NotificationBell() {
   const label = unread.data ? `Уведомления, непрочитанных: ${unread.data}` : "Уведомления";
 
   return (
-    <div ref={ref} className="relative hidden lg:block">
+    <div ref={ref} data-desktop-nav className="relative hidden lg:block">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
         aria-haspopup="dialog"
         aria-label={label}
-        className="pressable relative grid size-11 place-items-center rounded-full border border-line bg-surface-muted hover:bg-white xl:size-[50px]"
+        className="neu-control pressable relative grid size-11 place-items-center rounded-full border border-white/70 bg-surface-muted xl:size-[50px]"
       >
         <Bell className="size-5" aria-hidden />
         <UnreadBadge count={unread.data} className="absolute -right-1 -top-1" />

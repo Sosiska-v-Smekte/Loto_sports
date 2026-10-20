@@ -1,4 +1,7 @@
 import type { Sport } from "@/api/types";
+import { useAccessibility } from "@/features/accessibility";
+import { cn } from "@/lib/cn";
+import { SportIllustration } from "./SportIllustration";
 import { Pill } from "./ui/Pill";
 import { Skeleton } from "./ui/Skeleton";
 
@@ -9,6 +12,8 @@ interface SportChipsProps {
 }
 
 export function SportChips({ sports, value, onChange }: SportChipsProps) {
+  // В простом режиме все направления видны сразу, без прокрутки вбок
+  const { simple } = useAccessibility().settings;
   if (!sports) {
     return (
       <div className="flex gap-2 overflow-hidden" aria-hidden>
@@ -22,7 +27,12 @@ export function SportChips({ sports, value, onChange }: SportChipsProps) {
     <div
       role="group"
       aria-label="Направления"
-      className="no-scrollbar -mx-4 flex gap-2 overflow-x-auto px-4 sm:mx-0 sm:px-0 sm:[mask-image:linear-gradient(to_right,black_92%,transparent)]"
+      className={cn(
+        "flex gap-2",
+        simple
+          ? "flex-wrap"
+          : "no-scrollbar -mx-4 overflow-x-auto px-4 sm:mx-0 sm:px-0 sm:[mask-image:linear-gradient(to_right,black_92%,transparent)]",
+      )}
     >
       <Pill active={value === null} onClick={() => onChange(null)}>
         Все направления
@@ -32,11 +42,7 @@ export function SportChips({ sports, value, onChange }: SportChipsProps) {
           key={sport.id}
           active={value === sport.id}
           onClick={() => onChange(value === sport.id ? null : sport.id)}
-          icon={
-            <span aria-hidden className="text-lg leading-none">
-              {sport.icon}
-            </span>
-          }
+          icon={<SportIllustration sport={sport} className="text-[24px]" />}
         >
           {sport.name}
         </Pill>
