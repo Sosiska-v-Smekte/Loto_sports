@@ -15,6 +15,7 @@ class NotificationType(StrEnum):
     organization_review = "organization_review"
     organization_request = "organization_request"
     event_unpublished = "event_unpublished"
+    interest_invite = "interest_invite"
 
 
 class Notification(Base):

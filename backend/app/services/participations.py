@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
 from app.models import Event, EventStatus, JoinMode, Participation, ParticipationStatus, User
@@ -13,6 +13,19 @@ _ALREADY = {
     ParticipationStatus.pending: "Ваша заявка уже отправлена и ждёт решения организатора",
     ParticipationStatus.rejected: "Организатор уже отклонил вашу заявку на это мероприятие",
 }
+
+
+def _ensure_capacity(db: Session, event: Event) -> None:
+    """У мероприятия в зоне есть предел по людям: сверх вместимости зоны записать нельзя."""
+    if event.zone is None:
+        return
+    taken = db.scalar(
+        select(func.count())
+        .select_from(Participation)
+        .where(Participation.event_id == event.id, Participation.status == ParticipationStatus.confirmed)
+    )
+    if taken >= event.zone.capacity:
+        raise conflict(f"Мест больше нет: {event.zone.name} рассчитан(а) на {event.zone.capacity} чел.")
 
 
 def join_event(db: Session, event_id: int, user: User) -> Participation:
@@ -32,6 +45,8 @@ def join_event(db: Session, event_id: int, user: User) -> Participation:
     )
     if existing is not None:
         raise conflict(_ALREADY[existing.status])
+
+    _ensure_capacity(db, event)
 
     # Свободная запись сразу делает участником, «по заявке» — только после решения организатора
     is_open = event.join_mode == JoinMode.open
@@ -59,6 +74,8 @@ def decide(db: Session, participation_id: int, user: User, approve: bool) -> Par
     if participation.status != ParticipationStatus.pending:
         raise conflict("Эта заявка уже рассмотрена")
 
+    if approve:
+        _ensure_capacity(db, event)
     participation.status = ParticipationStatus.confirmed if approve else ParticipationStatus.rejected
     participation.decided_at = now()
     notify_decision(db, participation)

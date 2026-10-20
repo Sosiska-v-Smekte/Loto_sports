@@ -40,6 +40,8 @@ class Event(Base):
     city: Mapped[str] = mapped_column(String(120), index=True)
     address: Mapped[str] = mapped_column(String(300))
     place_details: Mapped[str] = mapped_column(Text, default="")
+    # Конкретная зона площадки: на неё распространяется правило «одно мероприятие одновременно»
+    zone_id: Mapped[int | None] = mapped_column(ForeignKey("zones.id"), index=True)
     # Координаты точки на карте. Необязательны: без них мероприятие просто не показывается на карте
     latitude: Mapped[float | None] = mapped_column(Float)
     longitude: Mapped[float | None] = mapped_column(Float)
@@ -58,3 +60,4 @@ class Event(Base):
     sport: Mapped["Sport"] = relationship(lazy="joined")  # noqa: F821
     organizer: Mapped["User"] = relationship(lazy="joined")  # noqa: F821
     organization: Mapped["Organization | None"] = relationship(lazy="joined")  # noqa: F821
+    zone: Mapped["Zone | None"] = relationship(lazy="joined")  # noqa: F821

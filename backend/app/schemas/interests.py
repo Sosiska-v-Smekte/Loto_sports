@@ -1,0 +1,36 @@
+from typing import Annotated
+
+from pydantic import BaseModel, Field, StringConstraints
+
+from app.models import DayKind, DayPart
+from app.schemas.common import City, ORMModel, SportOut
+
+
+class InterestIn(BaseModel):
+    sport_id: int
+    city: City
+    district: Annotated[str, StringConstraints(strip_whitespace=True, max_length=80)] = ""
+    day_kinds: Annotated[list[DayKind], Field(min_length=1, max_length=2)]
+    day_parts: Annotated[list[DayPart], Field(min_length=1, max_length=3)]
+
+
+class InterestOut(ORMModel):
+    id: int
+    sport: SportOut
+    city: str
+    district: str
+    day_kind: str
+    day_part: str
+
+
+class DemandGroup(BaseModel):
+    """Совместимые намерения: то же направление, город, будни/выходные и время суток."""
+
+    sport: SportOut
+    city: str
+    day_kind: str
+    day_part: str
+    # Сколько человек хотят пойти, включая зрителя, если он среди них
+    count: int
+    mine: bool
+    districts: list[str]

@@ -9,6 +9,7 @@ import { CommunityPage } from "./pages/CommunityPage";
 import { CreateEventPage } from "./pages/CreateEventPage";
 import { EventPage } from "./pages/EventPage";
 import { HomePage } from "./pages/HomePage";
+import { InterestPage } from "./pages/InterestPage";
 import { LoginPage } from "./pages/LoginPage";
 import { MyPage } from "./pages/MyPage";
 import { NotFoundPage } from "./pages/NotFoundPage";
@@ -61,6 +62,7 @@ export function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/events/new" element={<RequireAuth><CreateEventPage /></RequireAuth>} />
         <Route path="/events/:id" element={<EventPage />} />
+        <Route path="/interest" element={<InterestPage />} />
         <Route path="/my" element={<RequireAuth><MyPage /></RequireAuth>} />
         <Route path="/communities" element={<CommunitiesPage />} />
         <Route path="/communities/:id" element={<CommunityPage />} />

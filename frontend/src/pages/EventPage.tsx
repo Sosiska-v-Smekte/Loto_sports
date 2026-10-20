@@ -106,6 +106,11 @@ function EventView({ event }: { event: SportEvent }) {
                 <span className="font-medium">{event.address}</span>
                 <span className="block text-muted">{event.city}</span>
                 {event.place_details && <span className="mt-1 block">{event.place_details}</span>}
+                {event.zone && (
+                  <span className="mt-1 block text-muted">
+                    Зона: {event.zone.name}, до {event.zone.capacity} чел. Мест не больше, чем рассчитана зона.
+                  </span>
+                )}
               </Fact>
               <Fact icon={Gauge} label="Уровень">
                 <span className="font-medium">{LEVEL_LABEL[event.level]}</span>

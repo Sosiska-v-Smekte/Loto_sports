@@ -51,6 +51,8 @@ export interface SportEvent {
   city: string;
   address: string;
   place_details: string;
+  /** Зона площадки, к которой привязано мероприятие */
+  zone: EventZone | null;
   latitude: number | null;
   longitude: number | null;
   level: Level;
@@ -69,7 +71,81 @@ export interface SportEvent {
   is_past: boolean;
 }
 
+export interface EventZone {
+  id: number;
+  name: string;
+  group_name: string | null;
+  capacity: number;
+  venue_id: number;
+  venue_name: string;
+}
+
+export interface Zone {
+  id: number;
+  name: string;
+  group_name: string | null;
+  capacity: number;
+  buffer_minutes: number;
+}
+
+export interface Venue {
+  id: number;
+  name: string;
+  city: string;
+  address: string;
+  latitude: number | null;
+  longitude: number | null;
+  organization_id: number | null;
+  can_manage: boolean;
+  zones: Zone[];
+}
+
+export interface VenueInput {
+  name: string;
+  city: string;
+  address: string;
+  zones: { name: string; group_name?: string | null; capacity: number; buffer_minutes: number }[];
+}
+
+export interface Availability {
+  free: boolean;
+  message: string | null;
+  suggestion: { starts_at: string; ends_at: string } | null;
+  busy: { starts_at: string; ends_at: string; title: string }[];
+}
+
+export type DayKind = "weekday" | "weekend";
+export type DayPart = "morning" | "day" | "evening";
+
+export interface Interest {
+  id: number;
+  sport: Sport;
+  city: string;
+  district: string;
+  day_kind: DayKind;
+  day_part: DayPart;
+}
+
+export interface InterestInput {
+  sport_id: number;
+  city: string;
+  district: string;
+  day_kinds: DayKind[];
+  day_parts: DayPart[];
+}
+
+export interface DemandGroup {
+  sport: Sport;
+  city: string;
+  day_kind: DayKind;
+  day_part: DayPart;
+  count: number;
+  mine: boolean;
+  districts: string[];
+}
+
 export interface EventCreate {
+  zone_id?: number | null;
   title: string;
   description: string;
   sport_id: number | null;
@@ -159,7 +235,8 @@ export type NotificationType =
   | "participation_decision"
   | "organization_review"
   | "organization_request"
-  | "event_unpublished";
+  | "event_unpublished"
+  | "interest_invite";
 
 export interface AppNotification {
   id: number;

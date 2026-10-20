@@ -11,7 +11,10 @@ import { Card } from "../ui/Card";
 import { Notice } from "../ui/Notice";
 import { Skeleton } from "../ui/Skeleton";
 import { ErrorState } from "../ui/States";
+import { DemandList } from "../DemandList";
+import { useDemand } from "@/features/planning";
 import { OrganizationForm } from "./OrganizationForm";
+import { VenuesManager } from "./VenuesManager";
 
 /**
  * Верх страницы «Сообщества»: кнопка «Создать организацию», если её ещё нет,
@@ -101,6 +104,8 @@ function OrganizationStatusCard({ organization }: { organization: Organization }
             onUpload={(image) => meApi.setOrganizationAvatar(image).then(refresh)}
             onRemove={() => meApi.removeOrganizationAvatar().then(refresh)}
           />
+          <VenuesManager city={organization.city} />
+          <OrganizationDemand city={organization.city} />
           <div className="flex flex-wrap gap-3">
             <ButtonLink to="/events/new?as=org" icon={<Plus className="size-5" aria-hidden />}>
               Создать мероприятие от организации
@@ -129,6 +134,23 @@ function OrganizationStatusCard({ organization }: { organization: Organization }
         </>
       )}
     </Card>
+  );
+}
+
+/** Спрос рядом с организацией: люди, которые хотят заниматься, но не нашли подходящей встречи. */
+function OrganizationDemand({ city }: { city: string }) {
+  const demand = useDemand(city);
+  if (!demand.data?.length) return null;
+  return (
+    <section aria-labelledby="demand-title" className="flex flex-col gap-3 border-t border-line pt-4">
+      <div>
+        <h3 id="demand-title" className="text-lg font-semibold">
+          Спрос в городе {city}
+        </h3>
+        <p className="text-muted">Эти люди хотят заниматься, но подходящей встречи пока нет. Создайте открытую встречу, и они получат приглашение.</p>
+      </div>
+      <DemandList groups={demand.data} limit={4} />
+    </section>
   );
 }
 

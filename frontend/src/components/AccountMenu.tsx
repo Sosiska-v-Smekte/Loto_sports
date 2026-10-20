@@ -1,4 +1,4 @@
-import { LogIn, LogOut, Menu, RefreshCw, ShieldCheck, Ticket, UserRound } from "lucide-react";
+import { Hand, LogIn, LogOut, Menu, RefreshCw, ShieldCheck, Ticket, UserRound } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/features/auth";
@@ -87,6 +87,9 @@ export function AccountMenu() {
           </Link>
           <Link role="menuitem" to="/my" className={itemClass} onClick={() => setOpen(false)}>
             <Ticket className="size-5" aria-hidden /> Мои активности
+          </Link>
+          <Link role="menuitem" to="/interest" className={itemClass} onClick={() => setOpen(false)}>
+            <Hand className="size-5" aria-hidden /> Я бы пошёл
           </Link>
           {user.is_admin && (
             <Link role="menuitem" to="/admin" className={itemClass} onClick={() => setOpen(false)}>

@@ -5,6 +5,7 @@ import {
   Building2,
   ClipboardCheck,
   Inbox,
+  Sparkles,
   MessageCircle,
   type LucideIcon,
 } from "lucide-react";
@@ -24,6 +25,7 @@ const TYPE_ICON: Record<NotificationType, LucideIcon> = {
   organization_review: Building2,
   organization_request: Inbox,
   event_unpublished: Ban,
+  interest_invite: Sparkles,
 };
 
 interface NotificationListProps {

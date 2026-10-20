@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field, StringConstraints, model_validator
 
 from app.models import EventLevel, JoinMode
 from app.schemas.common import City, ORMModel, OrganizationBrief, SportOut, UserBrief
+from app.schemas.venues import EventZone
 
 ShortText = Annotated[str, StringConstraints(strip_whitespace=True, max_length=2000)]
 
@@ -29,6 +30,7 @@ class EventOut(ORMModel):
     city: str
     address: str
     place_details: str
+    zone: EventZone | None
     latitude: float | None
     longitude: float | None
     level: str
@@ -66,6 +68,7 @@ class EventCreate(BaseModel):
     card_color: Annotated[str, StringConstraints(pattern=r"^#[0-9A-Fa-f]{6}$")] | None = None
     card_pattern: CardPattern | None = None
     organization_id: int | None = None
+    zone_id: int | None = None
 
     @model_validator(mode="after")
     def _check(self) -> "EventCreate":

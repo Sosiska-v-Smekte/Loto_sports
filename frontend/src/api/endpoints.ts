@@ -2,12 +2,16 @@ import { api } from "./client";
 import type {
   AdminOrganization,
   AppNotification,
+  Availability,
   AuthResult,
   Comment,
   DemoAccount,
   EventCreate,
+  DemandGroup,
   EventFilters,
   EventStatus,
+  Interest,
+  InterestInput,
   MyParticipation,
   Organization,
   OrganizationInput,
@@ -19,6 +23,8 @@ import type {
   SportEvent,
   User,
   UserPublic,
+  Venue,
+  VenueInput,
 } from "./types";
 
 export const authApi = {
@@ -93,4 +99,20 @@ export const adminApi = {
   unpublishEvent: (id: number, reason: string) => api.post<SportEvent>(`/admin/events/${id}/unpublish`, { reason }),
   deleteEvent: (id: number, reason: string) => api.post<SportEvent>(`/admin/events/${id}/delete`, { reason }),
   hideComment: (id: number, reason: string) => api.post<Comment>(`/admin/comments/${id}/hide`, { reason }),
+};
+
+export const venuesApi = {
+  list: (city?: string) => api.get<Venue[]>("/venues", { city }),
+  create: (data: VenueInput) => api.post<Venue>("/venues", data),
+  addZone: (venueId: number, zone: VenueInput["zones"][number]) => api.post<Venue>(`/venues/${venueId}/zones`, zone),
+  removeZone: (zoneId: number) => api.delete<Venue>(`/zones/${zoneId}`),
+  availability: (zoneId: number, startsAt: string, endsAt: string) =>
+    api.get<Availability>(`/zones/${zoneId}/availability`, { starts_at: startsAt, ends_at: endsAt }),
+};
+
+export const interestsApi = {
+  demand: (city?: string) => api.get<DemandGroup[]>("/interests/demand", { city }),
+  mine: () => api.get<Interest[]>("/interests/mine"),
+  add: (data: InterestInput) => api.post<Interest[]>("/interests", data),
+  remove: (id: number) => api.delete<void>(`/interests/${id}`),
 };

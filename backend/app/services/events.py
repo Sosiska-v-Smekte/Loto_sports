@@ -21,7 +21,9 @@ from app.schemas.events import EventCreate, EventOut, MyParticipation
 from app.services.access import can_manage
 from app.services.errors import bad_request, forbidden, not_found
 from app.services.geocoding import geocode
+from app.services.interests import notify_interested
 from app.services.sports import get_or_create_sport
+from app.services.venues import ensure_free, get_zone
 
 
 def present_events(db: Session, events: list[Event], viewer: User | None) -> list[EventOut]:
@@ -55,6 +57,7 @@ def present_events(db: Session, events: list[Event], viewer: User | None) -> lis
                     "sport": event.sport,
                     "organizer": event.organizer,
                     "organization": event.organization,
+                    "zone": _zone_brief(event),
                     "participants_count": counts[event.id].get(ParticipationStatus.confirmed, 0),
                     "pending_count": counts[event.id].get(ParticipationStatus.pending, 0) if manager else None,
                     "my_participation": MyParticipation.model_validate(participation) if participation else None,
@@ -64,6 +67,20 @@ def present_events(db: Session, events: list[Event], viewer: User | None) -> lis
             )
         )
     return result
+
+
+def _zone_brief(event: Event) -> dict | None:
+    zone = event.zone
+    if zone is None:
+        return None
+    return {
+        "id": zone.id,
+        "name": zone.name,
+        "group_name": zone.group_name,
+        "capacity": zone.capacity,
+        "venue_id": zone.venue.id,
+        "venue_name": zone.venue.name,
+    }
 
 
 def _feed_query() -> Select[tuple[Event]]:
@@ -155,8 +172,22 @@ def create_event(db: Session, data: EventCreate, author: User) -> Event:
     else:
         sport = get_or_create_sport(db, data.sport_name or "", author)
 
+    values = data.model_dump(exclude={"sport_id", "sport_name"})
+    if data.zone_id is not None:
+        zone = get_zone(db, data.zone_id)
+        if data.ends_at is None:
+            raise bad_request("Для площадки укажите время окончания: по нему проверяется, свободна ли зона")
+        ensure_free(db, zone, data.starts_at, data.ends_at)
+        venue = zone.venue
+        # Адрес и точка на карте берутся с площадки: мероприятие привязано к зоне, а не к произвольной строке
+        values.update(city=venue.city, address=venue.address)
+        if venue.latitude is not None and venue.longitude is not None:
+            values.update(latitude=venue.latitude, longitude=venue.longitude)
+        label = f"{venue.name}, {zone.group_name + ', ' if zone.group_name else ''}{zone.name}"
+        values["place_details"] = f"{label}. {data.place_details}".strip() if data.place_details else label
+
     event = Event(
-        **data.model_dump(exclude={"sport_id", "sport_name"}),
+        **values,
         sport_id=sport.id,
         organizer_user_id=author.id,
         status=EventStatus.published,
@@ -167,6 +198,8 @@ def create_event(db: Session, data: EventCreate, author: User) -> Event:
         if point is not None:
             event.latitude, event.longitude = point
     db.add(event)
+    db.flush()
+    notify_interested(db, event)
     db.commit()
     db.refresh(event)
     return event

@@ -13,8 +13,11 @@ from sqlalchemy.orm import Session
 from app.db import Base, SessionLocal, engine, init_db
 from app.models import (
     Comment,
+    DayKind,
+    DayPart,
     Event,
     EventLevel,
+    Interest,
     EventStatus,
     JoinMode,
     Organization,
@@ -23,6 +26,8 @@ from app.models import (
     ParticipationStatus,
     Sport,
     User,
+    Venue,
+    Zone,
 )
 from app.models.base import now
 from app.services.notifications import (
@@ -460,13 +465,62 @@ def seed(db: Session) -> None:
     db.commit()
 
 
+def seed_planning(db: Session) -> None:
+    """Демо площадки с зонами и несколько отметок «Я бы пошёл». Добавляется и в уже заполненную базу."""
+    if db.scalar(select(Venue.id).limit(1)) is not None:
+        return
+    users = {u.email: u for u in db.scalars(select(User))}
+    if "org@demo.ru" not in users:
+        return
+    owner = users["org@demo.ru"]
+    organization = db.scalar(select(Organization).where(Organization.owner_id == owner.id))
+    sports = {s.slug: s for s in db.scalars(select(Sport)) if s.slug}
+
+    def zone(name, capacity, order, group=None, buffer=0):
+        return Zone(name=name, group_name=group, capacity=capacity, buffer_minutes=buffer, sort_order=order)
+
+    db.add(
+        Venue(
+            name="Спортивный центр «Старт»",
+            city="Москва",
+            address="ул. Ленина, 10",
+            owner_id=owner.id,
+            organization_id=organization.id if organization else None,
+            zones=[
+                zone("Футбольное поле", 22, 0, buffer=15),
+                zone("Малый зал", 12, 1, buffer=15),
+                zone("Стол №1", 4, 2, "Зал настольного тенниса"),
+                zone("Стол №2", 4, 3, "Зал настольного тенниса"),
+                zone("Стол №3", 4, 4, "Зал настольного тенниса"),
+            ],
+        )
+    )
+    wants = [
+        ("user2@demo.ru", "volleyball", DayKind.weekend, DayPart.day, "Центральный"),
+        ("ivan@demo.ru", "volleyball", DayKind.weekend, DayPart.day, "Центральный"),
+        ("user@demo.ru", "volleyball", DayKind.weekend, DayPart.day, ""),
+        ("org@demo.ru", "volleyball", DayKind.weekend, DayPart.day, "Северный"),
+        ("neworg@demo.ru", "volleyball", DayKind.weekend, DayPart.day, ""),
+        ("user2@demo.ru", "chess", DayKind.weekday, DayPart.evening, ""),
+        ("ivan@demo.ru", "chess", DayKind.weekday, DayPart.evening, ""),
+    ]
+    for email, slug, kind, part, district in wants:
+        if email in users and slug in sports:
+            db.add(
+                Interest(user_id=users[email].id, sport_id=sports[slug].id, city="Москва", district=district, day_kind=kind, day_part=part)
+            )
+    db.commit()
+
+
 def seed_if_empty(db: Session) -> bool:
     if db.scalar(select(User.id).limit(1)) is not None:
         # Новые базовые направления появляются и в уже заполненной базе
         ensure_base_sports(db)
         db.commit()
+        seed_planning(db)
         return False
     seed(db)
+    seed_planning(db)
     return True
 
 

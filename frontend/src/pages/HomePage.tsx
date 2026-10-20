@@ -1,4 +1,4 @@
-import { Plus, SearchX } from "lucide-react";
+import { Hand, Plus, SearchX } from "lucide-react";
 import { useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { DateStrip } from "@/components/DateStrip";
@@ -17,6 +17,9 @@ import { useAuth } from "@/features/auth";
 import { useEvents, useFeaturedEvent, useSports } from "@/features/events";
 import { dayjs } from "@/lib/dates";
 import { eventsInCityTitle } from "@/lib/names";
+import { demandTitle } from "@/components/DemandList";
+import { Card } from "@/components/ui/Card";
+import { useDemand } from "@/features/planning";
 
 // Город для гостей и пользователей без города в профиле
 const GUEST_CITY = "Москва";
@@ -55,6 +58,7 @@ export function HomePage() {
   const events = useEvents({ q: q || undefined, city, date: date ?? undefined, sport_id: sportId ?? undefined }, cityReady);
   const featured = useFeaturedEvent(city, cityReady);
   const sports = useSports();
+  const demand = useDemand(city, cityReady);
   const { simple } = useAccessibility().settings;
 
   const hasFilters = Boolean(q || date || sportId);
@@ -92,6 +96,23 @@ export function HomePage() {
       <div className="mt-7">
         {featured.isPending ? <FeaturedBannerSkeleton /> : featured.data && <FeaturedBanner event={featured.data} />}
       </div>
+
+      <Card className="mt-6 flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:gap-5 sm:p-5">
+        <span className="grid size-12 shrink-0 place-items-center rounded-full bg-level">
+          <Hand className="size-6" aria-hidden />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="font-semibold">Не нашли подходящее время? Отметьте «Я бы пошёл»</p>
+          <p className="text-muted">
+            {demand.data?.[0]
+              ? `Сейчас в этом городе: ${demandTitle(demand.data[0])}.`
+              : "Организовывать самим не нужно: мы соберём тех, кто хочет того же, и сообщим, когда появится встреча."}
+          </p>
+        </div>
+        <ButtonLink to="/interest" variant="secondary">
+          Я бы пошёл
+        </ButtonLink>
+      </Card>
 
       <div className="mt-6">
         <HomeMapSection events={events.data} city={city} onEventSelect={(id) => navigate(`/events/${id}`)} />
