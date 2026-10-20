@@ -1,3 +1,5 @@
+import { ChevronDown } from "lucide-react";
+import { useState } from "react";
 import type { Sport } from "@/api/types";
 import { useAccessibility } from "@/features/accessibility";
 import { cn } from "@/lib/cn";
@@ -11,9 +13,14 @@ interface SportChipsProps {
   onChange: (sportId: number | null) => void;
 }
 
+/** Сколько направлений простой режим показывает на телефоне до кнопки «Ещё» */
+const SIMPLE_VISIBLE = 5;
+
 export function SportChips({ sports, value, onChange }: SportChipsProps) {
-  // В простом режиме все направления видны сразу, без прокрутки вбок
+  // В простом режиме направления переносятся по строкам, без прокрутки вбок.
+  // На телефоне длинный список свёрнут: иначе до событий нужно долго листать
   const { simple } = useAccessibility().settings;
+  const [expanded, setExpanded] = useState(false);
   if (!sports) {
     return (
       <div className="flex gap-2 overflow-hidden" aria-hidden>
@@ -37,16 +44,22 @@ export function SportChips({ sports, value, onChange }: SportChipsProps) {
       <Pill active={value === null} onClick={() => onChange(null)}>
         Все направления
       </Pill>
-      {sports.map((sport) => (
+      {sports.map((sport, index) => (
         <Pill
           key={sport.id}
           active={value === sport.id}
           onClick={() => onChange(value === sport.id ? null : sport.id)}
           icon={<SportIllustration sport={sport} compact className="text-[24px]" />}
+          className={cn(simple && !expanded && index >= SIMPLE_VISIBLE && value !== sport.id && "hidden sm:inline-flex")}
         >
           {sport.name}
         </Pill>
       ))}
+      {simple && !expanded && sports.length > SIMPLE_VISIBLE && (
+        <Pill onClick={() => setExpanded(true)} className="sm:hidden" icon={<ChevronDown className="size-5" aria-hidden />}>
+          Ещё {sports.length - SIMPLE_VISIBLE}
+        </Pill>
+      )}
     </div>
   );
 }

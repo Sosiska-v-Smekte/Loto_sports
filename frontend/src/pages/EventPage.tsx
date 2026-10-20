@@ -19,6 +19,7 @@ import { Notice } from "@/components/ui/Notice";
 import { LoadingBlock } from "@/components/ui/Skeleton";
 import { EmptyState, ErrorState } from "@/components/ui/States";
 import { Tag } from "@/components/ui/Tag";
+import { useColorSafe } from "@/features/accessibility";
 import { useAuth } from "@/features/auth";
 import { useEvent, useParticipants } from "@/features/events";
 import { formatEventDateLong } from "@/lib/dates";
@@ -52,6 +53,7 @@ function EventView({ event }: { event: SportEvent }) {
   const { user } = useAuth();
   const participants = useParticipants(event.id);
   const ModeIcon = JOIN_MODE_ICON[event.join_mode];
+  const palette = eventPalette(event, useColorSafe());
 
   return (
     <div className="page-container pt-4 lg:pt-6">
@@ -70,23 +72,29 @@ function EventView({ event }: { event: SportEvent }) {
 
       <header
         className="relative isolate mt-3 overflow-hidden rounded-card px-5 pb-6 pt-5 sm:px-8 sm:pb-8 sm:pt-7"
-        style={{ backgroundColor: eventPalette(event).background }}
+        style={{ backgroundColor: palette.background }}
       >
         <Engraving pattern={event.card_pattern} />
-        <div className="relative z-[1] max-w-[calc(100%-6rem)] sm:max-w-[70%]">
-          <Tag tone="level" className="bg-white/55">
-            {event.sport.name}
-          </Tag>
-          <h1 className="mt-3 text-[30px] font-bold leading-[1.08] tracking-[-0.02em] sm:text-[44px]">{event.title}</h1>
-          <p className="mt-3 flex items-center gap-2 text-lg">
-            <CalendarDays className="size-5 shrink-0" aria-hidden />
-            {formatEventDateLong(event.starts_at, event.ends_at)}
+        {/* На телефоне иконка стоит в строке с направлением, и заголовок занимает всю ширину шапки */}
+        <div className="relative z-[1] sm:max-w-[70%]">
+          <div className="flex items-start justify-between gap-3">
+            <Tag tone="level" className="bg-white/55">
+              {event.sport.name}
+            </Tag>
+            <SportIllustration sport={event.sport} tint={palette.tint} className="-my-2 -mr-1 text-[72px] sm:hidden" />
+          </div>
+          <h1 className="mt-1 text-[28px] font-bold leading-[1.1] tracking-[-0.02em] [overflow-wrap:anywhere] sm:mt-3 sm:text-[44px] sm:leading-[1.08]">
+            {event.title}
+          </h1>
+          <p className="mt-3 flex items-start gap-2 text-lg leading-snug">
+            <CalendarDays className="mt-[3px] size-5 shrink-0" aria-hidden />
+            <span>{formatEventDateLong(event.starts_at, event.ends_at)}</span>
           </p>
         </div>
         <SportIllustration
           sport={event.sport}
-          tint={eventPalette(event).tint}
-          className="absolute -bottom-3 right-4 text-[88px] sm:bottom-auto sm:right-10 sm:top-1/2 sm:-translate-y-1/2 sm:text-[150px]"
+          tint={palette.tint}
+          className="absolute right-10 top-1/2 hidden -translate-y-1/2 text-[150px] sm:block"
         />
       </header>
 

@@ -35,8 +35,8 @@ export function AccountMenu() {
 
   if (!user) {
     return (
-      <ButtonLink to="/login" variant="secondary" size="sm" icon={<LogIn className="size-4" aria-hidden />}>
-        Войти
+      <ButtonLink to="/login" variant="secondary" size="sm" aria-label="Войти" icon={<LogIn className="size-4" aria-hidden />}>
+        <span data-login-label>Войти</span>
       </ButtonLink>
     );
   }

@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import type { Sport } from "@/api/types";
+import { useColorSafe } from "@/features/accessibility";
 import { cn } from "@/lib/cn";
+import { iconColor, safeCardColor } from "@/lib/color";
 import { recolorIcon } from "@/lib/recolor";
 
 /**
@@ -28,10 +30,9 @@ const ICONS: Record<string, string> = {
 const COMPACT: Record<string, string> = { bowling: "bowling-pin" };
 
 /** Адрес перекрашенной картинки для выбранного цвета; пока считается, возвращает null. */
-function useRecoloredIcon(src: string, color: string | undefined): string | null {
+function useRecoloredIcon(src: string, color: string): string | null {
   const [done, setDone] = useState<{ key: string; url: string } | null>(null);
   useEffect(() => {
-    if (!color) return;
     let alive = true;
     recolorIcon(src, color).then((url) => {
       if (alive) setDone({ key: `${src}|${color}`, url });
@@ -40,7 +41,7 @@ function useRecoloredIcon(src: string, color: string | undefined): string | null
       alive = false;
     };
   }, [src, color]);
-  return color && done?.key === `${src}|${color}` ? done.url : null;
+  return done?.key === `${src}|${color}` ? done.url : null;
 }
 
 /**
@@ -52,7 +53,7 @@ interface SportIllustrationProps {
   className?: string;
   /** Маленькая иконка: для чипов и списков */
   compact?: boolean;
-  /** Свой цвет карточки: иконка перекрашивается в него, светотень и детали сохраняются */
+  /** Цвет иконки: светотень и детали сохраняются. Без него — тон цвета направления, как в чипах */
   tint?: string;
 }
 
@@ -60,14 +61,15 @@ export function SportIllustration({ sport, className, compact, tint }: SportIllu
   const base = (sport.slug && ICONS[sport.slug]) || "custom";
   const file = (compact && COMPACT[base]) || base;
   const src = `/sport-icons/${file}.webp`;
-  const recolorTo = !compact && tint ? tint : undefined;
+  const colorSafe = useColorSafe();
+  const recolorTo = tint ?? iconColor(colorSafe ? safeCardColor(sport.color) : sport.color);
   const recolored = useRecoloredIcon(src, recolorTo);
   return (
     <span aria-hidden className={cn("illustration pointer-events-none inline-block select-none", className)}>
-      {recolorTo && !recolored ? (
+      {!recolored ? (
         <span className="block size-[1em]" />
       ) : (
-        <img src={recolored ?? src} alt="" width={384} height={384} draggable={false} className="block size-[1em] max-w-none" />
+        <img src={recolored} alt="" width={384} height={384} draggable={false} className="block size-[1em] max-w-none" />
       )}
     </span>
   );

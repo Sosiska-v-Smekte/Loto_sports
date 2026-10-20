@@ -61,7 +61,7 @@ export function JoinPanel({ event }: { event: SportEvent }) {
     const next = encodeURIComponent(location.pathname);
     return (
       <ButtonLink to={`/login?next=${next}`} size="lg" className="w-full" icon={<LogIn className="size-5" aria-hidden />}>
-        Войти, чтобы {isOpen ? "записаться" : "подать заявку"}
+        {isOpen ? "Войти и записаться" : "Войти и подать заявку"}
       </ButtonLink>
     );
   }

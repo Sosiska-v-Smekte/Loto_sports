@@ -22,7 +22,7 @@ export function CardPatternPicker({ value, onChange, sport, background }: CardPa
   return (
     <fieldset>
       <legend className="text-[15px] font-medium">Гравировка карточки</legend>
-      <div className="mt-2 grid grid-cols-3 gap-2.5 sm:grid-cols-4">
+      <div data-pattern-preview className="mt-2 grid grid-cols-3 gap-2.5 sm:grid-cols-4">
         {choices.map((choice) => {
           const checked = choice.id === value;
           return (

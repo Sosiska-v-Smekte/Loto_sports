@@ -33,7 +33,8 @@ export function BottomNav() {
           <item.icon className="size-[22px]" aria-hidden strokeWidth={active ? 2.4 : 2} />
           {badge}
         </span>
-        {item.shortLabel}
+        {/* Пять вкладок при крупном тексте: длинная подпись обрезается, а не наезжает на соседнюю */}
+        <span className="w-full truncate px-0.5 text-center">{item.shortLabel}</span>
       </NavLink>
     );
   };

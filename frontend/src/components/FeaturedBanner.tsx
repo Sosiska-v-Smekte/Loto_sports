@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import type { SportEvent } from "@/api/types";
+import { useColorSafe } from "@/features/accessibility";
 import { eventPalette } from "@/lib/color";
 import { formatEventDate } from "@/lib/dates";
 import { LEVEL_LABEL } from "@/lib/status";
@@ -13,7 +14,7 @@ import { Tag } from "./ui/Tag";
 /** Баннер ближайшего события со свободной записью. Кнопка ведёт на страницу события: условия нужно прочитать до записи. */
 export function FeaturedBanner({ event }: { event: SportEvent }) {
   const participation = event.my_participation;
-  const palette = eventPalette(event);
+  const palette = eventPalette(event, useColorSafe());
   return (
     <section
       aria-label="Ближайшая активность"

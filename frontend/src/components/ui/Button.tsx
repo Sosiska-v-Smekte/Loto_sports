@@ -17,12 +17,13 @@ const VARIANTS: Record<Variant, string> = {
 const SIZES: Record<Size, string> = {
   sm: "min-h-11 px-4 text-[15px] gap-1.5",
   md: "min-h-12 px-5 text-base gap-2",
-  lg: "min-h-14 px-7 text-lg gap-2.5",
+  lg: "min-h-14 px-5 text-lg gap-2.5 sm:px-7",
 };
 
 export function buttonClass(variant: Variant = "primary", size: Size = "md", className?: string) {
   return cn(
-    "pressable inline-flex select-none items-center justify-center rounded-full font-medium",
+    // Длинная подпись на узком экране переносится по центру, значок при этом не сжимается
+    "pressable inline-flex select-none items-center justify-center rounded-full py-2 text-center font-medium leading-tight [&>svg]:shrink-0",
     "disabled:cursor-not-allowed disabled:opacity-55",
     VARIANTS[variant],
     SIZES[size],

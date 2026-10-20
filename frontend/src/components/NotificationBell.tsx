@@ -60,7 +60,7 @@ export function NotificationBell() {
           aria-label="Уведомления"
           className="absolute right-0 top-[calc(100%+8px)] w-[380px] origin-top-right rounded-2xl border border-line bg-surface p-3 shadow-pop"
         >
-          <NotificationList showTitle limit={15} onNavigate={() => setOpen(false)} className="max-h-[60vh] overflow-y-auto" />
+          <NotificationList showTitle limit={15} onNavigate={() => setOpen(false)} className="max-h-[calc(60vh/var(--zoom,1))] overflow-y-auto" />
           <Link
             to="/notifications"
             onClick={() => setOpen(false)}
