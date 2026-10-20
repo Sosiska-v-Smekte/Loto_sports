@@ -304,18 +304,28 @@ def seed(db: Session) -> None:
     join(nordic_walk, anna, confirmed)
     join(night_run, ilya, confirmed, days_ago=4)
 
-    def say(event, author, text, hours_ago):
-        db.add(Comment(event_id=event.id, author_id=author.id, text=text, created_at=now() - timedelta(hours=hours_ago)))
+    def say(event, author, text, hours_ago, reply_to=None):
+        comment = Comment(
+            event_id=event.id,
+            author_id=author.id,
+            text=text,
+            parent_id=reply_to.id if reply_to else None,
+            created_at=now() - timedelta(hours=hours_ago),
+        )
+        db.add(comment)
+        db.flush()
+        return comment
 
-    say(blitz, anna, "Здравствуйте! Можно прийти, если у меня нет рейтинга?", 30)
-    say(blitz, oleg, "Конечно! Рейтинг не нужен, играем все вместе. Доски и часы дадим.", 28)
+    rating = say(blitz, anna, "Здравствуйте! Можно прийти, если у меня нет рейтинга?", 30)
+    no_rating = say(blitz, oleg, "Конечно! Рейтинг не нужен, играем все вместе. Доски и часы дадим.", 28, rating)
+    say(blitz, anna, "Отлично, спасибо! Тогда жду решения по заявке.", 27, no_rating)
     say(blitz, ivan, "А будет перерыв между турами?", 6)
-    say(football, ivan, "Сколько уже собралось? Нужна ли своя манишка?", 20)
-    say(football, ilya, "Пока шестеро. Манишки дадим, приходите за 10 минут до начала.", 19)
-    say(run_gorky, anna, "Какой будет темп? Я только начинаю бегать.", 10)
-    say(run_gorky, ivan, "Около 6:30 на километр, будем ждать всех. Приходите!", 9)
-    say(tennis_pair, ilya, "Можно подать заявку без пары?", 15)
-    say(tennis_pair, anna, "Да, пары составим на месте по уровню.", 14)
+    bibs = say(football, ivan, "Сколько уже собралось? Нужна ли своя манишка?", 20)
+    say(football, ilya, "Пока шестеро. Манишки дадим, приходите за 10 минут до начала.", 19, bibs)
+    pace = say(run_gorky, anna, "Какой будет темп? Я только начинаю бегать.", 10)
+    say(run_gorky, ivan, "Около 6:30 на километр, будем ждать всех. Приходите!", 9, pace)
+    pair = say(tennis_pair, ilya, "Можно подать заявку без пары?", 15)
+    say(tennis_pair, anna, "Да, пары составим на месте по уровню.", 14, pair)
 
     db.commit()
 

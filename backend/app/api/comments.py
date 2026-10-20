@@ -14,4 +14,4 @@ def list_comments(event_id: int, db: Db, viewer: OptionalUser):
 
 @router.post("", response_model=CommentOut, status_code=status.HTTP_201_CREATED)
 def add_comment(event_id: int, data: CommentIn, db: Db, user: CurrentUser):
-    return service.add_comment(db, event_id, user, data.text)
+    return service.add_comment(db, event_id, user, data.text, data.parent_id)

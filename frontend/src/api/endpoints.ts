@@ -47,7 +47,8 @@ export const eventsApi = {
   approve: (participationId: number) => api.post<Participant>(`/participations/${participationId}/approve`),
   reject: (participationId: number) => api.post<Participant>(`/participations/${participationId}/reject`),
   comments: (id: number) => api.get<Comment[]>(`/events/${id}/comments`),
-  addComment: (id: number, text: string) => api.post<Comment>(`/events/${id}/comments`, { text }),
+  addComment: (id: number, text: string, parentId: number | null = null) =>
+    api.post<Comment>(`/events/${id}/comments`, { text, parent_id: parentId }),
 };
 
 export const meApi = {

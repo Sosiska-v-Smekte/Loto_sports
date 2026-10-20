@@ -90,6 +90,15 @@ class MyParticipationOut(BaseModel):
 
 class CommentIn(BaseModel):
     text: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=2000)]
+    parent_id: int | None = None
+
+
+class ReplyTo(BaseModel):
+    """Кому отвечают: имя автора и начало исходного сообщения (null, если оно скрыто)."""
+
+    id: int
+    author_name: str
+    excerpt: str | None
 
 
 class CommentOut(BaseModel):
@@ -101,3 +110,7 @@ class CommentOut(BaseModel):
     hidden_reason: str | None
     is_organizer_reply: bool
     created_at: datetime
+    parent_id: int | None
+    # Ветка в один уровень: ответы на ответы показываются под тем же исходным сообщением
+    root_id: int
+    reply_to: ReplyTo | None

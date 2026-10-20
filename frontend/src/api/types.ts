@@ -110,6 +110,9 @@ export interface Comment {
   hidden_reason: string | null;
   is_organizer_reply: boolean;
   created_at: string;
+  parent_id: number | null;
+  root_id: number;
+  reply_to: { id: number; author_name: string; excerpt: string | null } | null;
 }
 
 export interface Organization {
