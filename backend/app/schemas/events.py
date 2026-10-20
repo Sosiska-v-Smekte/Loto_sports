@@ -4,7 +4,7 @@ from typing import Annotated, Literal
 from pydantic import BaseModel, Field, StringConstraints, model_validator
 
 from app.models import EventLevel, JoinMode
-from app.schemas.common import City, ORMModel, OrganizationBrief, SportOut, UserBrief
+from app.schemas.common import City, OrganizationBrief, ORMModel, SportOut, UserBrief
 from app.schemas.venues import EventZone
 
 ShortText = Annotated[str, StringConstraints(strip_whitespace=True, max_length=2000)]

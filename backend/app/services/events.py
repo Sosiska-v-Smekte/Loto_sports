@@ -4,7 +4,7 @@ from datetime import date, datetime, time, timedelta
 from sqlalchemy import Select, func, or_, select
 from sqlalchemy.orm import Session
 
-from app.db import search_key
+from app.db import search_column, search_key
 from app.models import (
     Event,
     EventStatus,
@@ -105,10 +105,10 @@ def search_events(
         needle = search_key(query.strip())
         stmt = stmt.where(
             or_(
-                func.search_key(Event.title).contains(needle),
-                func.search_key(Event.description).contains(needle),
-                func.search_key(Event.address).contains(needle),
-                func.search_key(Event.place_details).contains(needle),
+                search_column(Event.title).contains(needle),
+                search_column(Event.description).contains(needle),
+                search_column(Event.address).contains(needle),
+                search_column(Event.place_details).contains(needle),
                 Sport.normalized_name.contains(needle),
             )
         )

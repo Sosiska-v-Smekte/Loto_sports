@@ -9,7 +9,15 @@ from datetime import datetime, time, timedelta
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.models import Event, EventStatus, Organization, OrganizationStatus, User, Venue, Zone
+from app.models import (
+    Event,
+    EventStatus,
+    Organization,
+    OrganizationStatus,
+    User,
+    Venue,
+    Zone,
+)
 from app.schemas.venues import Availability, BusyInterval, Slot, VenueIn, ZoneIn
 from app.services.errors import bad_request, conflict, forbidden, not_found
 from app.services.geocoding import geocode

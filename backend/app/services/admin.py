@@ -1,12 +1,15 @@
 from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
 
-from app.db import search_key
+from app.db import search_column, search_key
 from app.models import Event, EventStatus, Organization, OrganizationStatus, User
 from app.models.base import now
 from app.schemas.organizations import AdminOrganizationOut, OrganizationOut
 from app.services.errors import conflict, not_found
-from app.services.notifications import notify_event_unpublished, notify_organization_review
+from app.services.notifications import (
+    notify_event_unpublished,
+    notify_organization_review,
+)
 
 
 def list_organizations(db: Session, status: str | None, query: str | None) -> list[AdminOrganizationOut]:
@@ -28,10 +31,10 @@ def list_organizations(db: Session, status: str | None, query: str | None) -> li
         needle = search_key(query.strip())
         stmt = stmt.where(
             or_(
-                func.search_key(Organization.name).contains(needle),
-                func.search_key(User.name).contains(needle),
-                func.search_key(User.email).contains(needle),
-                func.search_key(Organization.city).contains(needle),
+                search_column(Organization.name).contains(needle),
+                search_column(User.name).contains(needle),
+                search_column(User.email).contains(needle),
+                search_column(Organization.city).contains(needle),
             )
         )
     return [
@@ -74,10 +77,10 @@ def list_events(
         needle = search_key(query.strip())
         stmt = stmt.where(
             or_(
-                func.search_key(Event.title).contains(needle),
-                func.search_key(Event.address).contains(needle),
-                func.search_key(Event.city).contains(needle),
-                func.search_key(User.name).contains(needle),
+                search_column(Event.title).contains(needle),
+                search_column(Event.address).contains(needle),
+                search_column(Event.city).contains(needle),
+                search_column(User.name).contains(needle),
             )
         )
     return list(db.scalars(stmt).unique())

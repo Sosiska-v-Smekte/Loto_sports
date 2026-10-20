@@ -1,13 +1,13 @@
 from app.models.comment import Comment
-from app.models.interest import DayKind, DayPart, Interest
 from app.models.event import Event, EventLevel, EventStatus, JoinMode
+from app.models.interest import DayKind, DayPart, Interest
 from app.models.membership import OrganizationMember
 from app.models.notification import Notification, NotificationType
 from app.models.organization import Organization, OrganizationStatus
 from app.models.participation import Participation, ParticipationStatus
 from app.models.sport import Sport
-from app.models.user_sport import SportLevel, UserSport
 from app.models.user import AuthSession, User
+from app.models.user_sport import SportLevel, UserSport
 from app.models.venue import Venue, Zone
 
 __all__ = [

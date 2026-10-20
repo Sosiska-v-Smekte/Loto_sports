@@ -1,7 +1,12 @@
 from fastapi import APIRouter, status
 
 from app.deps import CurrentUser, Db, OptionalUser
-from app.schemas.events import EventOut, MyParticipationOut, ParticipantOut, ParticipantsOut
+from app.schemas.events import (
+    EventOut,
+    MyParticipationOut,
+    ParticipantOut,
+    ParticipantsOut,
+)
 from app.services import participations as service
 from app.services.events import organized_by, present_events
 

@@ -1,8 +1,8 @@
 from typing import Annotated, Literal
 
-from pydantic import BaseModel, Field, StringConstraints, field_validator
+from pydantic import BaseModel, Field, StringConstraints
 
-from app.schemas.common import City, Email, ORMModel, OrganizationBrief, SportOut
+from app.schemas.common import City, Email, OrganizationBrief, ORMModel, SportOut
 from app.schemas.events import EventOut
 
 
@@ -14,15 +14,9 @@ class UserOut(ORMModel):
     city: str | None
     about: str | None
     is_admin: bool
-    notify_new: bool = True
-    notify_remind: bool = True
+    notify_new: bool
+    notify_remind: bool
     organization: OrganizationBrief | None
-
-    @field_validator("notify_new", "notify_remind", mode="before")
-    @classmethod
-    def _default_on(cls, value):
-        # У записей, созданных до появления настроек, значения нет — это «включено»
-        return True if value is None else value
 
 
 class UserPublic(ORMModel):

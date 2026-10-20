@@ -8,7 +8,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.api import api_router
 from app.config import CORS_ORIGINS, FRONTEND_DIST, SEED_ON_STARTUP
-from app.db import SessionLocal, init_db
+from app.db import SessionLocal, migrate
 from app.seed import seed_if_empty
 
 FIELD_LABELS = {
@@ -59,7 +59,7 @@ def _validation_message(exc: RequestValidationError) -> str:
 
 @asynccontextmanager
 async def lifespan(_: FastAPI):
-    init_db()
+    migrate()
     if SEED_ON_STARTUP:
         with SessionLocal() as db:
             seed_if_empty(db)

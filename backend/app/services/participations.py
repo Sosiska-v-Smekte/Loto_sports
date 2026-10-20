@@ -1,7 +1,14 @@
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
-from app.models import Event, EventStatus, JoinMode, Participation, ParticipationStatus, User
+from app.models import (
+    Event,
+    EventStatus,
+    JoinMode,
+    Participation,
+    ParticipationStatus,
+    User,
+)
 from app.models.base import now
 from app.schemas.events import ParticipantOut, ParticipantsOut
 from app.services.access import can_manage, get_event_for_viewer

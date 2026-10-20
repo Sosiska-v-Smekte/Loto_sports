@@ -1,7 +1,14 @@
 from fastapi import APIRouter
 
 from app.deps import CurrentUser, Db, OptionalUser
-from app.schemas.users import AvatarIn, ProfileUpdate, UserOut, UserPage, UserSportIn, UserSportOut
+from app.schemas.users import (
+    AvatarIn,
+    ProfileUpdate,
+    UserOut,
+    UserPage,
+    UserSportIn,
+    UserSportOut,
+)
 from app.services import users as service
 from app.services.events import present_events, upcoming_by_organizer
 

@@ -2,16 +2,16 @@ import os
 from collections.abc import Callable, Iterator
 from datetime import datetime, timedelta
 
-# Тесты работают на отдельной in-memory базе; переменную нужно выставить до импорта приложения
-os.environ["DATABASE_URL"] = "sqlite://"
+os.environ["DATABASE_URL"] = os.getenv(
+    "TEST_DATABASE_URL", "postgresql+psycopg://sport:sport@localhost:5432/sport_club_test"
+)
 os.environ["SEED_ON_STARTUP"] = "1"
-# Геокодер ходит в интернет — в тестах выключен, проверяется отдельно с подменой запроса
 os.environ["GEOCODING_ENABLED"] = "0"
 
 import pytest
 from fastapi.testclient import TestClient
 
-from app.db import Base, engine
+from app.db import reset_schema
 from app.main import app
 
 Headers = dict[str, str]
@@ -19,8 +19,8 @@ Headers = dict[str, str]
 
 @pytest.fixture
 def client() -> Iterator[TestClient]:
-    Base.metadata.drop_all(engine)
-    with TestClient(app) as test_client:  # lifespan создаёт таблицы и заливает демо-данные
+    reset_schema()
+    with TestClient(app) as test_client:
         yield test_client
 
 

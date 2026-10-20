@@ -1,10 +1,33 @@
 services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: sport
+      POSTGRES_PASSWORD: sport
+      POSTGRES_DB: sport_club
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sport -d sport_club"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
   app:
     build: .
     image: sport-club
+    environment:
+      DATABASE_URL: postgresql+psycopg://sport:sport@db:5432/sport_club
     ports:
       - "8000:8000"
     volumes:
-      # Файл SQLite живёт на хосте и переживает пересборку контейнера
-      - ./data:/data
+      - uploads:/data/uploads
+    depends_on:
+      db:
+        condition: service_healthy
     restart: unless-stopped
+
+volumes:
+  pgdata:
+  uploads:

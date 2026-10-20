@@ -1,9 +1,5 @@
 import base64
 
-from sqlalchemy import create_engine, inspect, text
-
-from app.db import Base, init_db
-
 PNG = b"\x89PNG\r\n\x1a\n" + b"\x00" * 64
 
 
@@ -51,13 +47,3 @@ def test_organization_avatar_needs_an_organization(client, login, tmp_path, monk
     assert owner.status_code == 200
     organization_id = owner.json()["id"]
     assert client.get(f"/api/organizations/{organization_id}").json()["organization"]["avatar_url"] == owner.json()["avatar_url"]
-
-
-def test_new_columns_are_added_to_an_old_database(tmp_path):
-    engine = create_engine(f"sqlite:///{tmp_path / 'old.db'}")
-    Base.metadata.create_all(engine)
-    with engine.begin() as connection:
-        connection.execute(text("ALTER TABLE organizations DROP COLUMN avatar_url"))
-    assert "avatar_url" not in {c["name"] for c in inspect(engine).get_columns("organizations")}
-    init_db(engine)
-    assert "avatar_url" in {c["name"] for c in inspect(engine).get_columns("organizations")}

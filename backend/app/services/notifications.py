@@ -162,7 +162,7 @@ def notify_event_unpublished(db: Session, event: Event) -> None:
 
 def ensure_reminders(db: Session, user: User) -> None:
     """Напоминания о событиях, до начала которых меньше суток: участникам и организатору."""
-    if user.notify_remind is False:
+    if not user.notify_remind:
         return
     current = now()
     stmt = (

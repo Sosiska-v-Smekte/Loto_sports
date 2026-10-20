@@ -10,18 +10,18 @@ from datetime import datetime, timedelta
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from app.db import Base, SessionLocal, engine, init_db
+from app.db import SessionLocal, migrate, reset_schema
 from app.models import (
     Comment,
     DayKind,
     DayPart,
     Event,
     EventLevel,
-    Interest,
-    OrganizationMember,
     EventStatus,
+    Interest,
     JoinMode,
     Organization,
+    OrganizationMember,
     OrganizationStatus,
     Participation,
     ParticipationStatus,
@@ -111,6 +111,29 @@ PLACE_COORDINATES: dict[str, tuple[float, float]] = {
     "Ледовая арена «Сокольники», ул. Сокольнический Вал, 1Б": (55.792894, 37.671492),
 }
 
+
+
+SPORT_PATTERNS = {
+    "football": "pitch",
+    "basketball": "court",
+    "volleyball": "net",
+    "tennis": "tennis",
+    "table-tennis": "tennis",
+    "badminton": "net",
+    "chess": "chess",
+    "running": "track",
+    "cycling": "topo",
+    "swimming": "lanes",
+    "yoga": "waves",
+    "bowling": "balls",
+    "boxing": "topo",
+    "hockey": "court",
+    "billiards": "balls",
+}
+
+
+def pattern_for(sport: Sport) -> str:
+    return SPORT_PATTERNS.get(sport.slug or "", "topo")
 
 def _at(days: int, hour: int, minute: int = 0) -> datetime:
     """Дата через `days` дней в hh:mm.
@@ -206,7 +229,7 @@ def seed(db: Session) -> None:
             requirements=requirements,
             join_mode=mode,
             card_color=color,
-            card_pattern=pattern,
+            card_pattern=pattern or pattern_for(sport),
         )
         db.add(event)
         return event
@@ -570,6 +593,7 @@ def seed_communities(db: Session) -> None:
                 latitude=PLACE_COORDINATES[address][0],
                 longitude=PLACE_COORDINATES[address][1],
                 join_mode=JoinMode.open,
+                card_pattern=pattern_for(sports[sport]),
             )
         )
         clubs.append(organization)
@@ -618,10 +642,8 @@ def main() -> None:
     sys.stdout.reconfigure(errors="replace")
 
     if args.reset:
-        import app.models  # noqa: F401
-
-        Base.metadata.drop_all(engine)
-    init_db()
+        reset_schema()
+    migrate()
     with SessionLocal() as db:
         created = seed_if_empty(db)
     print("Демо-данные созданы" if created else "База уже заполнена, используйте --reset для пересоздания")

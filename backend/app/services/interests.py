@@ -12,8 +12,8 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.models import DayKind, DayPart, Event, Interest, NotificationType, Sport, User
-from app.schemas.interests import DemandGroup, InterestIn
 from app.schemas.common import SportOut
+from app.schemas.interests import DemandGroup, InterestIn
 from app.services.errors import bad_request, forbidden, not_found
 from app.services.notifications import notify
 from app.services.sports import get_or_create_sport

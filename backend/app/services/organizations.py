@@ -1,9 +1,9 @@
+from collections import defaultdict
+
 from sqlalchemy import func, or_, select
 from sqlalchemy.orm import Session
 
-from app.db import search_key
-from collections import defaultdict
-
+from app.db import search_column, search_key
 from app.models import (
     Event,
     EventStatus,
@@ -14,12 +14,11 @@ from app.models import (
     User,
 )
 from app.models.base import now
-from app.schemas.organizations import OrganizationOut
-from app.schemas.organizations import OrganizationIn
+from app.schemas.organizations import OrganizationIn, OrganizationOut
 from app.services import avatars
 from app.services.errors import conflict, not_found
-from app.services.sports import normalize_sport_name
 from app.services.notifications import notify_organization_request
+from app.services.sports import normalize_sport_name
 
 
 def list_approved(db: Session, query: str | None = None) -> list[Organization]:
@@ -28,9 +27,9 @@ def list_approved(db: Session, query: str | None = None) -> list[Organization]:
         needle = search_key(query.strip())
         stmt = stmt.where(
             or_(
-                func.search_key(Organization.name).contains(needle),
-                func.search_key(Organization.sports).contains(needle),
-                func.search_key(Organization.city).contains(needle),
+                search_column(Organization.name).contains(needle),
+                search_column(Organization.sports).contains(needle),
+                search_column(Organization.city).contains(needle),
             )
         )
     return list(db.scalars(stmt))
