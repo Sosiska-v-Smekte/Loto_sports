@@ -21,7 +21,6 @@ const toZone = (z: ZoneDraft) => ({
 });
 const zoneValid = (z: ZoneDraft) => z.name.trim().length >= 2 && Number(z.capacity) >= 1 && Number(z.capacity) <= 500;
 
-/** Площадки организации: адрес и зоны, которые бронируются по одной (одно мероприятие на зону одновременно). */
 export function VenuesManager({ city }: { city: string }) {
   const venues = useVenues();
   const [adding, setAdding] = useState(false);

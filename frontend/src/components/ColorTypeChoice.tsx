@@ -1,7 +1,6 @@
 import { COLOR_TYPES, useAccessibility, type ColorType } from "@/features/accessibility";
 import { cn } from "@/lib/cn";
 
-/** Образцы палитры каждого вида: фон страницы, главный цвет и три статуса. Значки дублируют цвет. */
 const SWATCHES: Record<ColorType, { page: string; primary: string; ok: string; wait: string; bad: string }> = {
   deutan: { page: "#eaf0f9", primary: "#1d4e9e", ok: "#cfe0ff", wait: "#fff3b5", bad: "#ffa874" },
   protan: { page: "#f8f2d9", primary: "#2e3a96", ok: "#c9d7fb", wait: "#fff6b8", bad: "#ffa066" },
@@ -27,7 +26,6 @@ function Swatch({ type }: { type: ColorType }) {
   );
 }
 
-/** Выбор вида дальтонизма. Страница перекрашивается сразу, поэтому видно, какая палитра подходит. */
 export function ColorTypeChoice({ className }: { className?: string }) {
   const { settings, update } = useAccessibility();
   return (

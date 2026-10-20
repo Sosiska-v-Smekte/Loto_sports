@@ -8,7 +8,6 @@ export const DAY_PART_TITLE: Record<DayPart, string> = {
   day: "Днём (12:00–18:00)",
   evening: "Вечером (после 18:00)",
 };
-/** Время начала по умолчанию в черновике встречи */
 export const DAY_PART_TIME: Record<DayPart, string> = { morning: "10:00", day: "14:00", evening: "19:00" };
 
 /** «3 человека», «5 человек»: склонение по числу */

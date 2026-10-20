@@ -9,7 +9,6 @@ import { Card } from "../ui/Card";
 
 type Mode = "unpublish" | "delete" | null;
 
-/** Модерация события администратором: снять с публикации или удалить, всегда с причиной. */
 export function AdminModeration({ event }: { event: SportEvent }) {
   const [mode, setMode] = useState<Mode>(null);
   const unpublish = useAction(

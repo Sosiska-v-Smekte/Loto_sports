@@ -3,10 +3,7 @@ import type { Sport } from "@/api/types";
 import { sportIconSource } from "@/components/SportIllustration";
 import { recolorIcon } from "./recolor";
 
-/**
- * Готовые адреса иконок направлений (с натуральным цветом) для мест, где нельзя поставить компонент, —
- * например, маркеры карты, которые Leaflet рисует строкой HTML. До перекраски отдаётся исходная картинка.
- */
+/** Для мест, где нельзя отрендерить компонент (HTML-маркеры Leaflet). До перекраски отдаёт исходную картинку. */
 export function useSportIconUrls(sports: Pick<Sport, "id" | "slug">[]): Record<string, string> {
   const [urls, setUrls] = useState<Record<string, string>>({});
   const key = [...new Set(sports.map((s) => s.slug ?? ""))].sort().join("|");

@@ -4,13 +4,12 @@ import { CARD_COLORS } from "@/lib/color";
 import { cn } from "@/lib/cn";
 
 interface CardColorPickerProps {
-  /** Выбранный цвет (#RRGGBB) или null — цвет направления */
+  /** #RRGGBB; null означает цвет направления */
   value: string | null;
   onChange: (color: string | null) => void;
   sport: Sport | null;
 }
 
-/** Цвет карточки: по умолчанию цвет направления, либо один из восьми своих. Иконка перекрашивается под выбор. */
 export function CardColorPicker({ value, onChange, sport }: CardColorPickerProps) {
   const choices = [{ hex: null, name: "Как у направления" }, ...CARD_COLORS];
   const selected = choices.find((c) => c.hex === value) ?? choices[0];

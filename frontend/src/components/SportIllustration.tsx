@@ -3,10 +3,6 @@ import type { Sport } from "@/api/types";
 import { cn } from "@/lib/cn";
 import { recolorIcon } from "@/lib/recolor";
 
-/**
- * 3D-иконки направлений: Figma-пак «Sports 3D Icon Pack» и присланные картинки (боулинг, бег, плавание,
- * волейбол, бильярд), файлы в public/sport-icons. Направлению без своей иконки подобран предмет по смыслу.
- */
 const ICONS: Record<string, string> = {
   football: "football",
   basketball: "basketball",
@@ -25,10 +21,7 @@ const ICONS: Record<string, string> = {
   billiards: "eight-ball",
 };
 
-/**
- * Натуральные цвета: у иконок Figma-пака фиолетовый акцент, а предмет в жизни другого цвета. Акцент заменяется
- * цветом из этой таблицы (светотень остаётся), остальные иконки показываются как есть.
- */
+/** Натуральный цвет предмета, которым заменяется фиолетовый акцент иконок Figma-пака. */
 const NATURAL: Record<string, string> = {
   boxing: "#D32F2F",
   "table-tennis": "#D63A2F",
@@ -42,7 +35,6 @@ const NATURAL: Record<string, string> = {
 /** В маленьком размере (чипы) сложная композиция не читается — показываем один предмет. */
 const COMPACT: Record<string, string> = { bowling: "bowling-pin" };
 
-/** Адрес иконки направления и цвет, в который нужно перекрасить фиолетовый акцент (если нужно). Для карты и списков. */
 export function sportIconSource(sport: Pick<Sport, "slug">, compact = false) {
   const base = (sport.slug && ICONS[sport.slug]) || "custom";
   const file = (compact && COMPACT[base]) || base;
@@ -65,14 +57,10 @@ function useRecoloredIcon(src: string, color: string | undefined): string | null
   return color && done?.key === `${src}|${color}` ? done.url : null;
 }
 
-/**
- * Объёмная иллюстрация направления. Размер задаётся через font-size (text-[80px] и т. п.):
- * картинка занимает 1em × 1em. Для пользовательских направлений показываем трофей.
- */
+/** Размер задаётся через font-size: картинка занимает 1em × 1em. */
 interface SportIllustrationProps {
   sport: Sport;
   className?: string;
-  /** Маленькая иконка: для чипов и списков */
   compact?: boolean;
 }
 

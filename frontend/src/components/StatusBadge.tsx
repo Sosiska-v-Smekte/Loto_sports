@@ -10,7 +10,6 @@ interface StatusBadgeProps {
   className?: string;
 }
 
-/** Статус записи: цвет + иконка + текст, чтобы не полагаться только на цвет. */
 export function StatusBadge({ status, eventStatus, size, className }: StatusBadgeProps) {
   const view = participationView(status, eventStatus);
   return (

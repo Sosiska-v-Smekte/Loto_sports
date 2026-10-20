@@ -16,7 +16,6 @@ const PARTICIPATION_HINT = {
   rejected: "Организатор не смог принять заявку на это мероприятие. Посмотрите другие активности.",
 } as const;
 
-/** Главная кнопка страницы события: её вид полностью зависит от состояния записи. */
 export function JoinPanel({ event }: { event: SportEvent }) {
   const { user } = useAuth();
   const location = useLocation();

@@ -5,15 +5,13 @@ import { CARD_PATTERNS, SPORT_PATTERN, type CardPattern } from "@/lib/engraving"
 import { Engraving } from "./Engraving";
 
 interface CardPatternPickerProps {
-  /** Выбранный узор или null — без гравировки */
+  /** null означает без гравировки */
   value: CardPattern | null;
   onChange: (pattern: CardPattern | null) => void;
   sport: Sport | null;
-  /** Цвет шапки карточки: превью узоров показываются на нём */
   background: string;
 }
 
-/** Гравировка шапки карточки. Узор, подходящий к направлению, стоит первым. */
 export function CardPatternPicker({ value, onChange, sport, background }: CardPatternPickerProps) {
   const suggested = sport?.slug ? SPORT_PATTERN[sport.slug] : undefined;
   const patterns = [...CARD_PATTERNS].sort((a, b) => Number(b.id === suggested) - Number(a.id === suggested));

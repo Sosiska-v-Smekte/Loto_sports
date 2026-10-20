@@ -19,7 +19,6 @@ export function UnreadBadge({ count, className }: { count: number | undefined; c
   );
 }
 
-/** Колокольчик в шапке на десктопе: выпадающий список последних уведомлений. На телефоне — пункт таб-бара. */
 export function NotificationBell() {
   const unread = useUnreadCount();
   const [open, setOpen] = useState(false);

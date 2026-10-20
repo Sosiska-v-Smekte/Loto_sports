@@ -12,18 +12,15 @@ interface EventGridProps {
   isPending: boolean;
   error: unknown;
   onRetry: () => void;
-  /** Показываются прошлые результаты, пока грузятся новые (смена фильтра) */
   isStale?: boolean;
   empty: ReactNode;
   className?: string;
 }
 
-/** Сколько карточек простой режим показывает сразу: длинная лента утомляет */
 const SIMPLE_LIMIT = 6;
 
 const GRID_CLASS = "event-grid grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4 lg:gap-6";
 
-/** Сетка карточек с состояниями загрузки, ошибки и пустого результата. */
 export function EventGrid({ events, isPending, error, onRetry, isStale, empty, className }: EventGridProps) {
   const { simple } = useAccessibility().settings;
   const [showAll, setShowAll] = useState(false);

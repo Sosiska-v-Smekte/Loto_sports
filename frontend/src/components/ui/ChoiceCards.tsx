@@ -16,7 +16,6 @@ interface ChoiceCardsProps<T extends string> {
   choices: Choice<T>[];
 }
 
-/** Крупные карточки-переключатели на нативных radio: работают с клавиатуры и экранным диктором. */
 export function ChoiceCards<T extends string>({ legend, name, value, onChange, choices }: ChoiceCardsProps<T>) {
   return (
     <fieldset>

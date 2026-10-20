@@ -47,7 +47,6 @@ export function CreateEventPage() {
   const organization = useMyOrganization();
   const approvedOrg = organization.data?.status === "approved" ? organization.data : null;
 
-  // Черновик из «Я бы пошёл»: направление, город, будни/выходные и время суток уже известны
   const draftKind = (params.get("kind") as DayKind | null) ?? null;
   const draftPart = (params.get("part") as DayPart | null) ?? null;
   const draftSport = Number(params.get("sport")) || null;
@@ -102,7 +101,6 @@ export function CreateEventPage() {
   const valid = !Object.values(errors).some(Boolean);
   const show = (key: keyof typeof errors) => (touched ? errors[key] : undefined);
 
-  // Название по умолчанию для встречи из «Я бы пошёл», когда справочник направлений загрузился
   const titled = useRef(false);
   useEffect(() => {
     if (titled.current || !draftSport || !chosenSport) return;
@@ -163,7 +161,6 @@ export function CreateEventPage() {
           <SimpleHint>Шаг 1 из 4. Придумайте название и выберите вид спорта. Остальное можно не заполнять.</SimpleHint>
           <Input label="Название" placeholder="Например: Утренняя пробежка в парке" maxLength={120} required error={show("title")} {...field("title")} />
           <SportPicker sports={sports.data} value={sport} onChange={setSport} error={show("sport")} />
-          {/* Оформление карточки в простом режиме не нужно: цвет и узор подберутся сами */}
           <div data-simple-hide className="flex flex-col gap-5">
             <CardColorPicker value={cardColor} onChange={setCardColor} sport={chosenSport} />
             <CardPatternPicker
@@ -329,7 +326,6 @@ interface ZoneChooserProps {
   onPickSlot: (slot: { starts_at: string; ends_at: string }) => void;
 }
 
-/** Выбор зоны площадки и проверка, свободна ли она в выбранное время. */
 function ZoneChooser({ venue, zoneId, onChange, error, endError, availability, onPickSlot }: ZoneChooserProps) {
   const groups = venue.zones.reduce<Record<string, Venue["zones"]>>((acc, zone) => {
     (acc[zone.group_name ?? ""] ??= []).push(zone);

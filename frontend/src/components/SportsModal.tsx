@@ -17,7 +17,6 @@ interface SportsModalProps {
 
 const LEVELS: SportLevel[] = ["beginner", "amateur", "pro"];
 
-/** «Мои спортивные направления»: отметьте, чем занимаетесь, и укажите свой уровень. */
 export function SportsModal({ open, onClose, current }: SportsModalProps) {
   const sports = useSports();
   const [levels, setLevels] = useState<Record<number, SportLevel>>(() =>

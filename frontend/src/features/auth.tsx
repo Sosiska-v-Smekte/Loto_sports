@@ -25,7 +25,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         return await authApi.me();
       } catch {
-        // Токен устарел (например, база пересоздана) — выходим молча
+        // Токен устарел: выходим молча
         tokenStorage.set(null);
         setToken(null);
         return null;

@@ -9,7 +9,6 @@ import { UnreadBadge } from "./NotificationBell";
 
 const NOTIFICATIONS: NavItem = { to: "/notifications", label: "Уведомления", shortLabel: "Уведомления", icon: Bell };
 
-/** Нижний таб-бар для телефонов и планшетов; «Создать» — выделенная кнопка по центру. */
 export function BottomNav() {
   const { pathname } = useLocation();
   const { user } = useAuth();

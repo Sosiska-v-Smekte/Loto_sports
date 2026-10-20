@@ -9,7 +9,6 @@ interface SearchBarProps {
   onCityChange: (value: string) => void;
 }
 
-/** Поиск по названию, описанию, направлению и адресу + город из справочника. Ввод применяется с задержкой. */
 export function SearchBar({ query, onQueryChange, city, onCityChange }: SearchBarProps) {
   const [draft, setDraft] = useState(query);
 

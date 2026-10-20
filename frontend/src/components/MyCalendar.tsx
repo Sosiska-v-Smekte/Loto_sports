@@ -6,14 +6,12 @@ import { dayjs } from "@/lib/dates";
 const WEEKDAYS = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
 
 interface MyCalendarProps {
-  /** Дни (YYYY-MM-DD), в которые у человека что-то есть: под числом ставится точка */
+  /** Дни в формате YYYY-MM-DD, отмеченные точкой */
   busyDays: Set<string>;
-  /** Выбранный день: список слева показывает только его */
   selected: string | null;
   onSelect: (day: string | null) => void;
 }
 
-/** Календарь месяца с отметками дней, в которые есть активности. Понедельник — первый день недели. */
 export function MyCalendar({ busyDays, selected, onSelect }: MyCalendarProps) {
   const [month, setMonth] = useState(() => dayjs().startOf("month"));
   const today = dayjs().format("YYYY-MM-DD");

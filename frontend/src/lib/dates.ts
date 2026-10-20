@@ -8,7 +8,7 @@ dayjs.locale("ru");
 export { dayjs };
 
 const capitalize = (value: string) => value.charAt(0).toUpperCase() + value.slice(1);
-// В русской локали dayjs сокращения месяцев с точкой («окт.»), на макете — без
+// В русской локали dayjs сокращает месяцы с точкой («окт.»), нужно без неё
 const shortMonth = (d: Dayjs) => d.format("MMM").replace(".", "");
 
 /** «Сегодня, 19:00», «Завтра, 12:00», «Ср, 21 окт, 18:30». */

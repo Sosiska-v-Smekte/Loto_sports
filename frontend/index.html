@@ -14,8 +14,7 @@
     />
     <title>Спортивный клуб</title>
     <script>
-      // Специальные возможности применяются до отрисовки, чтобы не было вспышки обычного вида.
-      // Логика повторяет applyToDocument из src/features/accessibility.tsx.
+      // Повторяет applyToDocument из src/features/accessibility.tsx
       (function () {
         try {
           var s = JSON.parse(localStorage.getItem("a11y-settings") || "{}");

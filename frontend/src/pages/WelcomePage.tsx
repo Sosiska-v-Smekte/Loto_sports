@@ -17,7 +17,6 @@ const STEPS = [
   { icon: Users, title: "Приходите в компанию", text: "Адрес, время и условия у вас перед глазами, а напоминание придёт заранее." },
 ];
 
-/** Стартовая страница для гостей: либо войти, либо зарегистрироваться. События можно посмотреть и без входа. */
 export function WelcomePage({ onBrowse }: { onBrowse: () => void }) {
   const [a11yOpen, setA11yOpen] = useState(false);
   return (

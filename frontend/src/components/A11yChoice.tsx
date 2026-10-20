@@ -10,10 +10,6 @@ const OPTIONS: { key: "lowVision" | "colorSafe" | "simple"; label: string; hint:
   { key: "simple", label: "Простой режим", hint: "Крупные кнопки, меньше лишнего, подсказки" },
 ];
 
-/**
- * Выбор режимов доступности при регистрации. Режим включается сразу, как только вы отметили его: страница
- * меняется на глазах, и видно, подходит ли он. «Не нужно» — обычный вид. Позже всё можно поменять в шапке сайта.
- */
 export function A11yChoice() {
   const { settings, update, reset } = useAccessibility();
   const any = settings.lowVision || settings.colorSafe || settings.simple;

@@ -7,7 +7,7 @@ import { FieldShell } from "./ui/Field";
 interface CityComboboxProps {
   value: string;
   onChange: (city: string) => void;
-  /** Подпись поля в формах; без неё — компактный вариант для фильтра на главной */
+  /** Без подписи рендерится компактный вариант для фильтра */
   label?: string;
   hint?: string;
   error?: string;
@@ -16,10 +16,7 @@ interface CityComboboxProps {
 
 const normalize = (value: string) => value.trim().toLowerCase().replace(/ё/g, "е");
 
-/**
- * Выбор города только из справочника: можно искать по началу или части названия,
- * но произвольный текст не принимается — при уходе с поля возвращается последний выбранный город.
- */
+/** Только города из справочника: при уходе с поля невалидный ввод откатывается к последнему выбранному городу. */
 export function CityCombobox({ label, ...props }: CityComboboxProps) {
   if (!label) return <CityInput {...props} compact />;
   return (
@@ -47,7 +44,6 @@ function CityInput({ value, onChange, id, describedBy, invalid = false, compact 
     const all = cities.data ?? [];
     const needle = normalize(query);
     if (!needle) return all;
-    // Сначала города, начинающиеся с введённого текста, потом содержащие его
     const starts = all.filter((c) => normalize(c).startsWith(needle));
     const contains = all.filter((c) => !normalize(c).startsWith(needle) && normalize(c).includes(needle));
     return [...starts, ...contains];
@@ -79,7 +75,6 @@ function CityInput({ value, onChange, id, describedBy, invalid = false, compact 
   };
 
   const onBlur = () => {
-    // Точное совпадение с городом из списка принимаем, всё остальное откатываем
     const exact = (cities.data ?? []).find((c) => normalize(c) === normalize(query));
     if (open && exact) onChange(exact);
     close();

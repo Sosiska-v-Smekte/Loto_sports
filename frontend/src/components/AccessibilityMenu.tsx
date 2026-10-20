@@ -56,7 +56,6 @@ function ModeSwitch({ mode, checked, onChange }: { mode: ModeInfo; checked: bool
       aria-checked={checked}
       onClick={() => onChange(!checked)}
       className={cn(
-        // Сетка: значок, название и тумблер в одной строке, описание под ними во всю ширину на телефоне
         "pressable grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2 rounded-[20px] border-2 p-4 text-left",
         checked ? "border-primary bg-primary-soft" : "neu-raised-sm border-line/70",
       )}
@@ -65,7 +64,6 @@ function ModeSwitch({ mode, checked, onChange }: { mode: ModeInfo; checked: bool
         <Icon className="size-6" aria-hidden />
       </span>
       <span className="hyphens-auto text-[17px] font-semibold leading-snug [overflow-wrap:anywhere]">{mode.title}</span>
-      {/* Тумблер: положение и подпись дублируют цвет */}
       <span
         aria-hidden
         className={cn(
@@ -153,7 +151,6 @@ export function AccessibilityPanel({ open, onClose }: { open: boolean; onClose: 
   );
 }
 
-/** Кнопка в шапке. На телефоне — только значок, на широком экране с подписью. */
 export function AccessibilityButton({ className }: { className?: string }) {
   const [open, setOpen] = useState(false);
   const { isCustomized } = useAccessibility();

@@ -1,12 +1,6 @@
-/*
- * Специальные возможности. Атрибуты на <html> ставит src/features/accessibility.tsx
- * (и встроенный скрипт в index.html до загрузки приложения).
- */
+/* Размер текста и кнопок */
 
-/* ---------- Размер текста и кнопок ---------- */
-
-/* zoom масштабирует всё вместе: текст, отступы, зоны нажатия; вёрстка перестраивается под ширину.
-   --zoom нужен там, где размер считается от окна (vh, dvh): окно не масштабируется вместе с #root. */
+/* --zoom нужен для размеров от окна (vh, dvh): окно не масштабируется вместе с #root */
 html[data-text-size="1"] {
   --zoom: 1.15;
 }
@@ -30,20 +24,16 @@ html[data-text-size="2"] {
   zoom: var(--zoom, 1);
 }
 
-/* При крупном тексте карточки не сжимаются: колонок становится меньше */
 html[data-text-size="1"] .event-grid,
 html[data-text-size="2"] .event-grid {
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr));
 }
 
-/* Простой режим: карточки крупнее и по две в ряду, а не по три-четыре */
 html[data-simple] .event-grid {
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr));
 }
 
-/* Шапка. Её размеры на широком экране (от 1280px) и так крупные: 17–18px и кнопки по 50px, а с zoom
-   она перестаёт помещаться, поэтому там масштаб для шапки снимается. Уже 1280px при крупном тексте
-   навигация уезжает в нижнюю панель, как на планшете */
+/* От 1280px шапка не масштабируется: с zoom она не помещается. Уже 1280px навигация уходит в нижнюю панель */
 @media (min-width: 1280px) {
   html[data-text-size="1"] [data-site-header],
   html[data-text-size="2"] [data-site-header] {
@@ -68,8 +58,7 @@ html[data-simple] .event-grid {
   }
 }
 
-/* Нижняя панель: подпись из двух слов («Мои активности») переносится на вторую строку, а не обрезается;
-   значки при этом остаются на одной линии. Однословные подписи по-прежнему в одну строку */
+/* Двухсловные подписи нижней панели переносятся на вторую строку, а не обрезаются */
 [data-mobile-nav] a {
   justify-content: flex-start;
   padding-top: 4px;
@@ -84,8 +73,7 @@ html[data-text-size="2"] [data-nav-label] {
   font-size: 10px;
 }
 
-/* На узком телефоне логотип с крупным текстом иначе не помещается рядом с кнопками шапки,
-   а у «Войти» остаётся только значок (подпись есть в aria-label) */
+/* На узком телефоне логотип уменьшается, у «Войти» остаётся только значок (подпись есть в aria-label) */
 @media (max-width: 639.98px) {
   html[data-text-size="1"] [data-logo],
   html[data-text-size="2"] [data-logo] {
@@ -97,10 +85,9 @@ html[data-text-size="2"] [data-nav-label] {
   }
 }
 
-/* ---------- Для слабовидящих ---------- */
+/* Для слабовидящих */
 
-/* Чистый светлый фон, почти чёрный текст, тонкие, но заметные рамки (контраст рамок от 3:1, текста от 7:1).
-   Тени остаются мягкими — объём держится на рамке, а не на тени. */
+/* Контраст рамок от 3:1, текста от 7:1 */
 html[data-low-vision] {
   --color-page: #fbf9f4;
   --color-surface: #ffffff;
@@ -148,7 +135,6 @@ html[data-low-vision] .neu-control {
   border-color: transparent;
 }
 
-/* Хорошо заметная двойная рамка фокуса: тёмная + жёлтая */
 html[data-low-vision] :focus-visible {
   outline: 3px solid #0f0d0a !important;
   outline-offset: 2px !important;
@@ -167,7 +153,6 @@ html[data-low-vision] textarea {
   border-color: #6f6453;
 }
 
-/* Ссылки внутри текста подчёркнуты; заголовки карточек — нет, их видно по рамке карточки */
 html[data-low-vision] main p a,
 html[data-low-vision] main li a {
   text-decoration: underline;
@@ -184,23 +169,18 @@ html[data-low-vision] .engraving:not([data-pattern-preview] .engraving) {
   display: none;
 }
 
-/* Элемент, который сейчас озвучивается */
 [data-speaking] {
   outline: 3px dashed var(--color-primary) !important;
   outline-offset: 3px;
 }
 
-/* ---------- Для людей с нарушением цветовосприятия ---------- */
-
-/* Для каждого из трёх самых частых видов дальтонизма — своя палитра всей страницы: фон, главный цвет, статусы.
-   Опора везде одна: цвет не единственный признак. Статусы отличаются рамкой и значком, выходные — чертой,
-   ошибки в полях — толстой пунктирной рамкой (правила ниже). Карточки событий красятся в lib/color.ts. */
+/* Для людей с нарушением цветовосприятия */
 
 html[data-color-safe] {
   --color-chrome: #f7f2e8;
 }
 
-/* Дейтеранопия (нет зелёного): холодный фон, синий главный цвет; «хорошо» — синий, «плохо» — оранжевый */
+/* Дейтеранопия */
 html[data-color-type="deutan"] {
   --color-page: #eaf0f9;
   --color-surface: #fbfcff;
@@ -226,7 +206,7 @@ html[data-color-type="deutan"] {
   --shadow-primary: inset 0 1px 0 rgb(255 255 255 / 0.14), 0 1px 2px rgb(15 40 90 / 0.2), 0 4px 12px -4px rgb(15 40 90 / 0.32);
 }
 
-/* Протанопия (красный тёмный): тёплый светлый фон, индиго; красный не используем, «плохо» — яркий оранжевый */
+/* Протанопия */
 html[data-color-type="protan"] {
   --color-page: #f8f2d9;
   --color-surface: #fffdf2;
@@ -252,8 +232,7 @@ html[data-color-type="protan"] {
   --shadow-primary: inset 0 1px 0 rgb(255 255 255 / 0.14), 0 1px 2px rgb(25 30 90 / 0.2), 0 4px 12px -4px rgb(25 30 90 / 0.32);
 }
 
-/* Тританопия (нет синего): красно-зелёная ось цела, поэтому розово-бордовый главный цвет, «хорошо» — зелёный,
-   «плохо» — красный; светлота статусов разная, потому что жёлтый и розовый путаются */
+/* Тританопия: жёлтый и розовый путаются, поэтому светлота статусов разная */
 html[data-color-type="tritan"] {
   --color-page: #f7eef0;
   --color-surface: #fffafb;
@@ -284,7 +263,6 @@ html[data-color-type] body {
   background-image: none;
 }
 
-/* Шапка и нижняя панель берут цвет страницы, а не бежевый по умолчанию */
 html[data-color-type] [data-site-header],
 html[data-color-type] [data-mobile-nav] {
   background-color: color-mix(in srgb, var(--color-chrome) 92%, transparent);
@@ -294,7 +272,6 @@ html[data-color-type] [data-mobile-nav] .ring-4 {
   --tw-ring-color: var(--color-chrome);
 }
 
-/* Значок статуса в тексте плашки, если своего значка у неё нет: ✓ хорошо, ▲ внимание, ✕ плохо */
 html[data-color-safe] .chip-3d[data-tone="success"]:not(:has(svg))::before,
 html[data-color-safe] .chip-3d[data-tone="warning"]:not(:has(svg))::before,
 html[data-color-safe] .chip-3d[data-tone="danger"]:not(:has(svg))::before {
@@ -329,7 +306,6 @@ html[data-color-safe] [data-tone="danger"] {
   outline-offset: -2.5px;
 }
 
-/* Выходные в ленте дат: метка под днём недели, а не только красный цвет */
 html[data-color-safe] [data-weekend]::after,
 html[data-low-vision] [data-weekend]::after {
   content: "";
@@ -343,13 +319,12 @@ html[data-low-vision] [data-weekend]::after {
   background: currentColor;
 }
 
-/* Ошибки в полях: толстая рамка, чтобы красный не был единственным признаком */
 html[data-color-safe] [aria-invalid="true"] {
   border-width: 3px;
   border-style: dashed;
 }
 
-/* ---------- Простой режим ---------- */
+/* Простой режим */
 
 [data-simple-only] {
   display: none !important;
@@ -363,12 +338,10 @@ html[data-simple] [data-simple-hide] {
   display: none !important;
 }
 
-/* Страница с боковой колонкой без неё: основная колонка занимает всю ширину */
 html[data-simple] [data-simple-single] {
   grid-template-columns: minmax(0, 1fr) !important;
 }
 
-/* Без «прыгающих» элементов и анимаций */
 html[data-simple] *,
 html[data-simple] *::before,
 html[data-simple] *::after {

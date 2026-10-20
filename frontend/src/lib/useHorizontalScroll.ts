@@ -8,7 +8,6 @@ export interface ScrollEdges {
   end: boolean;
 }
 
-/** Горизонтальная лента: стрелки, прокрутка колесом мыши и перетаскивание мышью. На сенсорных экранах — нативная прокрутка. */
 export function useHorizontalScroll<T extends HTMLElement>() {
   const [element, setElement] = useState<T | null>(null);
   const [edges, setEdges] = useState<ScrollEdges>({ start: true, end: true });

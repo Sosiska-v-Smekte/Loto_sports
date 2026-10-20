@@ -11,7 +11,6 @@ import { buttonClass } from "./ui/Button";
 import { Skeleton } from "./ui/Skeleton";
 import { Tag } from "./ui/Tag";
 
-/** Баннер ближайшего события со свободной записью. Кнопка ведёт на страницу события: условия нужно прочитать до записи. */
 export function FeaturedBanner({ event }: { event: SportEvent }) {
   const participation = event.my_participation;
   const palette = eventPalette(event, useColorSafe());

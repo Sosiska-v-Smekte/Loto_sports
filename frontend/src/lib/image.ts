@@ -1,9 +1,6 @@
 const SIZE = 256;
 
-/**
- * Готовит фото для аватарки: вырезает центральный квадрат, сжимает до 256×256 и возвращает JPEG в виде
- * строки data:image/jpeg;base64. Так на сервер уходит десяток килобайт, а не снимок с телефона на несколько мегабайт.
- */
+/** Центральный квадрат 256×256 в JPEG (data URL), чтобы на сервер уходили килобайты, а не мегабайты. */
 export async function imageToAvatar(file: File): Promise<string> {
   if (!file.type.startsWith("image/")) throw new Error("Выберите файл с картинкой: JPEG, PNG или WebP");
   const bitmap = await createImageBitmap(file).catch(() => {

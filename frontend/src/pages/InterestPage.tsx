@@ -24,7 +24,6 @@ const PARTS: DayPart[] = ["morning", "day", "evening"];
 
 const toggle = <T,>(list: T[], value: T) => (list.includes(value) ? list.filter((v) => v !== value) : [...list, value]);
 
-/** «Я бы пошёл»: отметить желание заниматься без записи на событие и увидеть, сколько таких людей рядом. */
 export function InterestPage() {
   const { user } = useAuth();
   const sports = useSports();

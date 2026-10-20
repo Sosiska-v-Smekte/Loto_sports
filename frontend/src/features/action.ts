@@ -2,11 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { errorMessage } from "@/api/client";
 import { toast } from "@/components/ui/Toast";
 
-/**
- * Обёртка над мутацией: после успеха показывает тост и обновляет все данные.
- * Почти любое действие меняет сразу несколько экранов (ленту, карточку, «Мои активности»),
- * поэтому проще и надёжнее перезапросить всё, чем вручную помнить связи.
- */
+/** После успеха показывает тост и инвалидирует все запросы: действие обычно меняет несколько экранов. */
 export function useAction<TArgs, TResult>(
   fn: (args: TArgs) => Promise<TResult>,
   successMessage: string | ((result: TResult) => string),

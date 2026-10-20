@@ -9,7 +9,6 @@ interface SwitchProps {
   disabled?: boolean;
 }
 
-/** Переключатель «включено / выключено»: нативная кнопка с role=switch, состояние слышно экранному диктору. */
 export function Switch({ checked, onChange, label, hint, disabled }: SwitchProps) {
   const id = useId();
   return (

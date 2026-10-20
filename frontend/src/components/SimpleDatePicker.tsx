@@ -10,8 +10,6 @@ interface SimpleDatePickerProps {
 const OTHER_DAY = "col-span-3 flex min-h-14 items-center gap-2 whitespace-nowrap rounded-full px-5 text-lg font-medium";
 const DAY_BUTTON = "min-h-14 justify-center !px-3 !text-lg sm:!px-6";
 
-/** Выбор даты для простого режима: три понятные кнопки и обычный календарь вместо длинной ленты.
- *  На телефоне кнопки стоят в ряд по три, поле «Другой день» — отдельной строкой во всю ширину. */
 export function SimpleDatePicker({ value, onChange }: SimpleDatePickerProps) {
   const inputId = useId();
   const today = toIsoDate(dayjs());

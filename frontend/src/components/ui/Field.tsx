@@ -17,7 +17,6 @@ interface FieldShellProps {
   children: (props: { id: string; describedBy?: string; invalid: boolean }) => ReactNode;
 }
 
-/** Подпись, подсказка и ошибка поля, связанные с ним через aria-describedby. */
 export function FieldShell({ label, hint, error, required, children }: FieldShellProps) {
   const id = useId();
   const hintId = hint ? `${id}-hint` : undefined;

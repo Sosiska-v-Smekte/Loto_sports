@@ -1,4 +1,3 @@
-/* Дизайн-токены, снятые с макета docs/design/home.png */
 :root {
   --color-page: #f4efe3;
   --color-surface: #fbf8f1;
@@ -15,7 +14,7 @@
   --color-today: #e9dfcc;
   --color-level: #efe2c3;
 
-  /* Статусы: фон + тёмный текст с контрастом AA */
+  /* Статусы: фон и тёмный текст с контрастом AA */
   --color-success: #cfe3a8;
   --color-success-ink: #2f4a12;
   --color-warning: #f6e1a6;
@@ -28,12 +27,10 @@
   --radius-card: 24px;
   --radius-header: 18px;
 
-  /* Тени мягкие и низкоконтрастные: нейтральный холодный тон без коричневого ореола и белых бликов */
   --shadow-card: 0 1px 2px rgb(28 32 40 / 0.04), 0 6px 20px -8px rgb(28 32 40 / 0.12);
   --shadow-soft: 0 1px 2px rgb(28 32 40 / 0.05), 0 2px 8px -3px rgb(28 32 40 / 0.08);
   --shadow-pop: 0 2px 6px rgb(28 32 40 / 0.06), 0 20px 48px -16px rgb(28 32 40 / 0.28);
   --shadow-hover: 0 2px 4px rgb(28 32 40 / 0.05), 0 14px 32px -12px rgb(28 32 40 / 0.18);
-  /* Внутренняя тень — только для нажатых состояний и отдельных углублённых поверхностей */
   --shadow-inset: inset 0 1px 3px rgb(28 32 40 / 0.1);
   --shadow-primary: inset 0 1px 0 rgb(255 255 255 / 0.14), 0 1px 2px rgb(20 50 45 / 0.18), 0 4px 12px -4px rgb(20 50 45 / 0.3);
   --shadow-primary-pressed: inset 0 2px 4px rgb(0 0 0 / 0.25);

@@ -8,7 +8,6 @@ interface PersonRowProps {
   user: UserBrief;
   meta?: ReactNode;
   actions?: ReactNode;
-  /** Приглушённая строка без ссылки — для людей, которые не участвуют (отклонённые заявки) */
   muted?: boolean;
 }
 

@@ -12,7 +12,6 @@ import { PersonRow } from "./PersonRow";
 
 type Tab = "requests" | "participants" | "rejected";
 
-/** Блок организатора: заявки с кнопками «Принять»/«Отклонить», подтверждённые участники и отдельно отклонённые. */
 export function ManagePanel({ participants }: { participants: Participants }) {
   const [tab, setTab] = useState<Tab>(participants.pending.length > 0 ? "requests" : "participants");
 
@@ -32,7 +31,6 @@ export function ManagePanel({ participants }: { participants: Participants }) {
         items={[
           { value: "requests", label: "Заявки", count: participants.pending.length },
           { value: "participants", label: "Участники", count: participants.confirmed.length },
-          // Отклонённые — не участники: отдельная вкладка, которая не открыта по умолчанию
           ...(participants.rejected.length > 0
             ? [{ value: "rejected" as const, label: "Отклонённые", count: participants.rejected.length }]
             : []),

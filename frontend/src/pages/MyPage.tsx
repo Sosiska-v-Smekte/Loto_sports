@@ -25,7 +25,6 @@ import { EVENT_STATUS, isOutdatedParticipation } from "@/lib/status";
 
 type Tab = "upcoming" | "requests" | "organized" | "past";
 
-/** Событие в расписании: либо я записан/подал заявку, либо я его организую. */
 interface Entry {
   key: string;
   event: SportEvent;
@@ -60,7 +59,6 @@ export function MyPage() {
     };
   }, [joined.data, organized.data]);
 
-  // Дни с активностями для календаря: и будущие, и прошедшие
   const busyDays = useMemo(
     () => new Set([...lists.upcoming, ...lists.past].map((e) => dayOf(e.event.starts_at))),
     [lists.upcoming, lists.past],
@@ -206,7 +204,6 @@ function Empty({ tab, day }: { tab: Tab; day: string | null }) {
   );
 }
 
-/** Крупная карточка ближайшего события: цвет и иллюстрация направления, как на карточках ленты. */
 function NextUp({ entry }: { entry: Entry }) {
   const { event, participation } = entry;
   const colorSafe = useColorSafe();
@@ -246,10 +243,8 @@ interface RowProps {
   onRemove: (p: MyParticipation) => void;
 }
 
-/** Строка расписания: дата и название, статус и главное действие. */
 function Row({ entry, tab, onCancel, onRemove }: RowProps) {
   const { event, participation } = entry;
-  // Удалённое мероприятие открыть нельзя, поэтому строка без ссылки
   const linkable = event.status !== "deleted";
   const isPast = event.is_past;
   const palette = eventPalette(event, useColorSafe());
@@ -357,7 +352,6 @@ function Row({ entry, tab, onCancel, onRemove }: RowProps) {
   );
 }
 
-/** «Ближайшая по расписанию»: короткая лента из трёх событий. */
 function Timeline({ entries }: { entries: Entry[] }) {
   if (entries.length === 0) return null;
   return (

@@ -81,7 +81,6 @@ function EventView({ event }: { event: SportEvent }) {
         style={{ backgroundColor: palette.background }}
       >
         <Engraving pattern={event.card_pattern} />
-        {/* На телефоне иконка стоит в строке с направлением, и заголовок занимает всю ширину шапки */}
         <div className="relative z-[1] sm:max-w-[70%]">
           <div className="flex items-start justify-between gap-3">
             <Tag tone="level" className="bg-white/55">
@@ -136,7 +135,6 @@ function EventView({ event }: { event: SportEvent }) {
 
           {event.can_manage && participants.data && <ManagePanel participants={participants.data} />}
           {user?.is_admin && <AdminModeration event={event} />}
-          {/* Простой режим: без обсуждения, оно отвлекает от записи */}
           {!simple && <CommentThread event={event} />}
         </div>
 

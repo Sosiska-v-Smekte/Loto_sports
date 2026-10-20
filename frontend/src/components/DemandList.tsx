@@ -5,7 +5,6 @@ import { SportIllustration } from "./SportIllustration";
 import { ButtonLink } from "./ui/Button";
 import { Card } from "./ui/Card";
 
-/** Ссылка на форму создания с предзаполненным черновиком встречи по группе спроса. */
 export const draftLink = (group: DemandGroup) =>
   `/events/new?${new URLSearchParams({
     sport: String(group.sport.id),
@@ -28,12 +27,10 @@ export function demandTitle(group: DemandGroup) {
 
 interface DemandListProps {
   groups: DemandGroup[];
-  /** Сколько групп показать, остальные скрыты (для сводки в карточке организации) */
   limit?: number;
   canCreate?: boolean;
 }
 
-/** Скрытый спрос: что хотят люди рядом, но пока нет подходящего мероприятия. */
 export function DemandList({ groups, limit, canCreate = true }: DemandListProps) {
   const shown = limit ? groups.slice(0, limit) : groups;
   return (

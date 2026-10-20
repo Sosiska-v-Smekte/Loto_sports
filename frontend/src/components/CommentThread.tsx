@@ -116,7 +116,6 @@ interface MessageProps {
   comment: Comment;
   onReply?: () => void;
   onHide?: () => void;
-  /** Ответ на ответ: показать, кому именно отвечают */
   showMention?: boolean;
 }
 

@@ -18,7 +18,6 @@ interface SportPickerProps {
 // Та же нормализация, что на бэкенде: регистр, лишние пробелы, «ё»
 const normalize = (value: string) => value.replace(/\s+/g, " ").trim().toLowerCase().replace(/ё/g, "е");
 
-/** Выбор направления из каталога с поиском или ввод своего — новое направление не требует правки кода. */
 export function SportPicker({ sports, value, onChange, error }: SportPickerProps) {
   const [search, setSearch] = useState("");
   const id = useId();

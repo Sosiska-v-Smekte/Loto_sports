@@ -1,14 +1,8 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { useHoverSpeech } from "./speech";
 
-/**
- * Специальные возможности. Каждая настройка — атрибут на <html>, вся визуальная часть живёт в CSS
- * (src/styles/accessibility.css). Настройки хранятся в localStorage и применяются ещё до загрузки
- * React скриптом в index.html, поэтому страница не «мигает» обычным видом.
- */
 export type TextSize = 0 | 1 | 2;
 
-/** Вид нарушения цветовосприятия: для каждого своя палитра (src/styles/accessibility.css, lib/color.ts) */
 export type ColorType = "deutan" | "protan" | "tritan";
 
 export const COLOR_TYPES: { value: ColorType; label: string; hint: string }[] = [
@@ -18,15 +12,11 @@ export const COLOR_TYPES: { value: ColorType; label: string; hint: string }[] = 
 ];
 
 export interface A11ySettings {
-  /** Для слабовидящих: высокий контраст, крупный текст, заметный фокус, без фонового узора */
   lowVision: boolean;
-  /** Для людей с нарушением цветовосприятия: безопасная палитра и дублирование цвета формой */
   colorSafe: boolean;
-  /** Вид дальтонизма; действует, когда включён colorSafe. Раньше режим был один, он соответствует дейтеранопии */
+  /** Действует, только когда включён colorSafe */
   colorType: ColorType;
-  /** Простой режим: меньше элементов, крупные кнопки, подсказки, без анимаций */
   simple: boolean;
-  /** Озвучка элементов при наведении мыши и переходе по Tab */
   speech: boolean;
   textSize: TextSize;
 }
@@ -54,7 +44,7 @@ function read(): A11ySettings {
   }
 }
 
-/** Та же логика, что и во встроенном скрипте index.html: держите их одинаковыми. */
+/** Повторяется во встроенном скрипте index.html: держать одинаковыми. */
 export function applyToDocument(s: A11ySettings) {
   const root = document.documentElement;
   root.toggleAttribute("data-low-vision", s.lowVision);
@@ -116,7 +106,6 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
   return <A11yContext.Provider value={value}>{children}</A11yContext.Provider>;
 }
 
-/** Вид дальтонизма, если режим для людей с нарушением цветовосприятия включён, иначе false: от него зависят цвета карточек. */
 export function useColorSafe(): ColorType | false {
   const { colorSafe, colorType } = useAccessibility().settings;
   return colorSafe ? colorType : false;

@@ -7,7 +7,6 @@ interface CheckboxProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "typ
   error?: string;
 }
 
-/** Флажок с крупной зоной нажатия: нажимается и сам квадрат, и вся подпись. Ссылки в подписи работают отдельно. */
 export function Checkbox({ children, error, className, id, ...rest }: CheckboxProps) {
   const auto = useId();
   const inputId = id ?? auto;

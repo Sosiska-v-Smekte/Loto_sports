@@ -14,7 +14,6 @@ interface ReasonModalProps {
   onConfirm: (reason: string) => void;
 }
 
-/** Модалка с обязательной причиной: её увидит организатор или владелец организации. */
 export function ReasonModal({ open, onClose, title, description, confirmLabel, danger, loading, onConfirm }: ReasonModalProps) {
   const [reason, setReason] = useState("");
   const [touched, setTouched] = useState(false);

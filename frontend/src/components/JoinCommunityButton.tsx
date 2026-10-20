@@ -8,15 +8,12 @@ import { Button, type ButtonProps } from "./ui/Button";
 
 interface JoinCommunityButtonProps {
   organization: Organization;
-  /** Подписи кнопки: по умолчанию «Вступить» / «Вы состоите» */
   joinLabel?: string;
   size?: ButtonProps["size"];
   className?: string;
-  /** Вид кнопки, когда человек ещё не состоит в сообществе */
   joinVariant?: ButtonProps["variant"];
 }
 
-/** «Вступить» / «Вы состоите»: вступление без одобрения, выйти можно тем же нажатием. Владельцу кнопка не нужна. */
 export function JoinCommunityButton({ organization, joinLabel = "Вступить", size, className, joinVariant = "primary" }: JoinCommunityButtonProps) {
   const { user } = useAuth();
   const navigate = useNavigate();

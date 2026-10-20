@@ -279,7 +279,6 @@ function ActivityCard({
   );
 }
 
-/** Розовая карточка «Статус организатора»: ведёт к управлению клубом или к заявке на организацию. */
 function OrganizerCard({ profile }: { profile: UserPublic }) {
   const organization = useMyOrganization();
   const colorSafe = useColorSafe();
@@ -335,7 +334,6 @@ function OrganizerCard({ profile }: { profile: UserPublic }) {
   );
 }
 
-/** «Личные данные и уведомления»: данные сохраняются кнопкой, переключатели действуют сразу. */
 function PersonalData({ viewer }: { viewer: User }) {
   const [form, setForm] = useState({
     name: viewer.name,

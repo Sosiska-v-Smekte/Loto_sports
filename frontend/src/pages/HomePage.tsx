@@ -21,7 +21,6 @@ import { demandTitle } from "@/components/DemandList";
 import { Card } from "@/components/ui/Card";
 import { useDemand } from "@/features/planning";
 
-// Город для гостей и пользователей без города в профиле
 const GUEST_CITY = "Москва";
 
 export function HomePage() {
@@ -33,7 +32,7 @@ export function HomePage() {
   const homeCity = user?.city || GUEST_CITY;
   const chosenCity = params.get("city");
   const city = chosenCity ?? homeCity;
-  // Пока профиль грузится, город по умолчанию ещё неизвестен — не запрашиваем чужой город
+  // Пока профиль грузится, город по умолчанию неизвестен: не запрашиваем чужой город
   const cityReady = Boolean(chosenCity) || !authLoading;
   const q = params.get("q") ?? "";
   const date = params.get("date");
@@ -104,7 +103,6 @@ export function HomePage() {
         <SportChips sports={sports.data} value={sportId} onChange={(id) => update("sport", id ? String(id) : null)} />
       </div>
 
-      {/* Простой режим: без баннера, подсказки про «Я бы пошёл» и карты — они повторяют основной список */}
       {!simple && (
         <>
           <div className="mt-7">

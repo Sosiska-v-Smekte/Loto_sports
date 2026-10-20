@@ -11,7 +11,6 @@ interface DateStripProps {
   onChange: (date: string | null) => void;
 }
 
-/** Лента дат на 6 недель вперёд. Повторный клик по выбранному дню снимает фильтр. */
 export function DateStrip({ value, onChange }: DateStripProps) {
   const { ref, edges, scrollBy, handlers } = useHorizontalScroll<HTMLDivElement>();
 

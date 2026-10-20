@@ -1,7 +1,6 @@
 /**
- * Гравировка цветной шапки карточки: тонкий линейный узор, как рельеф на фоне страницы.
  * Список совпадает с CARD_PATTERNS в backend/app/schemas/events.py.
- * Размер узора задан в пикселях, а не cover: так линия одной толщины и на карточке, и в большой шапке.
+ * Размер узора в пикселях, а не cover: толщина линии одинакова на любом размере.
  */
 export const CARD_PATTERNS = [
   { id: "topo", name: "Рельеф", src: "/topo.svg", size: "600px", repeat: "repeat" },
@@ -22,7 +21,6 @@ export type CardPatternInfo = (typeof CARD_PATTERNS)[number];
 export const findPattern = (id: string | null | undefined): CardPatternInfo | undefined =>
   CARD_PATTERNS.find((p) => p.id === id);
 
-/** Узор, который подходит направлению: его показываем в выборе первым. */
 export const SPORT_PATTERN: Record<string, CardPattern> = {
   football: "pitch",
   basketball: "court",

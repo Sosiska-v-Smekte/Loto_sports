@@ -23,14 +23,12 @@ export const LEVEL_HINT: Record<Level, string> = {
   pro: "Высокий уровень подготовки",
 };
 
-/** Уровень, который человек указывает о себе в профиле. */
 export const SPORT_LEVEL_LABEL: Record<SportLevel, string> = {
   beginner: "Начинающий",
   amateur: "Любитель",
   pro: "Опытный",
 };
 
-/** Тип организатора — одинаковая подпись на карточках и странице события. */
 export const organizerKind = (event: { organization: unknown }) => (event.organization ? "Организация" : "Частное лицо");
 
 export const JOIN_MODE_LABEL: Record<JoinMode, string> = {
@@ -52,13 +50,12 @@ const PARTICIPATION: Record<ParticipationStatus, StatusView> = {
 const EVENT_REMOVED: StatusView = { label: "Мероприятие снято", tone: "neutral", icon: Ban };
 const EVENT_DELETED: StatusView = { label: "Мероприятие удалено", tone: "neutral", icon: Trash2 };
 
-/** Статус записи пользователя; снятое или удалённое событие важнее статуса заявки. */
+/** Снятое или удалённое событие важнее статуса заявки. */
 export function participationView(status: ParticipationStatus, eventStatus: EventStatus): StatusView {
   if (eventStatus === "deleted") return EVENT_DELETED;
   return eventStatus === "published" ? PARTICIPATION[status] : EVENT_REMOVED;
 }
 
-/** Запись больше не актуальна — её можно убрать из «Моих активностей». */
 export const isOutdatedParticipation = (status: ParticipationStatus, eventStatus: EventStatus) =>
   status === "rejected" || eventStatus !== "published";
 

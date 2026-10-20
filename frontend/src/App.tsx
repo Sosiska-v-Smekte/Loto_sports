@@ -33,7 +33,6 @@ const readSeen = () => {
   }
 };
 
-/** Главная: гостю сначала стартовая страница (войти или зарегистрироваться), вошедшему сразу лента событий. */
 function HomeGate() {
   const { user, isLoading } = useAuth();
   const [seen, setSeen] = useState(readSeen);

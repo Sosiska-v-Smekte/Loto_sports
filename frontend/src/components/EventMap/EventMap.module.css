@@ -1,8 +1,3 @@
-/*
- * Стили карты. CSS Modules, а не Tailwind, чтобы не пересекаться со стилями остального приложения.
- * Цвета — из общих дизайн-токенов (var(--color-*)), с запасными значениями на случай, если токены не подключены.
- */
-
 .root {
   position: relative;
   /* Своя область наложения: панели Leaflet (z-index до 1000) не перекрывают липкую шапку и таб-бар сайта */
@@ -32,7 +27,7 @@
   }
 }
 
-/* --- Маркер --- */
+/* Маркер */
 
 /* Сбрасываем белый квадрат и рамку, которые Leaflet рисует для divIcon по умолчанию */
 .markerRoot {
@@ -63,8 +58,7 @@
   stroke-width: 4;
 }
 
-/* В leaflet.css есть «.leaflet-map-pane svg { z-index: 200 }» — без этого переопределения
-   булавка перекрывала бы иконку вида спорта. Селектор из двух классов специфичнее правила Leaflet */
+/* Перекрывает «.leaflet-map-pane svg { z-index: 200 }» из leaflet.css, иначе булавка закрывает иконку */
 .marker .markerShape {
   position: absolute;
   inset: 0;
@@ -118,7 +112,7 @@
   text-align: center;
 }
 
-/* --- Кластер --- */
+/* Кластер */
 
 .cluster {
   display: grid;
@@ -134,7 +128,7 @@
   font-weight: 700;
 }
 
-/* --- Попап --- */
+/* Попап */
 
 .popup :global(.leaflet-popup-content-wrapper) {
   border-radius: 20px;
@@ -184,7 +178,6 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  /* Много мероприятий по одному адресу — список прокручивается, попап не уходит за экран */
   max-height: 240px;
   overflow-y: auto;
 }
@@ -251,7 +244,7 @@
   font-size: 13px;
 }
 
-/* --- Подсказки поверх карты --- */
+/* Подсказки поверх карты */
 
 .overlay {
   position: absolute;

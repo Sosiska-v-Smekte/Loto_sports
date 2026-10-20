@@ -22,14 +22,9 @@ export function toMapEvent(event: SportEvent, recolored: Record<string, string> 
 }
 
 interface MapWrapperProps extends Omit<MapProps, "events"> {
-  /** Мероприятия в формате API приложения — например, results из useEvents() на главной */
   events: SportEvent[] | undefined;
 }
 
-/**
- * Точка встраивания: принимает мероприятия из API как есть.
- * Переход на страницу мероприятия — через onEventSelect, его передаёт родитель (например, navigate(`/events/${id}`)).
- */
 export function MapWrapper({ events, ...props }: MapWrapperProps) {
   const recolored = useSportIconUrls((events ?? []).map((e) => e.sport));
   const mapEvents = useMemo(() => (events ?? []).map((e) => toMapEvent(e, recolored)), [events, recolored]);

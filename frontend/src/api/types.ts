@@ -66,7 +66,6 @@ export interface SportEvent {
   city: string;
   address: string;
   place_details: string;
-  /** Зона площадки, к которой привязано мероприятие */
   zone: EventZone | null;
   latitude: number | null;
   longitude: number | null;
@@ -74,7 +73,7 @@ export interface SportEvent {
   requirements: string;
   join_mode: JoinMode;
   card_color: string | null;
-  /** Гравировка шапки карточки, id из CARD_PATTERNS */
+  /** id из CARD_PATTERNS */
   card_pattern: string | null;
   status: EventStatus;
   moderation_reason: string | null;
@@ -177,7 +176,7 @@ export interface EventCreate {
   requirements: string;
   join_mode: JoinMode;
   card_color: string | null;
-  /** Гравировка шапки карточки, id из CARD_PATTERNS */
+  /** id из CARD_PATTERNS */
   card_pattern: string | null;
   organization_id: number | null;
 }

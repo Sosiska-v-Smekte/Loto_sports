@@ -14,7 +14,6 @@ interface AvatarUploaderProps {
   onRemove: () => Promise<unknown>;
 }
 
-/** Аватарка с кнопками «Загрузить фото» и «Убрать». Фото обрезается по центру до квадрата и сжимается в браузере. */
 export function AvatarUploader({ name, id, src, onUpload, onRemove }: AvatarUploaderProps) {
   const input = useRef<HTMLInputElement>(null);
   const [busy, setBusy] = useState(false);

@@ -2,7 +2,7 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { citiesApi, eventsApi, sportsApi } from "@/api/endpoints";
 import type { EventFilters } from "@/api/types";
 
-// enabled=false — пока неизвестен город (ждём профиль), чтобы не загрузить сначала чужой город
+// enabled=false, пока город неизвестен: иначе сначала загрузится чужой город
 export const useEvents = (filters: EventFilters, enabled = true) =>
   useQuery({
     queryKey: ["events", filters],
@@ -14,7 +14,7 @@ export const useEvents = (filters: EventFilters, enabled = true) =>
 export const useFeaturedEvent = (city: string, enabled = true) =>
   useQuery({ queryKey: ["events", "featured", city], queryFn: () => eventsApi.featured(city), enabled });
 
-// Справочник городов и их центры не меняются во время работы — грузим один раз
+// Справочник городов не меняется во время работы, грузим один раз
 export const useCities = () => useQuery({ queryKey: ["cities"], queryFn: citiesApi.list, staleTime: Infinity });
 
 export const useCityCenters = () =>

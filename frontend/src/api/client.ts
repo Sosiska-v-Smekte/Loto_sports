@@ -22,7 +22,7 @@ export const tokenStorage = {
       if (token) localStorage.setItem(TOKEN_KEY, token);
       else localStorage.removeItem(TOKEN_KEY);
     } catch {
-      // Хранилище недоступно (приватный режим) — сессия живёт до перезагрузки
+      // Хранилище недоступно (приватный режим): сессия живёт до перезагрузки
     }
   },
 };

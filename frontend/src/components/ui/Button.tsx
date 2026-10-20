@@ -22,7 +22,6 @@ const SIZES: Record<Size, string> = {
 
 export function buttonClass(variant: Variant = "primary", size: Size = "md", className?: string) {
   return cn(
-    // Длинная подпись на узком экране переносится по центру, значок при этом не сжимается
     "pressable inline-flex select-none items-center justify-center rounded-full py-2 text-center font-medium leading-tight [&>svg]:shrink-0",
     "disabled:cursor-not-allowed disabled:opacity-55",
     VARIANTS[variant],

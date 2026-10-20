@@ -13,7 +13,6 @@ interface AvatarModalProps {
   onRemove: () => Promise<unknown>;
 }
 
-/** Окно смены аватарки (для сообщества). Изменение сохраняется сразу после выбора файла. */
 export function AvatarModal({ open, onClose, title, ...uploader }: AvatarModalProps) {
   return (
     <Modal open={open} onClose={onClose} title={title} footer={<Button onClick={onClose}>Готово</Button>}>

@@ -4,7 +4,6 @@ import { interestsApi, venuesApi } from "@/api/endpoints";
 export const useVenues = (city?: string, enabled = true) =>
   useQuery({ queryKey: ["venues", city ?? null], queryFn: () => venuesApi.list(city), enabled });
 
-/** Занята ли зона в выбранное время. Запрос идёт, только когда время задано целиком. */
 export const useAvailability = (zoneId: number | null, startsAt: string | null, endsAt: string | null) =>
   useQuery({
     queryKey: ["availability", zoneId, startsAt, endsAt],

@@ -1,9 +1,6 @@
 import { findPattern } from "@/lib/engraving";
 
-/**
- * Гравировка цветной плашки: плоский линейный узор чуть темнее самой плашки, как рельеф на фоне страницы.
- * Подходит к любому цвету карточки. Родителю нужны relative и isolate: слой лежит под содержимым.
- */
+/** Родителю нужны relative и isolate: слой лежит под содержимым. */
 export function Engraving({ pattern }: { pattern: string | null | undefined }) {
   const info = findPattern(pattern);
   if (!info) return null;

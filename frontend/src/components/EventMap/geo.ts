@@ -1,7 +1,4 @@
-/**
- * Геометрия без зависимости от Leaflet: её использует плашка-превью на главной,
- * чтобы не тянуть код карты, пока пользователь её не открыл.
- */
+/** Без зависимости от Leaflet: используется превью карты до загрузки её кода. */
 
 export type Coordinates = [lat: number, lng: number];
 
@@ -16,7 +13,6 @@ export function withCoordinates<T extends WithCoordinates>(events: T[]): (T & { 
   return events.filter((e): e is T & { latitude: number; longitude: number } => e.latitude !== null && e.longitude !== null);
 }
 
-/** Центр карты — среднее по точкам мероприятий; если точек нет, Красноярск. */
 export function centerOf(events: WithCoordinates[]): Coordinates {
   const points = withCoordinates(events);
   if (points.length === 0) return KRASNOYARSK;

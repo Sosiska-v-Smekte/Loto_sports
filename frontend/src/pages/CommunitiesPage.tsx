@@ -46,7 +46,6 @@ export function CommunitiesPage() {
   const [applying, setApplying] = useState(params.get("apply") === "1");
 
   const list = organizations.data?.filter((org) => matches(org, filter)) ?? [];
-  // Крупные карточки: два самых многолюдных сообщества; остальные в общем списке ниже
   const featured = [...list].sort((a, b) => b.members_count - a.members_count).slice(0, 2);
   const rest = list.filter((org) => !featured.includes(org));
   const mine = organizations.data?.filter((org) => org.is_member) ?? [];
@@ -178,7 +177,6 @@ function ApplyBanner({ loggedIn, onApply }: { loggedIn: boolean; onApply: () => 
   );
 }
 
-/** Крупная карточка с цветом и иллюстрацией направления. */
 function FeaturedCard({ org }: { org: Organization }) {
   const colorSafe = useColorSafe();
   const color = org.sport?.color ?? "#E9CF9F";

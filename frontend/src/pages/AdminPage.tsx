@@ -56,7 +56,7 @@ export function AdminPage() {
   );
 }
 
-/* ---------- Общие элементы ---------- */
+/* Общие элементы */
 
 function Toolbar({ children }: { children: ReactNode }) {
   return <div className="flex flex-col gap-3 sm:flex-row">{children}</div>;
@@ -122,7 +122,7 @@ function ListState({ isPending, error, onRetry, empty }: { isPending: boolean; e
 const TH = "px-4 py-3 text-left text-sm font-medium uppercase tracking-wide text-muted";
 const TD = "px-4 py-4 align-top";
 
-/* ---------- Организации ---------- */
+/* Организации */
 
 const ORG_STATUS_LABELS: Record<OrganizationStatus, string> = {
   pending: "На рассмотрении",
@@ -280,7 +280,7 @@ function OrganizationsTab({
   );
 }
 
-/* ---------- Мероприятия ---------- */
+/* Мероприятия */
 
 const EVENT_STATUS_LABELS: Record<EventStatus, string> = {
   published: "Опубликованы",

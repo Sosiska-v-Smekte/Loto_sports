@@ -29,15 +29,12 @@ const TYPE_ICON: Record<NotificationType, LucideIcon> = {
 };
 
 interface NotificationListProps {
-  /** Вызывается после перехода по уведомлению — чтобы закрыть выпадающее меню */
   onNavigate?: () => void;
   limit?: number;
-  /** Заголовок «Уведомления» нужен в выпадающем меню; на отдельной странице он уже есть */
   showTitle?: boolean;
   className?: string;
 }
 
-/** Список уведомлений: клик помечает прочитанным и ведёт на нужный экран. */
 export function NotificationList({ onNavigate, limit, showTitle = false, className }: NotificationListProps) {
   const notifications = useNotifications();
   const markRead = useMarkRead();

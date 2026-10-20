@@ -11,7 +11,6 @@ interface ModalProps {
   footer?: ReactNode;
 }
 
-/** Нативный <dialog>: фокус-ловушка, Escape и подложка из коробки. На мобильных — шторка снизу. */
 export function Modal({ open, onClose, title, description, children, footer }: ModalProps) {
   const ref = useRef<HTMLDialogElement>(null);
 

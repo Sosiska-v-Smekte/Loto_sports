@@ -6,7 +6,6 @@ interface PillProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   icon?: ReactNode;
 }
 
-/** Переключаемая таблетка: чипы фильтров, вкладки. Состояние передаётся через aria-pressed. */
 export function Pill({ active, icon, className, children, ...rest }: PillProps) {
   return (
     <button

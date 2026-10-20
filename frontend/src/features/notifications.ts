@@ -4,7 +4,6 @@ import { useAuth } from "./auth";
 
 const KEY = ["notifications"] as const;
 
-/** Счётчик непрочитанных: обновляется после действий (общая инвалидация) и раз в 30 секунд. */
 export function useUnreadCount() {
   const { user } = useAuth();
   return useQuery({

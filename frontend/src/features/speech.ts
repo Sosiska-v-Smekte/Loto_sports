@@ -1,10 +1,5 @@
 import { useEffect } from "react";
 
-/**
- * Озвучка при наведении мыши и при переходе по Tab: встроенный синтез речи браузера (Web Speech API),
- * без внешних сервисов. Читает подпись элемента и его роль: «Кнопка. Записаться».
- */
-
 const READABLE = [
   "a[href]",
   "button",
@@ -66,7 +61,6 @@ function roleOf(el: HTMLElement): string {
   return "";
 }
 
-/** Что прочитать для элемента под курсором. Карточка события читается целиком: название, дата, место, условия. */
 function describe(target: Element): { el: HTMLElement; text: string } | null {
   const card = target.closest<HTMLElement>("article");
   if (card?.querySelector("a[href]")) return { el: card, text: `Карточка. ${clean(card.innerText)}` };

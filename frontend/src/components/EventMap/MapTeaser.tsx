@@ -13,16 +13,11 @@ const MAX_PINS = 30;
 
 interface MapTeaserProps {
   events: SportEvent[] | undefined;
-  /** Центр превью — центр выбранного города */
   center: Coordinates;
   city: string;
   onOpen: () => void;
 }
 
-/**
- * Плашка-превью карты на главной: настоящий фрагмент OpenStreetMap с точками мероприятий.
- * Это обычные картинки тайлов и кнопка — код Leaflet грузится только после нажатия.
- */
 export function MapTeaser({ events, center: cityCenter, city, onOpen }: MapTeaserProps) {
   const { tiles, offset, pins, count } = useMemo(() => {
     const points = withCoordinates(events ?? []);
@@ -35,7 +30,6 @@ export function MapTeaser({ events, center: cityCenter, city, onOpen }: MapTease
       tiles: ROWS.flatMap((dy) =>
         COLS.map((dx) => ({ x: tileX + dx, y: tileY + dy, left: (dx - COLS[0]) * TILE, top: (dy - ROWS[0]) * TILE })),
       ),
-      // Сдвиг сетки так, чтобы центр города оказался в центре плашки
       offset: { x: center.x - originX, y: center.y - originY },
       pins: points.slice(0, MAX_PINS).map((event) => {
         const p = toWorldPixels([event.latitude, event.longitude], ZOOM);

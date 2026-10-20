@@ -1,7 +1,7 @@
 import type { SportEvent } from "@/api/types";
 import type { ColorType } from "@/features/accessibility";
 
-/** Палитра выбора цвета карточки. Отдельна от PALETTE в backend/app/services/sports.py: там цвета направлений. */
+/** Не путать с PALETTE в backend/app/services/sports.py: там цвета направлений. */
 export const CARD_COLORS = [
   { hex: "#F6D46A", name: "Жёлтый" },
   { hex: "#F7B267", name: "Оранжевый" },
@@ -31,7 +31,6 @@ const mix = (a: RGB, b: RGB, t: number): RGB => a.map((v, i) => v + (b[i] - v) *
 
 export const isHexColor = (value: string | null | undefined): value is string => Boolean(value && HEX.test(value));
 
-/** Фон карточки: цвет чуть блеклее исходного (часть насыщенности уходит в серый, немного света добавляется). */
 export function mutedColor(hex: string): string {
   const rgb = toRgb(hex);
   const gray = 0.3 * rgb[0] + 0.59 * rgb[1] + 0.11 * rgb[2];
@@ -48,12 +47,7 @@ function hueOf([r, g, b]: RGB): { hue: number; sat: number } {
   return { hue, sat: d / max };
 }
 
-/**
- * Цвета карточек для людей с нарушением цветовосприятия. Для каждого вида дальтонизма свой набор: цвета
- * направлений сводятся к нескольким тонам, которые этот вид различает (в основном по цвету и по яркости).
- * Дейтеранопия и протанопия — палитра Okabe–Ito: синий, голубой, сине-зелёный, жёлтый, оранжевый, пурпурный.
- * Тританопия различает красно-зелёную ось, поэтому там розовый, оранжевый, зелёный и тёмно-синий разной яркости.
- */
+/** Цвета карточек по видам дальтонизма. Дейтеранопия и протанопия: палитра Okabe–Ito. */
 const SAFE_CARD_COLORS: Record<ColorType, { from: number; hex: string }[]> = {
   deutan: [
     { from: 0, hex: "#F2B08A" }, // красные и коралловые → киноварь
@@ -94,10 +88,6 @@ export function safeCardColor(hex: string, type: ColorType = "deutan"): string {
   return [...SAFE_CARD_COLORS[type]].reverse().find((c) => hue >= c.from)!.hex;
 }
 
-/**
- * Фон карточки: цвет, выбранный автором (чуть приглушённый), а если его нет — цвет направления.
- * colorSafe: вид дальтонизма, если режим включён; цвета заменяются различимыми для него.
- */
 export function eventPalette(event: Pick<SportEvent, "card_color" | "sport">, colorSafe: ColorType | false = false): { background: string } {
   const own = isHexColor(event.card_color);
   const base = own ? event.card_color! : event.sport.color;

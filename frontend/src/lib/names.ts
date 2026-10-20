@@ -18,7 +18,6 @@ const LOCATIVE_EXCEPTIONS: Record<string, string> = {
   Сочи: "Сочи",
 };
 
-/** Предложный падеж одного слова названия города по общим правилам. */
 function locativeWord(word: string): string {
   if (/(ский|цкий)$/.test(word)) return word.replace(/ий$/, "ом"); // Октябрьский → Октябрьском
   if (/ый$/.test(word)) return word.replace(/ый$/, "ом"); // Грозный → Грозном

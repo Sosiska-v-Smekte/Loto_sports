@@ -12,7 +12,6 @@ interface NoticeProps {
   className?: string;
 }
 
-/** Плашка состояния: всегда иконка + заголовок + пояснение, чтобы смысл не держался только на цвете. */
 export function Notice({ tone, icon: Icon, title, children, action, className }: NoticeProps) {
   return (
     <div data-tone={tone} className={cn("flex flex-col gap-3 rounded-[20px] p-4 sm:flex-row sm:items-center sm:p-5", TONE_CLASS[tone], className)}>

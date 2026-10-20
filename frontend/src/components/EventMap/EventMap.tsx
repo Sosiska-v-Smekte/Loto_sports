@@ -10,8 +10,8 @@ import type { Event, MapProps } from "./types";
 
 export const KRASNOYARSK_CENTER: LatLngTuple = KRASNOYARSK;
 const DEFAULT_ZOOM = 12;
-const DEFAULT_COLOR = "#1F4F47"; // фирменный тёмно-зелёный
-const DEFAULT_ICON = "🏅"; // нейтральная иконка для направлений без своей
+const DEFAULT_COLOR = "#1F4F47";
+const DEFAULT_ICON = "🏅";
 // Точность группировки «одно место»: 5 знаков ≈ 1 метр
 const PLACE_PRECISION = 5;
 
@@ -31,7 +31,6 @@ interface CountedIconOptions extends L.DivIconOptions {
 const hasCoordinates = (e: Event): e is Event & { lat: number; lng: number } =>
   typeof e.lat === "number" && typeof e.lng === "number" && Number.isFinite(e.lat) && Number.isFinite(e.lng);
 
-/** Мероприятия по одному адресу объединяются в один маркер со списком и счётчиком «+N». */
 function groupByPlace(events: Event[]): { places: Place[]; withoutCoordinates: number } {
   const places = new Map<string, Place>();
   let withoutCoordinates = 0;
@@ -57,7 +56,6 @@ const escapeHtml = (value: string) =>
 
 const safeColor = (color: string | undefined) => (color && /^#[0-9a-f]{3,8}$/i.test(color) ? color : DEFAULT_COLOR);
 
-/** Иконка направления: 3D-картинка из каталога, а если её нет — эмодзи. */
 const markerGlyph = (event: Event) =>
   event.sportImage
     ? `<img src="${escapeHtml(event.sportImage)}" alt="" width="28" height="28" draggable="false" />`
@@ -68,7 +66,6 @@ function placeIcon(place: Place): L.DivIcon {
   const extra = place.events.length - 1;
   const options: CountedIconOptions = {
     className: styles.markerRoot,
-    // Круглая «булавка»: кружок в цвете направления с иконкой и хвостик, указывающий на точку
     html: `
       <div class="${styles.marker}" style="--marker-color:${safeColor(first.sportColor)}">
         <svg class="${styles.markerShape}" viewBox="0 0 44 52" aria-hidden="true">
@@ -116,7 +113,6 @@ const POPUP_PADDING_BOTTOM_RIGHT: PointTuple = [16, 16];
 // Внутренние поля попапа Leaflet (content margin + рамка)
 const POPUP_CHROME = 32;
 
-/** Попап не шире самой карты (а не окна): с учётом отступа под кнопки масштаба и полей по краям */
 function usePopupMaxWidth(): number {
   const mapWidth = useMap().getSize().x;
   const available = mapWidth - POPUP_PADDING_TOP_LEFT[0] - POPUP_PADDING_BOTTOM_RIGHT[0] - POPUP_CHROME;
@@ -179,7 +175,7 @@ function PlaceMarker({ place, icon, onEventSelect }: PlaceMarkerProps) {
         // Наведение открывает карточку. Сам попап не закрываем на mouseout, иначе до кнопок в нём не дотянуться
         mouseover: (e: LeafletMouseEvent) => e.target.openPopup(),
         // Leaflet переключает попап по клику: если он уже открыт наведением, клик бы его закрыл.
-        // Открываем его заново после встроенного обработчика — клик и тап всегда показывают карточку
+        // Открываем заново после встроенного обработчика, чтобы клик и тап всегда показывали карточку
         click: (e: LeafletMouseEvent) => window.setTimeout(() => e.target.openPopup(), 0),
       }}
     >
@@ -195,10 +191,6 @@ function PlaceMarker({ place, icon, onEventSelect }: PlaceMarkerProps) {
   );
 }
 
-/**
- * Карта мероприятий на Leaflet + OpenStreetMap: без ключей и платных сервисов.
- * Данные — только из пропсов, наружу — только onEventSelect(id); роутинг делает родитель.
- */
 export function EventMap({ events, onEventSelect, center = KRASNOYARSK_CENTER, zoom = DEFAULT_ZOOM, className }: MapProps) {
   const { places, withoutCoordinates } = useMemo(() => groupByPlace(events), [events]);
   const icons = useMemo(() => new Map(places.map((place) => [place.key, placeIcon(place)])), [places]);
@@ -209,9 +201,8 @@ export function EventMap({ events, onEventSelect, center = KRASNOYARSK_CENTER, z
         center={center}
         zoom={zoom}
         className={styles.map}
-        // Колесо мыши не зумит карту, чтобы страница прокручивалась как обычно; масштаб — кнопками и жестами
+        // Колесо мыши прокручивает страницу, а не масштабирует карту
         scrollWheelZoom={false}
-        // Подпись в углу карты (с флагом в префиксе Leaflet) скрыта по просьбе заказчика
         attributionControl={false}
       >
         <TileLayer

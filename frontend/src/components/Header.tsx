@@ -13,10 +13,8 @@ export function Header() {
   const { user } = useAuth();
   const { pathname } = useLocation();
   const items = NAV_ITEMS.filter((item) => !item.adminOnly || user?.is_admin);
-  // У админа лишний пункт «Админка»: вместе с кнопками доступности и уведомлений полные подписи
-  // не помещаются ни на одной ширине, поэтому у него всегда короткие («Найти», «Мои»…)
+  // У админа лишний пункт «Админка»: полные подписи не помещаются ни на одной ширине
   const compact = Boolean(user?.is_admin);
-  // Простой режим: у пунктов всегда значок, подпись как обычно (короткая, если полная не помещается)
   const { simple } = useAccessibility().settings;
 
   return (
@@ -45,10 +43,9 @@ export function Header() {
                     : "neu-control border-line/70 bg-surface-muted text-ink",
                 )}
               >
-                {/* В простом режиме значки у всех пунктов; на десктопе уже 1400px — только у активного,
-                    иначе у админа с четырьмя пунктами шапка не помещается */}
+                {/* Уже 1400px значок только у активного пункта, иначе шапка админа не помещается */}
                 {(active || simple) && <item.icon className={active ? "size-5" : "hidden size-5 wide:block"} aria-hidden />}
-                {/* Полные подписи («Найти активность») только на очень широком экране: на 1536–1700px шапка с ними не помещается */}
+                {/* На 1536–1700px шапка с полными подписями не помещается */}
                 <span data-label-short className={compact ? undefined : simple ? "min-[2100px]:hidden" : "huge:hidden"}>
                   {item.shortLabel}
                 </span>

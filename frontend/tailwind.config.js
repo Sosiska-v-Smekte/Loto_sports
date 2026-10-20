@@ -1,10 +1,9 @@
-/** Цвета и радиусы берутся из CSS-переменных в src/styles/tokens.css */
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   theme: {
     extend: {
-      // Промежуточная ширина для шапки: полная подпись «Создать активность», как на макете 1440
+      // Промежуточная ширина для шапки с полной подписью «Создать активность»
       screens: { wide: "1400px", huge: "1800px" },
       colors: {
         page: "var(--color-page)",

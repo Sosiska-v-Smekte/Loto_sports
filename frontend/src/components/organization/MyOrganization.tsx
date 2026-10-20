@@ -16,15 +16,10 @@ import { useDemand } from "@/features/planning";
 import { OrganizationForm } from "./OrganizationForm";
 import { VenuesManager } from "./VenuesManager";
 
-/**
- * Верх страницы «Сообщества»: кнопка «Создать организацию», если её ещё нет,
- * или карточка «Моя организация» со статусом заявки и доступными действиями.
- */
 export function MyOrganization({
   applying,
   onApplyingChange,
 }: {
-  /** Форма заявки открыта извне (баннер «Хотите проводить тренировки от лица клуба?») */
   applying?: boolean;
   onApplyingChange?: (open: boolean) => void;
 }) {
@@ -146,7 +141,6 @@ function OrganizationStatusCard({ organization }: { organization: Organization }
   );
 }
 
-/** Спрос рядом с организацией: люди, которые хотят заниматься, но не нашли подходящей встречи. */
 function OrganizationDemand({ city }: { city: string }) {
   const demand = useDemand(city);
   if (!demand.data?.length) return null;

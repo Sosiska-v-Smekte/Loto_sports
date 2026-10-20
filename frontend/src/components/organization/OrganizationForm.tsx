@@ -8,12 +8,10 @@ import { Button } from "../ui/Button";
 import { Input, Textarea } from "../ui/Field";
 
 interface OrganizationFormProps {
-  /** Отклонённая заявка: форма заполнена прежними данными для повторной отправки */
   initial: Organization | null;
   onCancel?: () => void;
 }
 
-/** Заявка на допуск организации. Отправляется администратору, до одобрения публиковать от её имени нельзя. */
 export function OrganizationForm({ initial, onCancel }: OrganizationFormProps) {
   const [form, setForm] = useState<OrganizationInput>({
     name: initial?.name ?? "",

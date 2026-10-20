@@ -77,7 +77,6 @@ export function EventCard({ event }: { event: SportEvent }) {
             <StatusBadge status={event.my_participation.status} eventStatus={event.status} className="min-w-0" />
           )}
         </div>
-        {/* Простой режим: явная «кнопка» вместо неочевидной кликабельной карточки */}
         <span
           data-simple-only
           aria-hidden
