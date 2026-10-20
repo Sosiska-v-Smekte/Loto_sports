@@ -1,7 +1,8 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo } from "react";
 import { dayjs, toIsoDate } from "@/lib/dates";
 import { cn } from "@/lib/cn";
+import { edgeFade, useHorizontalScroll } from "@/lib/useHorizontalScroll";
+import { ScrollArrow } from "./ui/ScrollArrow";
 
 const DAYS_AHEAD = 42;
 
@@ -10,61 +11,25 @@ interface DateStripProps {
   onChange: (date: string | null) => void;
 }
 
-/** Прозрачные края ленты там, где есть стрелка прокрутки (стрелки — только с 640px). */
-function fade({ start, end }: { start: boolean; end: boolean }) {
-  if (typeof window !== "undefined" && window.innerWidth < 640) return undefined;
-  if (start && end) return undefined;
-  // Под стрелкой (44px) лента полностью прозрачна, переход начинается раньше
-  const left = start ? "black 0" : "transparent 0, transparent 40px, black 110px";
-  const right = end ? "black 100%" : "black calc(100% - 130px), transparent calc(100% - 52px)";
-  return `linear-gradient(to right, ${left}, ${right})`;
-}
-
 /** Лента дат на 6 недель вперёд. Повторный клик по выбранному дню снимает фильтр. */
 export function DateStrip({ value, onChange }: DateStripProps) {
-  const scroller = useRef<HTMLDivElement>(null);
-  const [edges, setEdges] = useState({ start: true, end: false });
+  const { ref, edges, scrollBy, handlers } = useHorizontalScroll<HTMLDivElement>();
 
   const days = useMemo(() => {
     const today = dayjs().startOf("day");
     return Array.from({ length: DAYS_AHEAD }, (_, i) => today.add(i, "day"));
   }, []);
 
-  const updateEdges = () => {
-    const el = scroller.current;
-    if (!el) return;
-    setEdges({ start: el.scrollLeft < 8, end: el.scrollLeft + el.clientWidth >= el.scrollWidth - 8 });
-  };
-
-  useEffect(() => {
-    updateEdges();
-    window.addEventListener("resize", updateEdges);
-    return () => window.removeEventListener("resize", updateEdges);
-  }, []);
-
-  const scrollBy = (direction: 1 | -1) => {
-    const el = scroller.current;
-    if (el) el.scrollBy({ left: direction * el.clientWidth * 0.66, behavior: "smooth" });
-  };
-
-  const arrowClass =
-    "pressable absolute top-[38px] z-10 hidden size-11 place-items-center neu-control rounded-full border border-line/70 bg-surface sm:grid";
-
   return (
     <div className="relative">
-      {!edges.start && (
-        <button type="button" onClick={() => scrollBy(-1)} aria-label="Предыдущие дни" className={cn(arrowClass, "-left-3")}>
-          <ChevronLeft className="size-5" aria-hidden />
-        </button>
-      )}
+      {!edges.start && <ScrollArrow direction="prev" label="Предыдущие дни" onClick={() => scrollBy(-1)} className="top-[38px]" />}
       <div
-        ref={scroller}
-        onScroll={updateEdges}
+        ref={ref}
+        {...handlers}
         role="group"
         aria-label="Выбор даты"
         className="no-scrollbar flex snap-x snap-mandatory gap-1 overflow-x-auto pr-12 sm:gap-1.5"
-        // Край под стрелкой растворяется, чтобы стрелка не лежала поверх последнего дня
-        style={{ maskImage: fade(edges), WebkitMaskImage: fade(edges) }}
+        style={{ maskImage: edgeFade(edges), WebkitMaskImage: edgeFade(edges) }}
       >
         {days.map((day, index) => {
           const iso = toIsoDate(day);
@@ -74,7 +39,6 @@ export function DateStrip({ value, onChange }: DateStripProps) {
           const showMonth = index === 0 || day.date() === 1;
           return (
             <div key={iso} className="flex shrink-0 snap-start flex-col">
-              {/* Ширина 0: подпись месяца не раздвигает колонку дня */}
               <span className="h-7 w-0 whitespace-nowrap pl-2 text-[13px] font-medium uppercase tracking-[0.06em] text-muted">
                 {showMonth ? day.format("MMMM") : ""}
               </span>
@@ -98,11 +62,7 @@ export function DateStrip({ value, onChange }: DateStripProps) {
           );
         })}
       </div>
-      {!edges.end && (
-        <button type="button" onClick={() => scrollBy(1)} aria-label="Следующие дни" className={cn(arrowClass, "-right-1")}>
-          <ChevronRight className="size-5" aria-hidden />
-        </button>
-      )}
+      {!edges.end && <ScrollArrow direction="next" label="Следующие дни" onClick={() => scrollBy(1)} className="top-[38px]" />}
     </div>
   );
 }
