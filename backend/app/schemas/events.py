@@ -29,6 +29,7 @@ class EventOut(ORMModel):
     level: str
     requirements: str
     join_mode: str
+    card_color: str | None
     status: str
     # Причина видна только тем, кому показывается снятое событие (организатор, записавшиеся, админ)
     moderation_reason: str | None
@@ -54,6 +55,7 @@ class EventCreate(BaseModel):
     level: EventLevel = EventLevel.any
     requirements: ShortText = ""
     join_mode: JoinMode = JoinMode.open
+    card_color: Annotated[str, StringConstraints(pattern=r"^#[0-9A-Fa-f]{6}$")] | None = None
     organization_id: int | None = None
 
     @model_validator(mode="after")

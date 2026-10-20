@@ -9,6 +9,7 @@ import { AdminModeration } from "@/components/event/AdminModeration";
 import { JoinPanel } from "@/components/event/JoinPanel";
 import { ManagePanel } from "@/components/event/ManagePanel";
 import { SportIllustration } from "@/components/SportIllustration";
+import { eventPalette } from "@/lib/color";
 import { JOIN_MODE_ICON } from "@/components/StatusBadge";
 import { Avatar } from "@/components/ui/Avatar";
 import { ButtonLink } from "@/components/ui/Button";
@@ -68,7 +69,7 @@ function EventView({ event }: { event: SportEvent }) {
 
       <header
         className="relative mt-3 overflow-hidden rounded-card px-5 pb-6 pt-5 sm:px-8 sm:pb-8 sm:pt-7"
-        style={{ backgroundColor: event.sport.color }}
+        style={{ backgroundColor: eventPalette(event).background }}
       >
         <div className="relative z-[1] max-w-[calc(100%-6rem)] sm:max-w-[70%]">
           <Tag tone="level" className="bg-white/55">
@@ -82,6 +83,7 @@ function EventView({ event }: { event: SportEvent }) {
         </div>
         <SportIllustration
           sport={event.sport}
+          tint={eventPalette(event).tint}
           className="absolute -bottom-3 right-4 text-[88px] sm:bottom-auto sm:right-10 sm:top-1/2 sm:-translate-y-1/2 sm:text-[150px]"
         />
       </header>

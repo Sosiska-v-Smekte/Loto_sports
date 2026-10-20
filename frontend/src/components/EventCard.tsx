@@ -1,6 +1,7 @@
 import { ArrowRight, CalendarDays, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { SportEvent } from "@/api/types";
+import { eventPalette } from "@/lib/color";
 import { formatEventDate } from "@/lib/dates";
 import { JOIN_MODE_LABEL, LEVEL_LABEL, organizerKind } from "@/lib/status";
 import { SportIllustration } from "./SportIllustration";
@@ -14,12 +15,13 @@ const shortPlace = (address: string) => address.split(",")[0];
 
 export function EventCard({ event }: { event: SportEvent }) {
   const ModeIcon = JOIN_MODE_ICON[event.join_mode];
+  const palette = eventPalette(event);
 
   return (
     <article className="neu-raised lift group relative flex flex-col rounded-card border border-line/70 bg-surface p-2.5">
       <div
         className="tinted-3d relative h-[124px] rounded-[18px] px-4 pt-3.5"
-        style={{ backgroundColor: event.sport.color }}
+        style={{ backgroundColor: palette.background }}
       >
         <h3 className="line-clamp-3 text-[21px] font-medium leading-[1.1] tracking-[-0.01em]">
           <Link
@@ -31,6 +33,7 @@ export function EventCard({ event }: { event: SportEvent }) {
         </h3>
         <SportIllustration
           sport={event.sport}
+          tint={palette.tint}
           className="absolute -bottom-10 right-1 text-[112px] transition-transform duration-300 ease-out group-hover:-translate-y-1.5 group-hover:rotate-[-6deg]"
         />
       </div>

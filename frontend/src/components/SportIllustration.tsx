@@ -1,5 +1,6 @@
 import type { Sport } from "@/api/types";
 import { cn } from "@/lib/cn";
+import { iconTones } from "@/lib/color";
 
 /** Направления с 3D-иконкой в public/sport-icons (часть — рендеры из scripts/sport-icons). */
 const ICONS = new Set([
@@ -31,11 +32,35 @@ interface SportIllustrationProps {
   className?: string;
   /** Маленькая иконка: для чипов и списков */
   compact?: boolean;
+  /** Свой цвет карточки: иконка становится одноцветной, с объёмом из тонов этого цвета */
+  tint?: string;
 }
 
-export function SportIllustration({ sport, className, compact }: SportIllustrationProps) {
+export function SportIllustration({ sport, className, compact, tint }: SportIllustrationProps) {
   const base = sport.slug && ICONS.has(sport.slug) ? sport.slug : "custom";
   const slug = (compact && COMPACT[base]) || base;
+  if (tint && !compact) {
+    const { light, dark } = iconTones(tint);
+    const mask = `url(/sport-icons/${slug}.webp)`;
+    return (
+      <span aria-hidden className={cn("illustration pointer-events-none inline-block select-none", className)}>
+        <span
+          className="block size-[1em]"
+          style={{
+            background: `linear-gradient(160deg, ${light}, ${dark})`,
+            maskImage: mask,
+            WebkitMaskImage: mask,
+            maskSize: "contain",
+            WebkitMaskSize: "contain",
+            maskRepeat: "no-repeat",
+            WebkitMaskRepeat: "no-repeat",
+            maskPosition: "center",
+            WebkitMaskPosition: "center",
+          }}
+        />
+      </span>
+    );
+  }
   return (
     <span aria-hidden className={cn("illustration pointer-events-none inline-block select-none", className)}>
       <img src={`/sport-icons/${slug}.webp`} alt="" width={384} height={384} draggable={false} className="block size-[1em] max-w-none" />

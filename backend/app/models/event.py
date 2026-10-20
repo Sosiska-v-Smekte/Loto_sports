@@ -43,6 +43,8 @@ class Event(Base):
     level: Mapped[EventLevel] = mapped_column(String(20), default=EventLevel.any)
     requirements: Mapped[str] = mapped_column(Text, default="")
     join_mode: Mapped[JoinMode] = mapped_column(String(20), default=JoinMode.open)
+    # Свой цвет карточки (#RRGGBB); пусто — берётся цвет направления
+    card_color: Mapped[str | None] = mapped_column(String(7))
     status: Mapped[EventStatus] = mapped_column(
         String(20), default=EventStatus.published, index=True
     )

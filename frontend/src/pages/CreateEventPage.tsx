@@ -5,6 +5,7 @@ import { errorMessage } from "@/api/client";
 import { eventsApi } from "@/api/endpoints";
 import type { JoinMode, Level } from "@/api/types";
 import { BackLink } from "@/components/BackLink";
+import { CardColorPicker } from "@/components/CardColorPicker";
 import { CityCombobox } from "@/components/CityCombobox";
 import { SportPicker, type SportChoice } from "@/components/SportPicker";
 import { Button } from "@/components/ui/Button";
@@ -42,6 +43,7 @@ export function CreateEventPage() {
     requirements: "",
   });
   const [sport, setSport] = useState<SportChoice>(null);
+  const [cardColor, setCardColor] = useState<string | null>(null);
   const [level, setLevel] = useState<Level>("any");
   const [joinMode, setJoinMode] = useState<JoinMode>("open");
   const [author, setAuthor] = useState<Author>(params.get("as") === "org" ? "org" : "me");
@@ -83,6 +85,7 @@ export function CreateEventPage() {
         level,
         requirements: form.requirements.trim(),
         join_mode: joinMode,
+        card_color: cardColor,
         organization_id: author === "org" && approvedOrg ? approvedOrg.id : null,
       },
       { onSuccess: (event) => navigate(`/events/${event.id}`) },
@@ -105,6 +108,11 @@ export function CreateEventPage() {
           <h2 className="text-xl font-semibold">Что за активность</h2>
           <Input label="Название" placeholder="Например: Утренняя пробежка в парке" maxLength={120} required error={show("title")} {...field("title")} />
           <SportPicker sports={sports.data} value={sport} onChange={setSport} error={show("sport")} />
+          <CardColorPicker
+            value={cardColor}
+            onChange={setCardColor}
+            sport={sport && "sportId" in sport ? (sports.data?.find((s) => s.id === sport.sportId) ?? null) : null}
+          />
           <Textarea label="Описание" placeholder="Как всё будет проходить, сколько длится, кого ждёте" rows={4} maxLength={2000} {...field("description")} />
         </Card>
 
