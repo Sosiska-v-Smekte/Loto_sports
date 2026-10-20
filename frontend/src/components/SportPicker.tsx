@@ -54,7 +54,7 @@ export function SportPicker({ sports, value, onChange, error }: SportPickerProps
             key={sport.id}
             active={value !== null && "sportId" in value && value.sportId === sport.id}
             onClick={() => onChange({ sportId: sport.id, name: sport.name })}
-            icon={<SportIllustration sport={sport} className="text-[24px]" />}
+            icon={<SportIllustration sport={sport} compact className="text-[24px]" />}
           >
             {sport.name}
           </Pill>

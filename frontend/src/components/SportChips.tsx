@@ -42,7 +42,7 @@ export function SportChips({ sports, value, onChange }: SportChipsProps) {
           key={sport.id}
           active={value === sport.id}
           onClick={() => onChange(value === sport.id ? null : sport.id)}
-          icon={<SportIllustration sport={sport} className="text-[24px]" />}
+          icon={<SportIllustration sport={sport} compact className="text-[24px]" />}
         >
           {sport.name}
         </Pill>

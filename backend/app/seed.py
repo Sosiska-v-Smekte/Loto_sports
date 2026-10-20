@@ -198,6 +198,33 @@ def seed(db: Session) -> None:
         org=hod, level=EventLevel.beginner, mode=JoinMode.approval,
         description="Разбираем дебюты и играем партии с тренером. Подходит тем, кто знает, как ходят фигуры.",
     )
+    ev(
+        "Бадминтон в Музеоне", sports["badminton"], anna, _at(2, 17),
+        "Парк «Музеон», Крымский Вал, 2",
+        description="Играем на открытой площадке у набережной, ракетки и воланы есть на всех.",
+        requirements="Удобная обувь и вода.",
+    )
+    ev(
+        "Боулинг после работы", sports["bowling"], ilya, _at(3, 20),
+        "Боулинг-клуб «Страйк», ул. Арбат, 24",
+        description="Две дорожки, играем две игры. Счёт ведём для интереса, новичкам покажем, как бросать.",
+        place="Дорожки 5 и 6, бронь на имя Ильи.",
+        requirements="Обувь выдают в клубе.",
+    )
+    ev(
+        "Бокс: тренировка для новичков", sports["boxing"], ivan, _at(5, 10),
+        "Зал «Ринг», Ленинский проспект, 30",
+        level=EventLevel.beginner, mode=JoinMode.approval,
+        description="Стойка, удары, работа на лапах. Без спаррингов, только техника и общая физподготовка.",
+        requirements="Спортивная форма, бинты. Перчатки дадим в зале.", hours=1,
+    )
+    ev(
+        "Любительский хоккей", sports["hockey"], ilya, _at(7, 21, 30),
+        "Ледовая арена «Сокольники», ул. Сокольнический Вал, 1Б",
+        level=EventLevel.amateur,
+        description="Ночной лёд, играем 5×5 без силовых приёмов. Делимся на две команды на месте.",
+        requirements="Полная хоккейная экипировка обязательна.", hours=1,
+    )
     autumn_cup = ev(
         "Блиц-турнир «Осенний ход»", sports["chess"], oleg, _at(9, 12),
         "Клуб «Ход», ул. Покровка, 17",
@@ -351,6 +378,9 @@ def seed(db: Session) -> None:
 
 def seed_if_empty(db: Session) -> bool:
     if db.scalar(select(User.id).limit(1)) is not None:
+        # Новые базовые направления появляются и в уже заполненной базе
+        ensure_base_sports(db)
+        db.commit()
         return False
     seed(db)
     return True
