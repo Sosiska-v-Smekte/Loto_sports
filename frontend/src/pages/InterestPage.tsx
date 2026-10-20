@@ -1,4 +1,5 @@
 import { Hand, Trash2, UsersRound } from "lucide-react";
+import { SimpleHint } from "@/components/SimpleHint";
 import { useState } from "react";
 import { interestsApi } from "@/api/endpoints";
 import type { DayKind, DayPart } from "@/api/types";
@@ -66,6 +67,10 @@ export function InterestPage() {
         Хочется поиграть, но организовывать самому пока не готовы? Отметьте, что вам интересно. Мы соберём таких людей рядом,
         а когда кто-то организует встречу, вы получите приглашение. Автоматически вас никуда не запишут.
       </p>
+
+      <SimpleHint className="mt-4" title="Как это работает">
+        Выберите вид спорта и удобное время и нажмите кнопку внизу формы. Никуда вас не запишут: когда найдётся компания, вам придёт приглашение.
+      </SimpleHint>
 
       <Card className="mt-6 flex flex-col gap-5 p-5 sm:p-6">
         <h2 className="text-xl font-semibold">Что и когда вам подходит</h2>

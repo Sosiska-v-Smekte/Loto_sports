@@ -1,4 +1,5 @@
 import { Building2, MapPin, Search, UsersRound } from "lucide-react";
+import { SimpleHint } from "@/components/SimpleHint";
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import type { Organization } from "@/api/types";
@@ -55,6 +56,9 @@ export function CommunitiesPage() {
     <div className="page-container max-w-6xl pt-6 lg:pt-10">
       <h1 className="text-[30px] font-bold leading-tight sm:text-[40px]">Сообщества</h1>
       <p className="mt-2 text-lg text-muted">Спортивные клубы, беговые сообщества и организаторы вашего города</p>
+      <SimpleHint className="mt-4" title="Что такое сообщества">
+        Это клубы и секции. Откройте любой, чтобы посмотреть его занятия, и нажмите «Вступить», чтобы не пропускать новости.
+      </SimpleHint>
 
       {(hasOrganization || applying) && (
         <div className="mt-5">
@@ -62,7 +66,7 @@ export function CommunitiesPage() {
         </div>
       )}
 
-      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start">
+      <div data-simple-single className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_300px] lg:items-start">
         <div className="min-w-0">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <div className="relative min-w-0 flex-1">
@@ -127,7 +131,7 @@ export function CommunitiesPage() {
           )}
         </div>
 
-        <aside className="flex flex-col gap-5" aria-label="Мои сообщества">
+        <aside data-simple-hide className="flex flex-col gap-5" aria-label="Мои сообщества">
           <Card className="p-5">
             <h2 className="text-xl font-semibold">Мои сообщества</h2>
             {mine.length === 0 ? (
@@ -154,7 +158,7 @@ export function CommunitiesPage() {
 
 function ApplyBanner({ loggedIn, onApply }: { loggedIn: boolean; onApply: () => void }) {
   const colorSafe = useColorSafe();
-  const background = colorSafe ? safeCardColor("#F2A9C8") : mutedColor("#F2A9C8");
+  const background = colorSafe ? safeCardColor("#F2A9C8", colorSafe) : mutedColor("#F2A9C8");
   return (
     <section aria-labelledby="apply-title" className="tinted-3d rounded-card p-5" style={{ backgroundColor: background }}>
       <h2 id="apply-title" className="text-[22px] font-semibold leading-tight">
@@ -181,7 +185,7 @@ function FeaturedCard({ org }: { org: Organization }) {
   return (
     <article
       className="tinted-3d lift relative isolate flex h-full min-h-[220px] flex-col justify-between overflow-hidden rounded-card p-5"
-      style={{ backgroundColor: colorSafe ? safeCardColor(color) : color }}
+      style={{ backgroundColor: colorSafe ? safeCardColor(color, colorSafe) : color }}
     >
       <Engraving pattern={null} />
       <h3 className="max-w-[62%] text-[24px] font-semibold leading-tight">

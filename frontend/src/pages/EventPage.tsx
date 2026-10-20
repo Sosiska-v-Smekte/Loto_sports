@@ -19,7 +19,8 @@ import { Notice } from "@/components/ui/Notice";
 import { LoadingBlock } from "@/components/ui/Skeleton";
 import { EmptyState, ErrorState } from "@/components/ui/States";
 import { Tag } from "@/components/ui/Tag";
-import { useColorSafe } from "@/features/accessibility";
+import { SimpleHint } from "@/components/SimpleHint";
+import { useAccessibility, useColorSafe } from "@/features/accessibility";
 import { useAuth } from "@/features/auth";
 import { useEvent, useParticipants } from "@/features/events";
 import { formatEventDateLong } from "@/lib/dates";
@@ -54,10 +55,15 @@ function EventView({ event }: { event: SportEvent }) {
   const participants = useParticipants(event.id);
   const ModeIcon = JOIN_MODE_ICON[event.join_mode];
   const palette = eventPalette(event, useColorSafe());
+  const { simple } = useAccessibility().settings;
 
   return (
     <div className="page-container pt-4 lg:pt-6">
       <BackLink />
+
+      <SimpleHint className="mt-3" title="Что делать на этой странице">
+        Проверьте время и место. Если подходит, нажмите большую кнопку в рамке «Как записаться»: на компьютере она справа, на телефоне сразу под заголовком.
+      </SimpleHint>
 
       {event.status === "unpublished" && (
         <Notice tone="danger" icon={Ban} title={`Мероприятие снято с публикации: ${event.moderation_reason ?? "без причины"}`} className="mt-3">
@@ -130,7 +136,8 @@ function EventView({ event }: { event: SportEvent }) {
 
           {event.can_manage && participants.data && <ManagePanel participants={participants.data} />}
           {user?.is_admin && <AdminModeration event={event} />}
-          <CommentThread event={event} />
+          {/* Простой режим: без обсуждения, оно отвлекает от записи */}
+          {!simple && <CommentThread event={event} />}
         </div>
 
         {/* На телефоне запись — главное действие, поэтому колонка идёт сразу под шапкой */}
@@ -142,6 +149,7 @@ function EventView({ event }: { event: SportEvent }) {
             </p>
             <p className="mt-1 text-2xl font-semibold">{JOIN_MODE_LABEL[event.join_mode]}</p>
             <p className="mt-2 text-muted">{JOIN_MODE_HINT[event.join_mode]}</p>
+            <SimpleHint className="mt-4">Нажмите кнопку ниже и следуйте подсказкам на экране. Ответ придёт в уведомления.</SimpleHint>
             <div className="mt-5">
               <JoinPanel event={event} />
             </div>

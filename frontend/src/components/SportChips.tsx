@@ -13,12 +13,12 @@ interface SportChipsProps {
   onChange: (sportId: number | null) => void;
 }
 
-/** Сколько направлений простой режим показывает на телефоне до кнопки «Ещё» */
+/** Сколько направлений простой режим показывает до кнопки «Ещё» */
 const SIMPLE_VISIBLE = 5;
 
 export function SportChips({ sports, value, onChange }: SportChipsProps) {
   // В простом режиме направления переносятся по строкам, без прокрутки вбок.
-  // На телефоне длинный список свёрнут: иначе до событий нужно долго листать
+  // Длинный список свёрнут: иначе до событий нужно долго листать
   const { simple } = useAccessibility().settings;
   const [expanded, setExpanded] = useState(false);
   if (!sports) {
@@ -50,13 +50,13 @@ export function SportChips({ sports, value, onChange }: SportChipsProps) {
           active={value === sport.id}
           onClick={() => onChange(value === sport.id ? null : sport.id)}
           icon={<SportIllustration sport={sport} compact className="text-[24px]" />}
-          className={cn(simple && !expanded && index >= SIMPLE_VISIBLE && value !== sport.id && "hidden sm:inline-flex")}
+          className={cn(simple && !expanded && index >= SIMPLE_VISIBLE && value !== sport.id && "hidden")}
         >
           {sport.name}
         </Pill>
       ))}
       {simple && !expanded && sports.length > SIMPLE_VISIBLE && (
-        <Pill onClick={() => setExpanded(true)} className="sm:hidden" icon={<ChevronDown className="size-5" aria-hidden />}>
+        <Pill onClick={() => setExpanded(true)} icon={<ChevronDown className="size-5" aria-hidden />}>
           Ещё {sports.length - SIMPLE_VISIBLE}
         </Pill>
       )}

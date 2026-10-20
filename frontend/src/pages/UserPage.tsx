@@ -216,7 +216,7 @@ export function UserPage() {
 function SportCard({ item }: { item: UserSport }) {
   const colorSafe = useColorSafe();
   const background = colorSafe
-    ? safeCardColor(item.sport.color)
+    ? safeCardColor(item.sport.color, colorSafe)
     : item.sport.color;
   return (
     <article
@@ -285,7 +285,7 @@ function OrganizerCard({ profile }: { profile: UserPublic }) {
   const colorSafe = useColorSafe();
   const status = organization.data?.status;
   const background = colorSafe
-    ? safeCardColor("#F2A9C8")
+    ? safeCardColor("#F2A9C8", colorSafe)
     : mutedColor("#F2A9C8");
   return (
     <section

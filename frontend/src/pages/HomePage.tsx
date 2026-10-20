@@ -7,7 +7,7 @@ import { EventGrid } from "@/components/EventGrid";
 import { FeaturedBanner, FeaturedBannerSkeleton } from "@/components/FeaturedBanner";
 import { SearchBar } from "@/components/SearchBar";
 import { SimpleDatePicker } from "@/components/SimpleDatePicker";
-import { SimpleSteps } from "@/components/SimpleSteps";
+import { SimpleHint, SimpleStep } from "@/components/SimpleHint";
 import { SportChips } from "@/components/SportChips";
 import { Button, ButtonLink } from "@/components/ui/Button";
 import { SectionTitle } from "@/components/ui/Card";
@@ -70,7 +70,14 @@ export function HomePage() {
         Найдите компанию для спорта сегодня
       </h1>
 
-      <div className="mt-6 lg:mt-8">
+      <SimpleHint className="mt-5" title="Как записаться на занятие">
+        Выберите день, откройте занятие и нажмите «Записаться». Всё остальное можно не трогать.
+      </SimpleHint>
+
+      <SimpleStep n={1} title="Где вы будете заниматься?" className="mt-6">
+        Город уже выбран. Чтобы сменить его, нажмите на него. Искать по названию необязательно.
+      </SimpleStep>
+      <div className={simple ? "mt-4" : "mt-6 lg:mt-8"}>
         <SearchBar
           query={q}
           onQueryChange={setQuery}
@@ -79,8 +86,9 @@ export function HomePage() {
         />
       </div>
 
-      <SimpleSteps />
-
+      <SimpleStep n={2} title="В какой день?" className="mt-7">
+        Нажмите «Сегодня» или «Завтра». Если нужен другой день, выберите его в календаре.
+      </SimpleStep>
       <div className="mt-5">
         {simple ? (
           <SimpleDatePicker value={date} onChange={(value) => update("date", value)} />
@@ -89,34 +97,46 @@ export function HomePage() {
         )}
       </div>
 
+      <SimpleStep n={3} title="Какой вид спорта?" className="mt-7">
+        Нажмите на нужный. Если не выбирать, покажем все занятия.
+      </SimpleStep>
       <div className="mt-4">
         <SportChips sports={sports.data} value={sportId} onChange={(id) => update("sport", id ? String(id) : null)} />
       </div>
 
-      <div className="mt-7">
-        {featured.isPending ? <FeaturedBannerSkeleton /> : featured.data && <FeaturedBanner event={featured.data} />}
-      </div>
+      {/* Простой режим: без баннера, подсказки про «Я бы пошёл» и карты — они повторяют основной список */}
+      {!simple && (
+        <>
+          <div className="mt-7">
+            {featured.isPending ? <FeaturedBannerSkeleton /> : featured.data && <FeaturedBanner event={featured.data} />}
+          </div>
 
-      <Card className="mt-6 flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:gap-5 sm:p-5">
-        <span className="grid size-12 shrink-0 place-items-center rounded-full bg-level">
-          <Hand className="size-6" aria-hidden />
-        </span>
-        <div className="min-w-0 flex-1">
-          <p className="font-semibold">Не нашли подходящее время? Отметьте «Я бы пошёл»</p>
-          <p className="text-muted">
-            {demand.data?.[0]
-              ? `Сейчас в этом городе: ${demandTitle(demand.data[0])}.`
-              : "Организовывать самим не нужно: мы соберём тех, кто хочет того же, и сообщим, когда появится встреча."}
-          </p>
-        </div>
-        <ButtonLink to="/interest" variant="secondary">
-          Я бы пошёл
-        </ButtonLink>
-      </Card>
+          <Card className="mt-6 flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:gap-5 sm:p-5">
+            <span className="grid size-12 shrink-0 place-items-center rounded-full bg-level">
+              <Hand className="size-6" aria-hidden />
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="font-semibold">Не нашли подходящее время? Отметьте «Я бы пошёл»</p>
+              <p className="text-muted">
+                {demand.data?.[0]
+                  ? `Сейчас в этом городе: ${demandTitle(demand.data[0])}.`
+                  : "Организовывать самим не нужно: мы соберём тех, кто хочет того же, и сообщим, когда появится встреча."}
+              </p>
+            </div>
+            <ButtonLink to="/interest" variant="secondary">
+              Я бы пошёл
+            </ButtonLink>
+          </Card>
 
-      <div className="mt-6">
-        <HomeMapSection events={events.data} city={city} onEventSelect={(id) => navigate(`/events/${id}`)} />
-      </div>
+          <div className="mt-6">
+            <HomeMapSection events={events.data} city={city} onEventSelect={(id) => navigate(`/events/${id}`)} />
+          </div>
+        </>
+      )}
+
+      <SimpleStep n={4} title="Выберите занятие" className="mt-8">
+        Нажмите на большую кнопку «Подробнее и запись» у нужного занятия. Там будут адрес, время и условия.
+      </SimpleStep>
 
       <div className="mt-8 flex flex-wrap items-end justify-between gap-x-4 gap-y-2">
         <div>

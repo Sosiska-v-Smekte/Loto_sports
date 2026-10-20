@@ -1,4 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { SimpleHint } from "@/components/SimpleHint";
 import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
@@ -47,6 +48,7 @@ export function LoginPage() {
       <Card className="p-6 sm:p-8">
         <h1 className="text-3xl font-bold">Вход</h1>
         <p className="mt-2 text-muted">Войдите, чтобы записываться на активности и создавать свои.</p>
+        <SimpleHint className="mt-4">Введите почту и пароль, которые указали при регистрации, и нажмите «Войти». Нет аккаунта? Его можно создать на странице регистрации.</SimpleHint>
         <form onSubmit={submit} className="mt-6 flex flex-col gap-4" noValidate>
           <Input
             label="Email"

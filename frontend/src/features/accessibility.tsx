@@ -8,11 +8,22 @@ import { useHoverSpeech } from "./speech";
  */
 export type TextSize = 0 | 1 | 2;
 
+/** Вид нарушения цветовосприятия: для каждого своя палитра (src/styles/accessibility.css, lib/color.ts) */
+export type ColorType = "deutan" | "protan" | "tritan";
+
+export const COLOR_TYPES: { value: ColorType; label: string; hint: string }[] = [
+  { value: "deutan", label: "Дейтеранопия", hint: "Не различаю зелёный и красный (самый частый вид)" },
+  { value: "protan", label: "Протанопия", hint: "Красный кажется тёмным и сливается с зелёным" },
+  { value: "tritan", label: "Тританопия", hint: "Путаю синий с зелёным, жёлтый с розовым" },
+];
+
 export interface A11ySettings {
   /** Для слабовидящих: высокий контраст, крупный текст, заметный фокус, без фонового узора */
   lowVision: boolean;
   /** Для людей с нарушением цветовосприятия: безопасная палитра и дублирование цвета формой */
   colorSafe: boolean;
+  /** Вид дальтонизма; действует, когда включён colorSafe. Раньше режим был один, он соответствует дейтеранопии */
+  colorType: ColorType;
   /** Простой режим: меньше элементов, крупные кнопки, подсказки, без анимаций */
   simple: boolean;
   /** Озвучка элементов при наведении мыши и переходе по Tab */
@@ -22,7 +33,7 @@ export interface A11ySettings {
 
 export const STORAGE_KEY = "a11y-settings";
 
-export const DEFAULT_SETTINGS: A11ySettings = { lowVision: false, colorSafe: false, simple: false, speech: false, textSize: 0 };
+export const DEFAULT_SETTINGS: A11ySettings = { lowVision: false, colorSafe: false, colorType: "deutan", simple: false, speech: false, textSize: 0 };
 
 function read(): A11ySettings {
   try {
@@ -33,6 +44,7 @@ function read(): A11ySettings {
     return {
       lowVision: parsed.lowVision === true,
       colorSafe: parsed.colorSafe === true,
+      colorType: COLOR_TYPES.some((t) => t.value === parsed.colorType) ? (parsed.colorType as ColorType) : "deutan",
       simple: parsed.simple === true,
       speech: parsed.speech === true,
       textSize: size === 1 || size === 2 ? size : 0,
@@ -47,6 +59,8 @@ export function applyToDocument(s: A11ySettings) {
   const root = document.documentElement;
   root.toggleAttribute("data-low-vision", s.lowVision);
   root.toggleAttribute("data-color-safe", s.colorSafe);
+  if (s.colorSafe) root.setAttribute("data-color-type", s.colorType);
+  else root.removeAttribute("data-color-type");
   root.toggleAttribute("data-simple", s.simple);
   root.setAttribute("data-text-size", String(s.textSize));
 }
@@ -102,8 +116,11 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
   return <A11yContext.Provider value={value}>{children}</A11yContext.Provider>;
 }
 
-/** Включён ли режим для людей с нарушением цветовосприятия: от него зависят цвета карточек. */
-export const useColorSafe = () => useAccessibility().settings.colorSafe;
+/** Вид дальтонизма, если режим для людей с нарушением цветовосприятия включён, иначе false: от него зависят цвета карточек. */
+export function useColorSafe(): ColorType | false {
+  const { colorSafe, colorType } = useAccessibility().settings;
+  return colorSafe ? colorType : false;
+}
 
 export function useAccessibility() {
   const ctx = useContext(A11yContext);

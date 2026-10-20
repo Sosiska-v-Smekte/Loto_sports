@@ -56,17 +56,20 @@ export function EventCard({ event }: { event: SportEvent }) {
         <p className="mt-1.5 flex min-w-0 items-center gap-2 text-[15px]">
           <MapPin className="size-[18px] shrink-0 text-muted" aria-hidden />
           <span className="min-w-0 truncate">
-            {shortPlace(event.address)} • {event.organizer.name}
+            {shortPlace(event.address)}
+            <span data-simple-hide> • {event.organizer.name}</span>
           </span>
         </p>
         <div className="mt-3 flex flex-wrap gap-1.5">
-          <Tag tone="level">{LEVEL_LABEL[event.level]}</Tag>
+          <span data-simple-hide>
+            <Tag tone="level">{LEVEL_LABEL[event.level]}</Tag>
+          </span>
           <Tag tone={event.join_mode === "open" ? "success" : "info"} icon={ModeIcon}>
             {JOIN_MODE_LABEL[event.join_mode]}
           </Tag>
         </div>
         <div className="mt-auto flex items-center justify-between gap-2 pt-4">
-          <span className="flex min-w-0 items-center gap-2">
+          <span data-simple-hide className="flex min-w-0 items-center gap-2">
             <Avatar name={event.organizer.name} id={event.organizer.id} src={event.organizer.avatar_url} />
             <span className="truncate text-[15px] font-medium">{event.organizer.name}</span>
           </span>

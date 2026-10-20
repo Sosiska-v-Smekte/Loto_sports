@@ -1,10 +1,12 @@
+import { Fragment } from "react";
 import { useAccessibility, type A11ySettings } from "@/features/accessibility";
 import { cn } from "@/lib/cn";
+import { ColorTypeChoice } from "./ColorTypeChoice";
 import { Checkbox } from "./ui/Checkbox";
 
 const OPTIONS: { key: "lowVision" | "colorSafe" | "simple"; label: string; hint: string }[] = [
   { key: "lowVision", label: "Для слабовидящих", hint: "Крупный контрастный текст, озвучка при наведении" },
-  { key: "colorSafe", label: "Для людей с нарушением цветовосприятия", hint: "Другая палитра, статусы подписаны словами и рамкой" },
+  { key: "colorSafe", label: "Для людей с нарушением цветовосприятия", hint: "Своя палитра для трёх видов дальтонизма, статусы подписаны значком и рамкой" },
   { key: "simple", label: "Простой режим", hint: "Крупные кнопки, меньше лишнего, подсказки" },
 ];
 
@@ -35,14 +37,16 @@ export function A11yChoice() {
       </label>
       <div className="flex flex-col gap-3 px-1">
         {OPTIONS.map((option) => (
-          <Checkbox
-            key={option.key}
-            checked={settings[option.key]}
-            onChange={(e) => update({ [option.key]: e.target.checked } as Partial<A11ySettings>)}
-          >
-            <span className="block font-medium">{option.label}</span>
-            <span className="block text-sm text-muted">{option.hint}</span>
-          </Checkbox>
+          <Fragment key={option.key}>
+            <Checkbox
+              checked={settings[option.key]}
+              onChange={(e) => update({ [option.key]: e.target.checked } as Partial<A11ySettings>)}
+            >
+              <span className="block font-medium">{option.label}</span>
+              <span className="block text-sm text-muted">{option.hint}</span>
+            </Checkbox>
+            {option.key === "colorSafe" && settings.colorSafe && <ColorTypeChoice className="ml-8" />}
+          </Fragment>
         ))}
       </div>
       <p className="px-1 text-sm text-muted">Включается сразу. Изменить можно в любой момент кнопкой с глазом в шапке сайта.</p>

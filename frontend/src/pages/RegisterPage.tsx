@@ -1,4 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
+import { SimpleHint } from "@/components/SimpleHint";
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { errorMessage } from "@/api/client";
@@ -56,6 +57,7 @@ export function RegisterPage() {
       <Card className="p-6 sm:p-8">
         <h1 className="text-3xl font-bold">Регистрация</h1>
         <p className="mt-2 text-muted">Это займёт минуту. Подтверждать почту не нужно.</p>
+        <SimpleHint className="mt-4">Заполните поля по порядку, сверху вниз, и нажмите кнопку внизу. Специальные возможности можно включить прямо здесь, в блоке ниже.</SimpleHint>
         <form onSubmit={submit} className="mt-6 flex flex-col gap-4" noValidate>
           <Input label="Имя" autoComplete="name" value={form.name} onChange={set("name")} error={touched ? errors.name : undefined} required />
           <Input label="Email" type="email" autoComplete="email" value={form.email} onChange={set("email")} error={touched ? errors.email : undefined} required />

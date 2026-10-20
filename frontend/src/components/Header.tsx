@@ -25,12 +25,12 @@ export function Header() {
         <Link
           data-logo
           to="/"
-          className="min-w-0 truncate whitespace-nowrap rounded-lg text-[20px] font-semibold leading-[1.15] tracking-[-0.01em] sm:shrink-0 sm:text-[22px] lg:text-[24px] xl:text-[28px]"
+          className="min-w-0 truncate whitespace-nowrap rounded-lg text-[20px] font-semibold leading-[1.15] tracking-[-0.01em] sm:shrink-0 sm:text-[22px] xl:text-[28px]"
         >
           Спортивный клуб
         </Link>
 
-        <nav data-desktop-nav aria-label="Основная навигация" className="ml-4 hidden items-center gap-2 lg:flex xl:ml-8 xl:gap-2.5">
+        <nav data-desktop-nav aria-label="Основная навигация" className="ml-2 hidden items-center gap-1.5 lg:flex xl:ml-8 xl:gap-2.5">
           {items.map((item) => {
             const active = isNavActive(item.to, pathname);
             return (
@@ -39,15 +39,15 @@ export function Header() {
                 to={item.to}
                 end={item.to === "/"}
                 className={cn(
-                  "pressable inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-full border px-4 text-[15px] font-medium xl:min-h-[50px] xl:px-5 xl:text-[17px]",
+                  "pressable inline-flex min-h-11 items-center gap-2 whitespace-nowrap rounded-full border px-3 text-[14px] font-medium xl:min-h-[50px] xl:px-4 xl:text-[16px] wide:px-5 wide:text-[17px]",
                   active
                     ? "neu-primary border-primary bg-primary text-white"
                     : "neu-control border-line/70 bg-surface-muted text-ink",
                 )}
               >
-                {/* В простом режиме значки у всех пунктов; на узком десктопе (1024–1279) — только у активного,
+                {/* В простом режиме значки у всех пунктов; на десктопе уже 1400px — только у активного,
                     иначе у админа с четырьмя пунктами шапка не помещается */}
-                {(active || simple) && <item.icon className={active ? "size-5" : "hidden size-5 xl:block"} aria-hidden />}
+                {(active || simple) && <item.icon className={active ? "size-5" : "hidden size-5 wide:block"} aria-hidden />}
                 {/* Полные подписи («Найти активность») только на очень широком экране: на 1536–1700px шапка с ними не помещается */}
                 <span data-label-short className={compact ? undefined : simple ? "min-[2100px]:hidden" : "huge:hidden"}>
                   {item.shortLabel}

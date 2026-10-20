@@ -34,7 +34,9 @@ export function BottomNav() {
           {badge}
         </span>
         {/* Пять вкладок при крупном тексте: длинная подпись обрезается, а не наезжает на соседнюю */}
-        <span className="w-full truncate px-0.5 text-center">{item.shortLabel}</span>
+        <span data-nav-label={item.shortLabel.includes(" ") ? "" : undefined} className="w-full truncate px-0.5 text-center">
+          {item.shortLabel}
+        </span>
       </NavLink>
     );
   };

@@ -1,4 +1,5 @@
 import { CalendarDays, CalendarPlus, Check, Clock, MapPin, MessageCircle, Search, Settings2, UsersRound, X } from "lucide-react";
+import { SimpleHint } from "@/components/SimpleHint";
 import { useMemo, useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { meApi } from "@/api/endpoints";
@@ -74,8 +75,11 @@ export function MyPage() {
     <div className="page-container max-w-6xl pt-6 lg:pt-10">
       <h1 className="text-[30px] font-bold leading-tight sm:text-[40px]">Мои активности</h1>
       <p className="mt-1 text-lg text-muted">Ваше расписание тренировок и событий</p>
+      <SimpleHint className="mt-4" title="Что здесь">
+        Все занятия, на которые вы записались. «Предстоящие» — что ещё впереди, «Мои заявки» — что ждёт ответа организатора. Нажмите на занятие, чтобы открыть его.
+      </SimpleHint>
 
-      <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
+      <div data-simple-single className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
         <div className="flex min-w-0 flex-col gap-5">
           <Tabs
             label="Мои активности"
@@ -121,7 +125,7 @@ export function MyPage() {
           </section>
         </div>
 
-        <aside className="flex flex-col gap-5 lg:sticky lg:top-24" aria-label="Расписание">
+        <aside data-simple-hide className="flex flex-col gap-5 lg:sticky lg:top-24" aria-label="Расписание">
           <MyCalendar busyDays={busyDays} selected={day} onSelect={setDay} />
           <Timeline entries={lists.upcoming.slice(0, 3)} />
         </aside>

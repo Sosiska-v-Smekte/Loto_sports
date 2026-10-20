@@ -32,9 +32,13 @@ html[data-text-size="2"] {
 
 /* При крупном тексте карточки не сжимаются: колонок становится меньше */
 html[data-text-size="1"] .event-grid,
-html[data-text-size="2"] .event-grid,
-html[data-simple] .event-grid {
+html[data-text-size="2"] .event-grid {
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr));
+}
+
+/* Простой режим: карточки крупнее и по две в ряду, а не по три-четыре */
+html[data-simple] .event-grid {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr));
 }
 
 /* Шапка. Её размеры на широком экране (от 1280px) и так крупные: 17–18px и кнопки по 50px, а с zoom
@@ -62,6 +66,22 @@ html[data-simple] .event-grid {
   html[data-text-size="2"] [data-main] {
     padding-bottom: 8rem !important;
   }
+}
+
+/* Нижняя панель: подпись из двух слов («Мои активности») переносится на вторую строку, а не обрезается;
+   значки при этом остаются на одной линии. Однословные подписи по-прежнему в одну строку */
+[data-mobile-nav] a {
+  justify-content: flex-start;
+  padding-top: 4px;
+}
+
+html [data-nav-label] {
+  white-space: normal;
+  line-height: 1.1;
+}
+
+html[data-text-size="2"] [data-nav-label] {
+  font-size: 10px;
 }
 
 /* На узком телефоне логотип с крупным текстом иначе не помещается рядом с кнопками шапки,
@@ -172,18 +192,126 @@ html[data-low-vision] .engraving:not([data-pattern-preview] .engraving) {
 
 /* ---------- Для людей с нарушением цветовосприятия ---------- */
 
-/* Палитра по мотивам Okabe–Ito: «хорошо» — синий, «плохо» — оранжевый, «ждём» — жёлтый.
-   Пары различимы при протанопии, дейтеранопии и тританопии и отличаются по яркости. */
+/* Для каждого из трёх самых частых видов дальтонизма — своя палитра всей страницы: фон, главный цвет, статусы.
+   Опора везде одна: цвет не единственный признак. Статусы отличаются рамкой и значком, выходные — чертой,
+   ошибки в полях — толстой пунктирной рамкой (правила ниже). Карточки событий красятся в lib/color.ts. */
+
 html[data-color-safe] {
+  --color-chrome: #f7f2e8;
+}
+
+/* Дейтеранопия (нет зелёного): холодный фон, синий главный цвет; «хорошо» — синий, «плохо» — оранжевый */
+html[data-color-type="deutan"] {
+  --color-page: #eaf0f9;
+  --color-surface: #fbfcff;
+  --color-surface-muted: #f1f5fc;
+  --color-line: #c3d0e6;
+  --color-chrome: #eef3fb;
+  --color-primary: #1d4e9e;
+  --color-primary-hover: #153e82;
+  --color-primary-soft: #d6e3f7;
+  --color-today: #dbe5f4;
+  --color-level: #e3e9f5;
+  --color-weekend: #a04a00;
   --color-success: #cfe0ff;
   --color-success-ink: #0b3a8c;
-  --color-warning: #fbe6a0;
-  --color-warning-ink: #533c00;
-  --color-danger: #ffd6bd;
-  --color-danger-ink: #8f3000;
+  --color-warning: #fff3b5;
+  --color-warning-ink: #4d3a00;
+  --color-danger: #ffa874;
+  --color-danger-ink: #5c2000;
   --color-info: #e6e2f2;
   --color-info-ink: #3a2e66;
-  --color-weekend: #a04a00;
+  --gradient-surface: linear-gradient(180deg, #ffffff 0%, #fbfcff 100%);
+  --gradient-primary: linear-gradient(180deg, #2559ad 0%, #1d4e9e 100%);
+  --shadow-primary: inset 0 1px 0 rgb(255 255 255 / 0.14), 0 1px 2px rgb(15 40 90 / 0.2), 0 4px 12px -4px rgb(15 40 90 / 0.32);
+}
+
+/* Протанопия (красный тёмный): тёплый светлый фон, индиго; красный не используем, «плохо» — яркий оранжевый */
+html[data-color-type="protan"] {
+  --color-page: #f8f2d9;
+  --color-surface: #fffdf2;
+  --color-surface-muted: #fbf6e0;
+  --color-line: #dccf9f;
+  --color-chrome: #fbf6df;
+  --color-primary: #2e3a96;
+  --color-primary-hover: #222c75;
+  --color-primary-soft: #dfe2f6;
+  --color-today: #efe6bd;
+  --color-level: #f3ebc5;
+  --color-weekend: #8f4a00;
+  --color-success: #c9d7fb;
+  --color-success-ink: #14308a;
+  --color-warning: #fff6b8;
+  --color-warning-ink: #4d3a00;
+  --color-danger: #ffa066;
+  --color-danger-ink: #4f1c00;
+  --color-info: #e9e3f3;
+  --color-info-ink: #3a2e66;
+  --gradient-surface: linear-gradient(180deg, #fffef8 0%, #fffdf2 100%);
+  --gradient-primary: linear-gradient(180deg, #3745a6 0%, #2e3a96 100%);
+  --shadow-primary: inset 0 1px 0 rgb(255 255 255 / 0.14), 0 1px 2px rgb(25 30 90 / 0.2), 0 4px 12px -4px rgb(25 30 90 / 0.32);
+}
+
+/* Тританопия (нет синего): красно-зелёная ось цела, поэтому розово-бордовый главный цвет, «хорошо» — зелёный,
+   «плохо» — красный; светлота статусов разная, потому что жёлтый и розовый путаются */
+html[data-color-type="tritan"] {
+  --color-page: #f7eef0;
+  --color-surface: #fffafb;
+  --color-surface-muted: #fbf1f3;
+  --color-line: #e2c9d0;
+  --color-chrome: #faf0f2;
+  --color-primary: #8a1f3f;
+  --color-primary-hover: #6e1832;
+  --color-primary-soft: #f3d9e0;
+  --color-today: #f0dde2;
+  --color-level: #f4e4e8;
+  --color-weekend: #a3201c;
+  --color-success: #bfe8c4;
+  --color-success-ink: #14451c;
+  --color-warning: #fff4cc;
+  --color-warning-ink: #5a3e00;
+  --color-danger: #f5b4b8;
+  --color-danger-ink: #7a0f18;
+  --color-info: #e6e4ea;
+  --color-info-ink: #3a3a55;
+  --gradient-surface: linear-gradient(180deg, #ffffff 0%, #fffafb 100%);
+  --gradient-primary: linear-gradient(180deg, #99274a 0%, #8a1f3f 100%);
+  --shadow-primary: inset 0 1px 0 rgb(255 255 255 / 0.14), 0 1px 2px rgb(100 15 40 / 0.22), 0 4px 12px -4px rgb(100 15 40 / 0.34);
+}
+
+/* Бежевый узор фона на цветной палитре только пестрит: в этом режиме фон чистый */
+html[data-color-type] body {
+  background-image: none;
+}
+
+/* Шапка и нижняя панель берут цвет страницы, а не бежевый по умолчанию */
+html[data-color-type] [data-site-header],
+html[data-color-type] [data-mobile-nav] {
+  background-color: color-mix(in srgb, var(--color-chrome) 92%, transparent);
+}
+
+html[data-color-type] [data-mobile-nav] .ring-4 {
+  --tw-ring-color: var(--color-chrome);
+}
+
+/* Значок статуса в тексте плашки, если своего значка у неё нет: ✓ хорошо, ▲ внимание, ✕ плохо */
+html[data-color-safe] .chip-3d[data-tone="success"]:not(:has(svg))::before,
+html[data-color-safe] .chip-3d[data-tone="warning"]:not(:has(svg))::before,
+html[data-color-safe] .chip-3d[data-tone="danger"]:not(:has(svg))::before {
+  font-weight: 700;
+}
+
+html[data-color-safe] .chip-3d[data-tone="success"]:not(:has(svg))::before {
+  content: "✓";
+}
+
+html[data-color-safe] .chip-3d[data-tone="warning"]:not(:has(svg))::before {
+  content: "▲";
+  font-size: 0.8em;
+}
+
+html[data-color-safe] .chip-3d[data-tone="danger"]:not(:has(svg))::before {
+  content: "✕";
 }
 
 /* Статус различается не только цветом, но и рамкой: сплошная, пунктир, точки */
@@ -233,6 +361,11 @@ html[data-simple] [data-simple-only] {
 
 html[data-simple] [data-simple-hide] {
   display: none !important;
+}
+
+/* Страница с боковой колонкой без неё: основная колонка занимает всю ширину */
+html[data-simple] [data-simple-single] {
+  grid-template-columns: minmax(0, 1fr) !important;
 }
 
 /* Без «прыгающих» элементов и анимаций */

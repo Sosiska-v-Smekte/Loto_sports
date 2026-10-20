@@ -1,9 +1,10 @@
 import { Contrast, Eye, Hand, RotateCcw, Volume2, type LucideIcon } from "lucide-react";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { useAccessibility, type A11ySettings, type TextSize } from "@/features/accessibility";
 import { speak, speechSupported } from "@/features/speech";
 import { cn } from "@/lib/cn";
 import { Button } from "./ui/Button";
+import { ColorTypeChoice } from "./ColorTypeChoice";
 import { Modal } from "./ui/Modal";
 
 interface ModeInfo {
@@ -29,7 +30,7 @@ const MODES: ModeInfo[] = [
   {
     key: "colorSafe",
     title: "Для людей с нарушением цветовосприятия",
-    text: "Палитра, различимая при дальтонизме. Статусы отличаются ещё и рамкой, выходные дни — отметкой.",
+    text: "Своя палитра для дейтеранопии, протанопии и тританопии: перекрашиваются страница, кнопки, статусы и карточки. Статусы отличаются ещё рамкой и значком (✓ ▲ ✕), выходные дни — чертой.",
     icon: Contrast,
   },
   {
@@ -104,17 +105,19 @@ export function AccessibilityPanel({ open, onClose }: { open: boolean; onClose: 
     >
       <div className="flex flex-col gap-3">
         {MODES.filter((mode) => mode.key !== "speech" || speechSupported()).map((mode) => (
-          <ModeSwitch
-            key={mode.key}
-            mode={mode}
-            checked={settings[mode.key]}
-            onChange={(value) => {
-              update({ [mode.key]: value } as Partial<A11ySettings>);
-              if (value && (mode.key === "speech" || mode.key === "lowVision")) {
-                speak("Озвучка включена. Наведите мышь на элемент, чтобы услышать его.");
-              }
-            }}
-          />
+          <Fragment key={mode.key}>
+            <ModeSwitch
+              mode={mode}
+              checked={settings[mode.key]}
+              onChange={(value) => {
+                update({ [mode.key]: value } as Partial<A11ySettings>);
+                if (value && (mode.key === "speech" || mode.key === "lowVision")) {
+                  speak("Озвучка включена. Наведите мышь на элемент, чтобы услышать его.");
+                }
+              }}
+            />
+            {mode.key === "colorSafe" && settings.colorSafe && <ColorTypeChoice className="rounded-[20px] bg-surface-muted p-4" />}
+          </Fragment>
         ))}
       </div>
       <fieldset className="mt-5">

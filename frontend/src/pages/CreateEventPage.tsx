@@ -1,4 +1,5 @@
 import { Building2, CheckCircle2, ClipboardCheck, Clock, TriangleAlert, UserRound, Users, Zap } from "lucide-react";
+import { SimpleHint } from "@/components/SimpleHint";
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { errorMessage } from "@/api/client";
@@ -152,24 +153,32 @@ export function CreateEventPage() {
       <BackLink />
       <h1 className="mt-2 text-[30px] font-bold leading-tight sm:text-[40px]">Новая активность</h1>
       <p className="mt-2 text-lg text-muted">Расскажите, что, где и когда — и люди рядом смогут присоединиться.</p>
+      <SimpleHint className="mt-4" title="Как создать активность">
+        Заполняйте четыре блока сверху вниз. Поля со звёздочкой обязательны. В самом конце нажмите «Опубликовать».
+      </SimpleHint>
 
       <form onSubmit={submit} noValidate className="mt-6 flex flex-col gap-6">
         <Card className="flex flex-col gap-5 p-5 sm:p-6">
           <h2 className="text-xl font-semibold">Что за активность</h2>
+          <SimpleHint>Шаг 1 из 4. Придумайте название и выберите вид спорта. Остальное можно не заполнять.</SimpleHint>
           <Input label="Название" placeholder="Например: Утренняя пробежка в парке" maxLength={120} required error={show("title")} {...field("title")} />
           <SportPicker sports={sports.data} value={sport} onChange={setSport} error={show("sport")} />
-          <CardColorPicker value={cardColor} onChange={setCardColor} sport={chosenSport} />
-          <CardPatternPicker
-            value={cardPattern}
-            onChange={setCardPattern}
-            sport={chosenSport}
-            background={cardColor ? mutedColor(cardColor) : (chosenSport?.color ?? "#E9DFCC")}
-          />
+          {/* Оформление карточки в простом режиме не нужно: цвет и узор подберутся сами */}
+          <div data-simple-hide className="flex flex-col gap-5">
+            <CardColorPicker value={cardColor} onChange={setCardColor} sport={chosenSport} />
+            <CardPatternPicker
+              value={cardPattern}
+              onChange={setCardPattern}
+              sport={chosenSport}
+              background={cardColor ? mutedColor(cardColor) : (chosenSport?.color ?? "#E9DFCC")}
+            />
+          </div>
           <Textarea label="Описание" placeholder="Как всё будет проходить, сколько длится, кого ждёте" rows={4} maxLength={2000} {...field("description")} />
         </Card>
 
         <Card className="flex flex-col gap-5 p-5 sm:p-6">
           <h2 className="text-xl font-semibold">Когда и где</h2>
+          <SimpleHint>Шаг 2 из 4. Выберите день и время начала, затем город и адрес: по адресу занятие появится на карте.</SimpleHint>
           <div className="grid gap-4 sm:grid-cols-3">
             <Input label="Дата" type="date" min={dayjs().format("YYYY-MM-DD")} required error={show("date")} {...field("date")} />
             <Input label="Начало" type="time" required {...field("time")} />
@@ -242,6 +251,7 @@ export function CreateEventPage() {
 
         <Card className="flex flex-col gap-5 p-5 sm:p-6">
           <h2 className="text-xl font-semibold">Для кого</h2>
+          <SimpleHint>Шаг 3 из 4. Выберите уровень. Если не уверены, оставьте «для всех».</SimpleHint>
           <ChoiceCards
             legend="Уровень подготовки"
             name="level"
@@ -260,6 +270,7 @@ export function CreateEventPage() {
 
         <Card className="flex flex-col gap-5 p-5 sm:p-6">
           <h2 className="text-xl font-semibold">Как записываться</h2>
+          <SimpleHint>Шаг 4 из 4. «Свободная запись» — любой может прийти. «По заявке» — вы сами решаете, кого принять.</SimpleHint>
           <ChoiceCards
             legend="Режим записи"
             name="join_mode"
