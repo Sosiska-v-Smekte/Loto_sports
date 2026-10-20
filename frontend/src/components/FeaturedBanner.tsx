@@ -3,6 +3,7 @@ import type { SportEvent } from "@/api/types";
 import { eventPalette } from "@/lib/color";
 import { formatEventDate } from "@/lib/dates";
 import { LEVEL_LABEL } from "@/lib/status";
+import { Engraving } from "./Engraving";
 import { SportIllustration } from "./SportIllustration";
 import { StatusBadge } from "./StatusBadge";
 import { buttonClass } from "./ui/Button";
@@ -16,9 +17,10 @@ export function FeaturedBanner({ event }: { event: SportEvent }) {
   return (
     <section
       aria-label="Ближайшая активность"
-      className="tinted-3d relative flex flex-col gap-4 overflow-hidden rounded-card px-5 py-5 [box-shadow:var(--shadow-card)] sm:flex-row sm:items-center sm:gap-6 sm:px-6 sm:py-4"
+      className="tinted-3d relative isolate flex flex-col gap-4 overflow-hidden rounded-card px-5 py-5 [box-shadow:var(--shadow-card)] sm:flex-row sm:items-center sm:gap-6 sm:px-6 sm:py-4"
       style={{ backgroundColor: palette.background }}
     >
+      <Engraving pattern={event.card_pattern} />
       <div className="min-w-0 flex-1 pr-20 sm:pr-0">
         <h2 className="text-[22px] font-medium leading-tight tracking-[-0.01em] sm:text-[28px]">{event.title}</h2>
         <div className="mt-2 flex flex-wrap items-center gap-x-2.5 gap-y-1.5 text-[17px]">

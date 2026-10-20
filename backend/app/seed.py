@@ -136,7 +136,7 @@ def seed(db: Session) -> None:
     nordic = get_or_create_sport(db, "Скандинавская ходьба", maria)
 
     def ev(title, sport, organizer, starts_at, address, *, city="Москва", org=None, level=EventLevel.any,
-           mode=JoinMode.open, description="", place="", requirements="", hours=2):
+           mode=JoinMode.open, description="", place="", requirements="", hours=2, color=None, pattern=None):
         event = Event(
             title=title,
             description=description,
@@ -151,6 +151,8 @@ def seed(db: Session) -> None:
             level=level,
             requirements=requirements,
             join_mode=mode,
+            card_color=color,
+            card_pattern=pattern,
         )
         db.add(event)
         return event
@@ -158,6 +160,7 @@ def seed(db: Session) -> None:
     run_gorky = ev(
         "Вечерний забег в Парке Горького", sports["running"], ivan, _at(0, 19),
         "Парк Горького, Крымский Вал, 9",
+        pattern="track",
         description="Лёгкая пробежка 5 км вдоль набережной. Темп разговорный, никого не бросаем.",
         place="Встречаемся у главного входа, возле арки.",
         requirements="Удобная обувь для бега, вода.", hours=1,
@@ -165,6 +168,7 @@ def seed(db: Session) -> None:
     football = ev(
         "Любительский матч 5x5", sports["football"], ilya, _at(0, 19, 30),
         "Манеж «Запад», ул. Генерала Дорохова, 10",
+        pattern="pitch",
         description="Играем в мини-футбол два тайма по 25 минут. Команды делим на месте.",
         place="Поле №2, вход со стороны парковки.",
         requirements="Сменная обувь для зала (сороконожки или футзалки). Манишки выдадим.",
@@ -172,6 +176,7 @@ def seed(db: Session) -> None:
     tennis_pair = ev(
         "Парный турнир на грунте", sports["tennis"], anna, _at(1, 12),
         "СК «Спартак», Майская аллея, 7",
+        pattern="tennis",
         level=EventLevel.amateur, mode=JoinMode.approval,
         description="Небольшой парный турнир, играем до 6 геймов. Пары составим по уровню.",
         place="Грунтовые корты 3 и 4.",
@@ -180,6 +185,7 @@ def seed(db: Session) -> None:
     blitz = ev(
         "Вечер быстрых шахмат", sports["chess"], oleg, _at(2, 18, 30),
         "Клуб «Ход», ул. Покровка, 17",
+        pattern="chess",
         org=hod, mode=JoinMode.approval,
         description="Играем блиц 5+3 по швейцарской системе, 7 туров. Подходит всем уровням.",
         place="Второй этаж, зал с большими окнами.",
@@ -188,6 +194,7 @@ def seed(db: Session) -> None:
     streetball = ev(
         "Стритбол в Лужниках", sports["basketball"], ivan, _at(4, 16),
         "Лужники, площадка у Малой спортивной арены",
+        pattern="court",
         level=EventLevel.beginner,
         description="Играем 3×3 на одно кольцо до 21 очка. Новичкам объясним правила.",
         requirements="Кроссовки и вода. Мяч есть.",
@@ -234,6 +241,7 @@ def seed(db: Session) -> None:
     morning = ev(
         "Утренняя зарядка во дворе", sports["yoga"], anna, _at(1, 8),
         "Двор на Фрунзенской набережной, 30",
+        color="#9FD8F0", pattern="waves",
         description="20 минут лёгкой разминки на свежем воздухе. Подходит любому возрасту.",
         requirements="Удобная одежда. Коврик по желанию.", hours=1,
     )
@@ -246,6 +254,7 @@ def seed(db: Session) -> None:
     volleyball = ev(
         "Волейбол на песке", sports["volleyball"], ivan, _at(5, 18),
         "Парк «Музеон», крытые песчаные корты",
+        color="#F7B267", pattern="net",
         level=EventLevel.amateur,
         description="Игра 4×4, меняемся составами каждые 15 минут.",
     )
@@ -259,6 +268,7 @@ def seed(db: Session) -> None:
     swim = ev(
         "Заплыв в бассейне «Чайка»", sports["swimming"], anna, _at(8, 7, 30),
         "Бассейн «Чайка», Турчанинов пер., 3",
+        pattern="lanes",
         level=EventLevel.beginner,
         description="Спокойно плаваем 45 минут на своей дорожке.",
         requirements="Шапочка, очки, справка для бассейна.", hours=1,

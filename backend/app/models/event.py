@@ -45,6 +45,7 @@ class Event(Base):
     join_mode: Mapped[JoinMode] = mapped_column(String(20), default=JoinMode.open)
     # Свой цвет карточки (#RRGGBB); пусто — берётся цвет направления
     card_color: Mapped[str | None] = mapped_column(String(7))
+    card_pattern: Mapped[str | None] = mapped_column(String(16))
     status: Mapped[EventStatus] = mapped_column(
         String(20), default=EventStatus.published, index=True
     )

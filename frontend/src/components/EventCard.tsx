@@ -4,6 +4,7 @@ import type { SportEvent } from "@/api/types";
 import { eventPalette } from "@/lib/color";
 import { formatEventDate } from "@/lib/dates";
 import { JOIN_MODE_LABEL, LEVEL_LABEL, organizerKind } from "@/lib/status";
+import { Engraving } from "./Engraving";
 import { SportIllustration } from "./SportIllustration";
 import { JOIN_MODE_ICON, StatusBadge } from "./StatusBadge";
 import { Avatar } from "./ui/Avatar";
@@ -20,9 +21,10 @@ export function EventCard({ event }: { event: SportEvent }) {
   return (
     <article className="neu-raised lift group relative flex flex-col rounded-card border border-line/70 bg-surface p-2.5">
       <div
-        className="tinted-3d relative h-[124px] rounded-[18px] px-4 pt-3.5"
+        className="tinted-3d relative isolate h-[124px] rounded-[18px] px-4 pt-3.5"
         style={{ backgroundColor: palette.background }}
       >
+        <Engraving pattern={event.card_pattern} />
         <h3 className="line-clamp-3 text-[21px] font-medium leading-[1.1] tracking-[-0.01em]">
           <Link
             to={`/events/${event.id}`}

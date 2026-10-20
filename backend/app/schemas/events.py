@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Annotated
+from typing import Annotated, Literal
 
 from pydantic import BaseModel, Field, StringConstraints, model_validator
 
@@ -7,6 +7,9 @@ from app.models import EventLevel, JoinMode
 from app.schemas.common import City, ORMModel, OrganizationBrief, SportOut, UserBrief
 
 ShortText = Annotated[str, StringConstraints(strip_whitespace=True, max_length=2000)]
+
+# Гравировка шапки карточки. Список совпадает с CARD_PATTERNS во frontend/src/lib/engraving.ts
+CardPattern = Literal["topo", "pitch", "court", "tennis", "track", "lanes", "waves", "net", "chess", "balls"]
 
 
 class MyParticipation(ORMModel):
@@ -30,6 +33,7 @@ class EventOut(ORMModel):
     requirements: str
     join_mode: str
     card_color: str | None
+    card_pattern: str | None
     status: str
     # Причина видна только тем, кому показывается снятое событие (организатор, записавшиеся, админ)
     moderation_reason: str | None
@@ -56,6 +60,7 @@ class EventCreate(BaseModel):
     requirements: ShortText = ""
     join_mode: JoinMode = JoinMode.open
     card_color: Annotated[str, StringConstraints(pattern=r"^#[0-9A-Fa-f]{6}$")] | None = None
+    card_pattern: CardPattern | None = None
     organization_id: int | None = None
 
     @model_validator(mode="after")

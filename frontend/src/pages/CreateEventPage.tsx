@@ -6,6 +6,7 @@ import { eventsApi } from "@/api/endpoints";
 import type { JoinMode, Level } from "@/api/types";
 import { BackLink } from "@/components/BackLink";
 import { CardColorPicker } from "@/components/CardColorPicker";
+import { CardPatternPicker } from "@/components/CardPatternPicker";
 import { CityCombobox } from "@/components/CityCombobox";
 import { SportPicker, type SportChoice } from "@/components/SportPicker";
 import { Button } from "@/components/ui/Button";
@@ -16,7 +17,9 @@ import { useAction } from "@/features/action";
 import { useAuth } from "@/features/auth";
 import { useSports } from "@/features/events";
 import { useMyOrganization } from "@/features/me";
+import { mutedColor } from "@/lib/color";
 import { dayjs } from "@/lib/dates";
+import type { CardPattern } from "@/lib/engraving";
 import { JOIN_MODE_HINT, LEVEL_HINT, LEVEL_LABEL } from "@/lib/status";
 
 type Author = "me" | "org";
@@ -44,11 +47,13 @@ export function CreateEventPage() {
   });
   const [sport, setSport] = useState<SportChoice>(null);
   const [cardColor, setCardColor] = useState<string | null>(null);
+  const [cardPattern, setCardPattern] = useState<CardPattern | null>(null);
   const [level, setLevel] = useState<Level>("any");
   const [joinMode, setJoinMode] = useState<JoinMode>("open");
   const [author, setAuthor] = useState<Author>(params.get("as") === "org" ? "org" : "me");
   const [touched, setTouched] = useState(false);
 
+  const chosenSport = sport && "sportId" in sport ? (sports.data?.find((s) => s.id === sport.sportId) ?? null) : null;
   const startsAt = dayjs(`${form.date}T${form.time}`);
   const endsAt = form.endTime ? dayjs(`${form.date}T${form.endTime}`) : null;
   const errors = {
@@ -86,6 +91,7 @@ export function CreateEventPage() {
         requirements: form.requirements.trim(),
         join_mode: joinMode,
         card_color: cardColor,
+        card_pattern: cardPattern,
         organization_id: author === "org" && approvedOrg ? approvedOrg.id : null,
       },
       { onSuccess: (event) => navigate(`/events/${event.id}`) },
@@ -108,10 +114,12 @@ export function CreateEventPage() {
           <h2 className="text-xl font-semibold">Что за активность</h2>
           <Input label="Название" placeholder="Например: Утренняя пробежка в парке" maxLength={120} required error={show("title")} {...field("title")} />
           <SportPicker sports={sports.data} value={sport} onChange={setSport} error={show("sport")} />
-          <CardColorPicker
-            value={cardColor}
-            onChange={setCardColor}
-            sport={sport && "sportId" in sport ? (sports.data?.find((s) => s.id === sport.sportId) ?? null) : null}
+          <CardColorPicker value={cardColor} onChange={setCardColor} sport={chosenSport} />
+          <CardPatternPicker
+            value={cardPattern}
+            onChange={setCardPattern}
+            sport={chosenSport}
+            background={cardColor ? mutedColor(cardColor) : (chosenSport?.color ?? "#E9DFCC")}
           />
           <Textarea label="Описание" placeholder="Как всё будет проходить, сколько длится, кого ждёте" rows={4} maxLength={2000} {...field("description")} />
         </Card>

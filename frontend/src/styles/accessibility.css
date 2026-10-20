@@ -155,6 +155,10 @@ html[data-low-vision] .tinted-3d {
   background-image: none;
 }
 
+html[data-low-vision] .engraving {
+  display: none;
+}
+
 /* Элемент, который сейчас озвучивается */
 [data-speaking] {
   outline: 3px dashed var(--color-primary) !important;
