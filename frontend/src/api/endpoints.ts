@@ -60,6 +60,10 @@ export const meApi = {
   organization: () => api.get<Organization | null>("/me/organization"),
   submitOrganization: (data: OrganizationInput) => api.post<Organization>("/me/organization", data),
   updateProfile: (data: ProfileInput) => api.patch<User>("/me", data),
+  setAvatar: (image: string) => api.put<User>("/me/avatar", { image }),
+  removeAvatar: () => api.delete<User>("/me/avatar"),
+  setOrganizationAvatar: (image: string) => api.put<Organization>("/me/organization/avatar", { image }),
+  removeOrganizationAvatar: () => api.delete<Organization>("/me/organization/avatar"),
 };
 
 export const organizationsApi = {

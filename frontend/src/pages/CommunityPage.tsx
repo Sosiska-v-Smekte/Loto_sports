@@ -1,17 +1,26 @@
-import { Building2, CalendarPlus, MapPin, Phone } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { Building2, CalendarPlus, Camera, MapPin, Phone } from "lucide-react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
+import { meApi } from "@/api/endpoints";
+import { AvatarModal } from "@/components/AvatarModal";
 import { BackLink } from "@/components/BackLink";
 import { EventGrid } from "@/components/EventGrid";
-import { ButtonLink } from "@/components/ui/Button";
+import { Avatar } from "@/components/ui/Avatar";
+import { Button, ButtonLink } from "@/components/ui/Button";
 import { Card, SectionTitle } from "@/components/ui/Card";
 import { LoadingBlock } from "@/components/ui/Skeleton";
 import { EmptyState } from "@/components/ui/States";
 import { Tag } from "@/components/ui/Tag";
+import { useAuth } from "@/features/auth";
 import { useOrganization } from "@/features/organizations";
 
 export function CommunityPage() {
   const id = Number(useParams().id);
   const page = useOrganization(id);
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+  const [changingPhoto, setChangingPhoto] = useState(false);
 
   if (page.isPending) return <LoadingBlock className="page-container mt-8" />;
   if (page.isError) {
@@ -27,12 +36,22 @@ export function CommunityPage() {
     );
   }
   const { organization, events } = page.data;
+  const isOwner = user?.id === organization.owner.id;
+  const refresh = () => queryClient.invalidateQueries();
 
   return (
     <div className="page-container pt-4 lg:pt-6">
       <BackLink to="/communities" label="Все сообщества" />
       <Card className="mt-3 p-5 sm:p-8">
-        <h1 className="text-[30px] font-bold leading-tight sm:text-[40px]">{organization.name}</h1>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+          <Avatar name={organization.name} id={organization.id} src={organization.avatar_url} size="xl" />
+          <h1 className="min-w-0 flex-1 text-[30px] font-bold leading-tight [overflow-wrap:anywhere] sm:text-[40px]">{organization.name}</h1>
+          {isOwner && (
+            <Button variant="secondary" size="sm" icon={<Camera className="size-4" aria-hidden />} onClick={() => setChangingPhoto(true)} className="self-start sm:self-center">
+              Сменить фото
+            </Button>
+          )}
+        </div>
         <div className="mt-3 flex flex-wrap gap-2">
           {organization.sports.split(",").map((s) => (
             <Tag key={s} tone="level">
@@ -54,6 +73,18 @@ export function CommunityPage() {
           )}
         </div>
       </Card>
+      {isOwner && (
+        <AvatarModal
+          open={changingPhoto}
+          onClose={() => setChangingPhoto(false)}
+          title="Фото сообщества"
+          name={organization.name}
+          id={organization.id}
+          src={organization.avatar_url}
+          onUpload={(image) => meApi.setOrganizationAvatar(image).then(refresh)}
+          onRemove={() => meApi.removeOrganizationAvatar().then(refresh)}
+        />
+      )}
       <SectionTitle className="mt-8">Мероприятия</SectionTitle>
       <EventGrid
         events={events}

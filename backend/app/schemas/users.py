@@ -49,6 +49,10 @@ class ProfileUpdate(BaseModel):
     about: Annotated[str, StringConstraints(strip_whitespace=True, max_length=500)] = ""
 
 
+class AvatarIn(BaseModel):
+    image: str
+
+
 class AuthOut(BaseModel):
     token: str
     user: UserOut

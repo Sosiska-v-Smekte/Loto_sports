@@ -2,6 +2,7 @@ import { Building2, MapPin, Search } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { MyOrganization } from "@/components/organization/MyOrganization";
+import { Avatar } from "@/components/ui/Avatar";
 import { Card } from "@/components/ui/Card";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { EmptyState, ErrorState } from "@/components/ui/States";
@@ -39,17 +40,22 @@ export function CommunitiesPage() {
           <EmptyState icon={Building2} title="Сообществ не нашлось" text="Попробуйте другой запрос." className="md:col-span-2" />
         )}
         {organizations.data?.map((org) => (
-          <Card key={org.id} className="lift relative p-5 sm:p-6">
-            <h2 className="text-xl font-semibold">
-              <Link to={`/communities/${org.id}`} className="after:absolute after:inset-0 after:content-['']">
-                {org.name}
-              </Link>
-            </h2>
-            <p className="mt-1 flex items-center gap-1.5 text-muted">
-              <MapPin className="size-4" aria-hidden />
-              {org.city} · {org.sports}
-            </p>
-            <p className="mt-3 line-clamp-3">{org.description}</p>
+          <Card key={org.id} className="lift relative flex gap-4 p-5 sm:p-6">
+            <Avatar name={org.name} id={org.id} src={org.avatar_url} size="lg" />
+            <div className="min-w-0 flex-1">
+              <h2 className="text-xl font-semibold">
+                <Link to={`/communities/${org.id}`} className="after:absolute after:inset-0 after:content-['']">
+                  {org.name}
+                </Link>
+              </h2>
+              <p className="mt-1 flex items-center gap-1.5 text-muted">
+                <MapPin className="size-4 shrink-0" aria-hidden />
+                <span className="min-w-0">
+                  {org.city} · {org.sports}
+                </span>
+              </p>
+              <p className="mt-3 line-clamp-3">{org.description}</p>
+            </div>
           </Card>
         ))}
       </div>

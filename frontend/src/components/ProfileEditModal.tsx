@@ -1,8 +1,10 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { errorMessage } from "@/api/client";
 import { meApi } from "@/api/endpoints";
 import type { UserPublic } from "@/api/types";
 import { useAction } from "@/features/action";
+import { AvatarUploader } from "./AvatarUploader";
 import { CityCombobox } from "./CityCombobox";
 import { Button } from "./ui/Button";
 import { Input, Textarea } from "./ui/Field";
@@ -18,6 +20,9 @@ export function ProfileEditModal({ open, onClose, profile }: ProfileEditModalPro
   const [form, setForm] = useState({ name: profile.name, city: profile.city ?? "Москва", about: profile.about ?? "" });
   const [touched, setTouched] = useState(false);
   const save = useAction(meApi.updateProfile, "Профиль сохранён");
+  const queryClient = useQueryClient();
+  // Фото сохраняется сразу, не дожидаясь кнопки «Сохранить»
+  const refresh = () => queryClient.invalidateQueries();
 
   const errors = {
     name: form.name.trim().length < 2 ? "Имя — минимум 2 символа" : undefined,
@@ -47,6 +52,15 @@ export function ProfileEditModal({ open, onClose, profile }: ProfileEditModalPro
         </>
       }
     >
+      <div className="mb-5 rounded-2xl bg-surface-muted p-4">
+        <AvatarUploader
+          name={profile.name}
+          id={profile.id}
+          src={profile.avatar_url}
+          onUpload={(image) => meApi.setAvatar(image).then(refresh)}
+          onRemove={() => meApi.removeAvatar().then(refresh)}
+        />
+      </div>
       <form
         className="flex flex-col gap-4"
         noValidate

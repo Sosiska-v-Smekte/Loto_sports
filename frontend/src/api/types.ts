@@ -133,6 +133,7 @@ export interface Organization {
   sports: string;
   city: string;
   contacts: string;
+  avatar_url: string | null;
   status: OrganizationStatus;
   rejection_reason: string | null;
   created_at: string;

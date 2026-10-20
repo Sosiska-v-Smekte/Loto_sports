@@ -15,6 +15,7 @@ class OrganizationOut(ORMModel):
     sports: str
     city: str
     contacts: str
+    avatar_url: str | None
     status: str
     rejection_reason: str | None
     created_at: datetime

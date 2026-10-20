@@ -1,8 +1,11 @@
 import { Building2, CheckCircle2, Clock, LogIn, Plus, XCircle } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useState, type ReactNode } from "react";
+import { meApi } from "@/api/endpoints";
 import type { Organization } from "@/api/types";
 import { useAuth } from "@/features/auth";
 import { useMyOrganization } from "@/features/me";
+import { AvatarUploader } from "../AvatarUploader";
 import { Button, ButtonLink } from "../ui/Button";
 import { Card } from "../ui/Card";
 import { Notice } from "../ui/Notice";
@@ -78,6 +81,8 @@ function Intro({ action }: { action: ReactNode }) {
 }
 
 function OrganizationStatusCard({ organization }: { organization: Organization }) {
+  const queryClient = useQueryClient();
+  const refresh = () => queryClient.invalidateQueries();
   return (
     <Card className="flex flex-col gap-4 p-5 sm:p-6">
       <h2 className="flex items-center gap-2 text-xl font-semibold">
@@ -89,6 +94,13 @@ function OrganizationStatusCard({ organization }: { organization: Organization }
           <Notice tone="success" icon={CheckCircle2} title={`«${organization.name}» одобрена`}>
             Вы можете публиковать мероприятия от имени организации — без повторной проверки.
           </Notice>
+          <AvatarUploader
+            name={organization.name}
+            id={organization.id}
+            src={organization.avatar_url}
+            onUpload={(image) => meApi.setOrganizationAvatar(image).then(refresh)}
+            onRemove={() => meApi.removeOrganizationAvatar().then(refresh)}
+          />
           <div className="flex flex-wrap gap-3">
             <ButtonLink to="/events/new?as=org" icon={<Plus className="size-5" aria-hidden />}>
               Создать мероприятие от организации

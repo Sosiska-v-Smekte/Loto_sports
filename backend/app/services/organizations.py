@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session
 from app.db import search_key
 from app.models import Organization, OrganizationStatus, User
 from app.schemas.organizations import OrganizationIn
+from app.services import avatars
 from app.services.errors import conflict, not_found
 from app.services.notifications import notify_organization_request
 
@@ -53,6 +54,19 @@ def submit(db: Session, user: User, data: OrganizationIn) -> Organization:
     organization.reviewed_at = None
     db.flush()
     notify_organization_request(db, organization)
+    db.commit()
+    db.refresh(organization)
+    return organization
+
+
+def set_avatar(db: Session, user: User, image: str | None) -> Organization:
+    """Аватарку сообщества меняет его владелец."""
+    organization = get_own(db, user)
+    if organization is None:
+        raise not_found("У вас пока нет организации")
+    url = avatars.save(image) if image else None
+    avatars.remove(organization.avatar_url)
+    organization.avatar_url = url
     db.commit()
     db.refresh(organization)
     return organization

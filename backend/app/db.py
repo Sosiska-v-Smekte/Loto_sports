@@ -1,7 +1,7 @@
 from collections.abc import Iterator
 from pathlib import Path
 
-from sqlalchemy import create_engine, event
+from sqlalchemy import create_engine, event, inspect, text
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 from sqlalchemy.pool import StaticPool
@@ -46,6 +46,22 @@ def init_db(bind: Engine = engine) -> None:
     import app.models  # noqa: F401  регистрирует модели в metadata
 
     Base.metadata.create_all(bind)
+    _add_missing_columns(bind)
+
+
+def _add_missing_columns(bind: Engine) -> None:
+    """Миграций в проекте нет: новые необязательные колонки (например, avatar_url у организации) добавляются в уже
+    существующую базу сами, чтобы после обновления не нужно было пересоздавать её и терять данные."""
+    inspector = inspect(bind)
+    with bind.begin() as connection:
+        for table in Base.metadata.sorted_tables:
+            if not inspector.has_table(table.name):
+                continue
+            existing = {column["name"] for column in inspector.get_columns(table.name)}
+            for column in table.columns:
+                if column.name not in existing and column.nullable:
+                    ddl = column.type.compile(bind.dialect)
+                    connection.execute(text(f'ALTER TABLE "{table.name}" ADD COLUMN "{column.name}" {ddl}'))
 
 
 def get_db() -> Iterator[Session]:

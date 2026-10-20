@@ -25,6 +25,7 @@ class Organization(Base):
     sports: Mapped[str] = mapped_column(String(500), default="")
     city: Mapped[str] = mapped_column(String(120))
     contacts: Mapped[str] = mapped_column(String(500), default="")
+    avatar_url: Mapped[str | None] = mapped_column(String(500))
     status: Mapped[OrganizationStatus] = mapped_column(
         String(20), default=OrganizationStatus.pending, index=True
     )
