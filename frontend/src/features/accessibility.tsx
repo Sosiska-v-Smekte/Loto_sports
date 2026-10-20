@@ -102,6 +102,9 @@ export function AccessibilityProvider({ children }: { children: ReactNode }) {
   return <A11yContext.Provider value={value}>{children}</A11yContext.Provider>;
 }
 
+/** Включён ли режим для людей с нарушением цветовосприятия: от него зависят цвета карточек. */
+export const useColorSafe = () => useAccessibility().settings.colorSafe;
+
 export function useAccessibility() {
   const ctx = useContext(A11yContext);
   if (!ctx) throw new Error("useAccessibility вне AccessibilityProvider");

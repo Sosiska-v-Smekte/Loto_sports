@@ -45,11 +45,52 @@ export function iconColor(hex: string): string {
   return toHex(mix(vivid, [0, 0, 0], 0.4));
 }
 
+function hueOf([r, g, b]: RGB): { hue: number; sat: number } {
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  if (max === min) return { hue: 0, sat: 0 };
+  const d = max - min;
+  let hue = max === r ? (g - b) / d + (g < b ? 6 : 0) : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  hue *= 60;
+  return { hue, sat: d / max };
+}
+
+/**
+ * Цвета карточек для людей с нарушением цветовосприятия: пастельные тона палитры Okabe–Ito. Их различают
+ * при протанопии, дейтеранопии и тританопии, а соседние тона отличаются ещё и яркостью.
+ * Близкие оттенки (красный, зелёный, оранжевый) сводятся к нескольким хорошо различимым.
+ */
+const SAFE_CARD_COLORS: { from: number; hex: string }[] = [
+  { from: 0, hex: "#F2B08A" }, // красные и коралловые → киноварь
+  { from: 20, hex: "#F4C766" }, // оранжевые и персиковые → оранжевый
+  { from: 45, hex: "#F3E67A" }, // жёлтые и песочные → жёлтый
+  { from: 75, hex: "#86CDB2" }, // зелёные и мятные → сине-зелёный
+  { from: 170, hex: "#A7D6F2" }, // бирюзовые и небесные → небесный
+  { from: 205, hex: "#8DB4DE" }, // синие → синий
+  { from: 265, hex: "#E0B3CE" }, // сиреневые, пурпурные и розовые → красно-пурпурный
+  { from: 345, hex: "#F2B08A" },
+];
+
+export function safeCardColor(hex: string): string {
+  const { hue, sat } = hueOf(toRgb(hex));
+  if (sat < 0.12) return "#D3D0CA";
+  return [...SAFE_CARD_COLORS].reverse().find((c) => hue >= c.from)!.hex;
+}
+
 /**
  * Фон карточки и цвет иконки. Иконка всегда перекрашивается в тон карточки: в цвет, выбранный автором,
  * а если его нет — в цвет направления. Свой цвет на фоне чуть приглушён.
+ * colorSafe: режим для людей с нарушением цветовосприятия, цвета заменяются различимыми.
  */
-export function eventPalette(event: Pick<SportEvent, "card_color" | "sport">): { background: string; tint: string } {
-  if (!isHexColor(event.card_color)) return { background: event.sport.color, tint: iconColor(event.sport.color) };
-  return { background: mutedColor(event.card_color), tint: iconColor(event.card_color) };
+export function eventPalette(
+  event: Pick<SportEvent, "card_color" | "sport">,
+  colorSafe = false,
+): { background: string; tint: string } {
+  const own = isHexColor(event.card_color);
+  const base = own ? event.card_color! : event.sport.color;
+  if (colorSafe) {
+    const safe = safeCardColor(base);
+    return { background: safe, tint: iconColor(safe) };
+  }
+  return { background: own ? mutedColor(base) : base, tint: iconColor(base) };
 }

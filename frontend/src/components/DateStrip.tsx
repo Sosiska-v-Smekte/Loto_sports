@@ -10,6 +10,15 @@ interface DateStripProps {
   onChange: (date: string | null) => void;
 }
 
+/** Прозрачные края ленты там, где есть стрелка прокрутки (стрелки — только с 640px). */
+function fade({ start, end }: { start: boolean; end: boolean }) {
+  if (typeof window !== "undefined" && window.innerWidth < 640) return undefined;
+  if (start && end) return undefined;
+  const left = start ? "black 0" : "transparent 0, black 64px";
+  const right = end ? "black 100%" : "black calc(100% - 96px), transparent 100%";
+  return `linear-gradient(to right, ${left}, ${right})`;
+}
+
 /** Лента дат на 6 недель вперёд. Повторный клик по выбранному дню снимает фильтр. */
 export function DateStrip({ value, onChange }: DateStripProps) {
   const scroller = useRef<HTMLDivElement>(null);
@@ -53,6 +62,8 @@ export function DateStrip({ value, onChange }: DateStripProps) {
         role="group"
         aria-label="Выбор даты"
         className="no-scrollbar flex snap-x snap-mandatory gap-1 overflow-x-auto pr-12 sm:gap-1.5"
+        // Край под стрелкой растворяется, чтобы стрелка не лежала поверх последнего дня
+        style={{ maskImage: fade(edges), WebkitMaskImage: fade(edges) }}
       >
         {days.map((day, index) => {
           const iso = toIsoDate(day);

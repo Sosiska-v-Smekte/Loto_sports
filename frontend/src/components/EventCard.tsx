@@ -1,6 +1,7 @@
 import { ArrowRight, CalendarDays, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import type { SportEvent } from "@/api/types";
+import { useColorSafe } from "@/features/accessibility";
 import { eventPalette } from "@/lib/color";
 import { formatEventDate } from "@/lib/dates";
 import { JOIN_MODE_LABEL, LEVEL_LABEL, organizerKind } from "@/lib/status";
@@ -16,7 +17,8 @@ const shortPlace = (address: string) => address.split(",")[0];
 
 export function EventCard({ event }: { event: SportEvent }) {
   const ModeIcon = JOIN_MODE_ICON[event.join_mode];
-  const palette = eventPalette(event);
+  const colorSafe = useColorSafe();
+  const palette = eventPalette(event, colorSafe);
 
   return (
     <article className="neu-raised lift group relative flex flex-col rounded-card border border-line/70 bg-surface p-2.5">
@@ -33,6 +35,12 @@ export function EventCard({ event }: { event: SportEvent }) {
             {event.title}
           </Link>
         </h3>
+        {/* Направление подписано словом: цвет карточки не единственный признак */}
+        {colorSafe && (
+          <Tag tone="level" className="absolute bottom-3 left-4 max-w-[calc(100%-8.5rem)] bg-white/75">
+            {event.sport.name}
+          </Tag>
+        )}
         <SportIllustration
           sport={event.sport}
           tint={palette.tint}

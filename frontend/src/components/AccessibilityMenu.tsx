@@ -55,22 +55,20 @@ function ModeSwitch({ mode, checked, onChange }: { mode: ModeInfo; checked: bool
       aria-checked={checked}
       onClick={() => onChange(!checked)}
       className={cn(
-        "pressable flex w-full items-start gap-3 rounded-[20px] border-2 p-4 text-left",
+        // Сетка: значок, название и тумблер в одной строке, описание под ними во всю ширину на телефоне
+        "pressable grid w-full grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-2 rounded-[20px] border-2 p-4 text-left",
         checked ? "border-primary bg-primary-soft" : "neu-raised-sm border-line/70",
       )}
     >
       <span className={cn("grid size-11 shrink-0 place-items-center rounded-2xl", checked ? "neu-primary bg-primary text-white" : "bg-primary-soft text-primary")}>
         <Icon className="size-6" aria-hidden />
       </span>
-      <span className="min-w-0 flex-1">
-        <span className="block text-[17px] font-semibold leading-snug">{mode.title}</span>
-        <span className="mt-1 block text-[15px] leading-snug text-muted">{mode.text}</span>
-      </span>
+      <span className="hyphens-auto text-[17px] font-semibold leading-snug [overflow-wrap:anywhere]">{mode.title}</span>
       {/* Тумблер: положение и подпись дублируют цвет */}
       <span
         aria-hidden
         className={cn(
-          "neu-inset relative mt-1 flex h-8 w-[70px] shrink-0 items-center rounded-full px-1 text-[11px] font-bold transition-colors",
+          "neu-inset relative flex h-8 w-[70px] shrink-0 items-center rounded-full px-1 text-[11px] font-bold transition-colors",
           checked ? "bg-primary text-white" : "bg-line text-ink",
         )}
       >
@@ -82,6 +80,7 @@ function ModeSwitch({ mode, checked, onChange }: { mode: ModeInfo; checked: bool
           )}
         />
       </span>
+      <span className="col-span-3 text-[15px] leading-snug text-muted sm:col-span-1 sm:col-start-2">{mode.text}</span>
     </button>
   );
 }

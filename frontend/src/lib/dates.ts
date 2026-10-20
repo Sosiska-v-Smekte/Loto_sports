@@ -27,8 +27,9 @@ export function formatEventDate(iso: string): string {
 export function formatEventDateLong(startsAt: string, endsAt: string | null): string {
   const start = dayjs(startsAt);
   const day = capitalize(start.format("dddd, D MMMM"));
-  const end = endsAt ? `–${dayjs(endsAt).format("HH:mm")}` : "";
-  return `${day} · ${start.format("HH:mm")}${end}`;
+  // \u2060 не даёт разорвать «19:00–20:00» на две строки, а неразрывный пробел держит «·» при времени
+  const end = endsAt ? `\u2060–\u2060${dayjs(endsAt).format("HH:mm")}` : "";
+  return `${day}\u00a0· ${start.format("HH:mm")}${end}`;
 }
 
 export function formatRelative(iso: string): string {

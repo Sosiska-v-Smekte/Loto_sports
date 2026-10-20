@@ -39,8 +39,9 @@ export function Modal({ open, onClose, title, description, children, footer }: M
         "sm:m-auto sm:max-w-lg sm:rounded-card",
       )}
     >
+      {/* При крупном тексте #root увеличен через zoom, поэтому высоту окна делим на масштаб */}
       {open && (
-        <div className="flex max-h-[85dvh] flex-col">
+        <div className="flex max-h-[calc(85dvh/var(--zoom,1))] flex-col">
           <div className="flex items-start justify-between gap-4 px-6 pb-2 pt-6">
             <div>
               <h2 id="modal-title" className="text-xl font-semibold">
@@ -59,7 +60,7 @@ export function Modal({ open, onClose, title, description, children, footer }: M
           </div>
           <div className="overflow-y-auto px-6 py-3">{children}</div>
           {footer && (
-            <div className="flex flex-col-reverse gap-3 px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-3 sm:flex-row sm:justify-end">
+            <div className="flex flex-wrap-reverse gap-3 px-6 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 sm:justify-end [&>*]:min-w-[8rem] [&>*]:flex-1 sm:[&>*]:flex-none">
               {footer}
             </div>
           )}

@@ -29,9 +29,9 @@ export function SearchBar({ query, onQueryChange, city, onCityChange }: SearchBa
           type="search"
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
-          placeholder="Поиск по активностям и площадкам…"
+          placeholder="Поиск занятий и площадок"
           aria-label="Поиск по активностям и площадкам"
-          className="search-inset h-[52px] w-full rounded-full border border-line/70 pl-14 pr-12 text-[17px] placeholder:text-[#7d7366] focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/25 sm:text-lg [&::-webkit-search-cancel-button]:hidden"
+          className="search-inset h-[52px] w-full text-ellipsis rounded-full border border-line/70 pl-14 pr-4 text-[17px] [&:not(:placeholder-shown)]:pr-12 placeholder:text-[#7d7366] focus:border-primary focus:bg-white focus:outline-none focus:ring-2 focus:ring-primary/25 sm:text-lg [&::-webkit-search-cancel-button]:hidden"
         />
         {draft && (
           <button

@@ -5,13 +5,29 @@
 
 /* ---------- Размер текста и кнопок ---------- */
 
-/* zoom масштабирует всё вместе: текст, отступы, зоны нажатия; вёрстка перестраивается под ширину */
-html[data-text-size="1"] #root {
-  zoom: 1.15;
+/* zoom масштабирует всё вместе: текст, отступы, зоны нажатия; вёрстка перестраивается под ширину.
+   --zoom нужен там, где размер считается от окна (vh, dvh): окно не масштабируется вместе с #root. */
+html[data-text-size="1"] {
+  --zoom: 1.15;
 }
 
-html[data-text-size="2"] #root {
-  zoom: 1.3;
+html[data-text-size="2"] {
+  --zoom: 1.3;
+}
+
+/* На телефоне экран и так узкий: масштаб чуть меньше, иначе на строку помещается по слову */
+@media (max-width: 639.98px) {
+  html[data-text-size="1"] {
+    --zoom: 1.1;
+  }
+
+  html[data-text-size="2"] {
+    --zoom: 1.2;
+  }
+}
+
+#root {
+  zoom: var(--zoom, 1);
 }
 
 /* При крупном тексте карточки не сжимаются: колонок становится меньше */
@@ -21,55 +37,43 @@ html[data-simple] .event-grid {
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr));
 }
 
-/* Крупный текст не помещается в шапку: навигация уезжает в нижнюю панель
-   (при «крупном» — до 1280px, при «очень крупном» и в простом режиме — до 1536px) */
-@media (max-width: 1279.98px) {
-  html[data-text-size="1"] [data-desktop-nav] {
-    display: none !important;
-  }
-
-  html[data-text-size="1"] [data-mobile-nav] {
-    display: block !important;
-  }
-
-  html[data-text-size="1"] [data-main] {
-    padding-bottom: 8rem !important;
+/* Шапка. Её размеры на широком экране (от 1280px) и так крупные: 17–18px и кнопки по 50px, а с zoom
+   она перестаёт помещаться, поэтому там масштаб для шапки снимается. Уже 1280px при крупном тексте
+   навигация уезжает в нижнюю панель, как на планшете */
+@media (min-width: 1280px) {
+  html[data-text-size="1"] [data-site-header],
+  html[data-text-size="2"] [data-site-header] {
+    zoom: calc(1 / var(--zoom));
   }
 }
 
-@media (max-width: 1535.98px) {
-  html[data-simple] [data-desktop-nav],
+@media (max-width: 1279.98px) {
+  html[data-text-size="1"] [data-desktop-nav],
   html[data-text-size="2"] [data-desktop-nav] {
     display: none !important;
   }
 
-  html[data-simple] [data-mobile-nav],
+  html[data-text-size="1"] [data-mobile-nav],
   html[data-text-size="2"] [data-mobile-nav] {
     display: block !important;
   }
 
-  html[data-simple] [data-main],
+  html[data-text-size="1"] [data-main],
   html[data-text-size="2"] [data-main] {
     padding-bottom: 8rem !important;
   }
 }
 
-/* При крупном тексте в шапке короткие подписи */
-html[data-text-size="1"] [data-label-full],
-html[data-text-size="2"] [data-label-full] {
-  display: none !important;
-}
-
-html[data-text-size="1"] [data-label-short],
-html[data-text-size="2"] [data-label-short] {
-  display: inline !important;
-}
-
-/* На узком телефоне логотип с крупным текстом иначе наезжает на кнопки шапки */
+/* На узком телефоне логотип с крупным текстом иначе не помещается рядом с кнопками шапки,
+   а у «Войти» остаётся только значок (подпись есть в aria-label) */
 @media (max-width: 639.98px) {
   html[data-text-size="1"] [data-logo],
   html[data-text-size="2"] [data-logo] {
-    font-size: 18px;
+    font-size: 17px;
+  }
+
+  html[data-text-size="2"] [data-login-label] {
+    display: none;
   }
 }
 
@@ -155,7 +159,8 @@ html[data-low-vision] .tinted-3d {
   background-image: none;
 }
 
-html[data-low-vision] .engraving {
+/* На карточках узор не мешает читать текст; в выборе гравировки он и есть содержимое, там остаётся */
+html[data-low-vision] .engraving:not([data-pattern-preview] .engraving) {
   display: none;
 }
 
